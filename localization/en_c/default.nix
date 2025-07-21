@@ -33,7 +33,7 @@
     };
   };
 
-config =
+  config =
   let
     cfg-time = config.time;
     cfg-lang = config.i18n;
@@ -53,7 +53,7 @@ config =
       defaultLocale = cfg-lang.defaultLocaleShortlist;
       defaultCharset = cfg-lang.defaultCharsetShortlist;
       extraLocales = [
-        "C.UTF-8/UTF-8"
+        "en_US.UTF-8/UTF-8"
       ];
       extraLocaleSettings = {
         LC_ADDRESS = "C.UTF-8";
