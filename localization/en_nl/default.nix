@@ -41,7 +41,7 @@
     };
   };
 
-config =
+  config =
   let
     cfg-time = config.time;
     cfg-lang = config.i18n;
