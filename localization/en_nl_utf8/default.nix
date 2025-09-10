@@ -53,15 +53,11 @@
 			defaultLocale = cfg-lang.defaultLocaleShortlist;
 			defaultCharset = cfg-lang.defaultCharsetShortlist;
 			extraLocales = [
-				"en_IE/UTF-8"
 				"en_IE.UTF-8/UTF-8"
-				"en_IE.ISO-8859-1/ISO-8859-1"
-				"en_IE.ISO-8859-15@euro/ISO-8859-15"
+				"en_IE/ISO-8859-1"
 				"en_IE@euro/ISO-8859-15"
-				"nl_NL/UTF-8"
 				"nl_NL.UTF-8/UTF-8"
-				"nl_NL.ISO-8859-1/ISO-8859-1"
-				"nl_NL.ISO-8859-15@euro/ISO-8859-15"
+				"nl_NL/ISO-8859-1"
 				"nl_NL@euro/ISO-8859-15"
 			];
 			extraLocaleSettings = {
