@@ -16,6 +16,7 @@
 				description = "The default locale for this config.";
 				type = lib.types.enum [
 					"C"
+					"C.UTF-8"
 					"en_IE.UTF-8"
 					"en_IE"
 					"en_IE@euro"
