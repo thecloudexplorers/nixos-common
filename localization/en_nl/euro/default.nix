@@ -67,37 +67,35 @@
 				"nl_NL@euro/ISO-8859-15"
 			];
 			extraLocaleSettings = {
-				LC_ADDRESS = "nl_NL";
+				LC_ADDRESS = "nl_NL@euro";
 				LC_COLLATE = "C.UTF-8";
-				LC_CTYPE = "en_IE";
-				LC_IDENTIFICATION = "en_IE";
-				LC_MEASUREMENT = "nl_NL";
-				LC_MESSAGES = "en_IE";
-				LC_MONETARY = "nl_NL";
-				LC_NAME = "en_IE";
-				LC_NUMERIC = "nl_NL";
-				LC_PAPER = "nl_NL";
-				LC_TELEPHONE = "nl_NL";
-				LC_TIME = "nl_NL";
+				LC_CTYPE = "en_IE@euro";
+				LC_IDENTIFICATION = "en_IE@euro";
+				LC_MEASUREMENT = "nl_NL@euro";
+				LC_MESSAGES = "en_IE@euro";
+				LC_MONETARY = "nl_NL@euro";
+				LC_NAME = "en_IE@euro";
+				LC_NUMERIC = "nl_NL@euro";
+				LC_PAPER = "nl_NL@euro";
+				LC_TELEPHONE = "nl_NL@euro";
+				LC_TIME = "nl_NL@euro";
 			};
-			# Set all supported charsets to the ISO-8859-1 set to
-			# enable base EU language specifics without @euro variant
-			# to ensure compatability in applications that don't
-			# support the @euro variant
+			# Set all supported charsets to the ISO-8859-15 set to
+			# enable the Euro character and several EU language specifics
 			localeCharsets = {
-				LC_ADDRESS = "ISO-8859-1";
-				# C only support UTF-8, not an ISO standard
+				LC_ADDRESS = "ISO-8859-15";
+				# C only support UTF-8, not an ISO standard.
 				LC_COLLATE = "UTF-8";
-				LC_CTYPE = "ISO-8859-1";
-				LC_IDENTIFICATION = "ISO-8859-1";
-				LC_MEASUREMENT = "ISO-8859-1";
-				LC_MESSAGES = "ISO-8859-1";
-				LC_MONETARY = "ISO-8859-1";
-				LC_NAME = "ISO-8859-1";
-				LC_NUMERIC = "ISO-8859-1";
-				LC_PAPER = "ISO-8859-1";
-				LC_TELEPHONE = "ISO-8859-1";
-				LC_TIME = "ISO-8859-1";
+				LC_CTYPE = "ISO-8859-15";
+				LC_IDENTIFICATION = "ISO-8859-15";
+				LC_MEASUREMENT = "ISO-8859-15";
+				LC_MESSAGES = "ISO-8859-15";
+				LC_MONETARY = "ISO-8859-15";
+				LC_NAME = "ISO-8859-15";
+				LC_NUMERIC = "ISO-8859-15";
+				LC_PAPER = "ISO-8859-15";
+				LC_TELEPHONE = "ISO-8859-15";
+				LC_TIME = "ISO-8859-15";
 			};
 		};
 	};
