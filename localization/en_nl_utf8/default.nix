@@ -15,13 +15,13 @@
 			defaultLocaleShortlist = lib.mkOption {
 				description = "The default locale for this config.";
 				type = lib.types.enum [
-					"C.UTF-8"
+					"C"
 					"en_IE.UTF-8"
-					"en_IE.ISO-8859-1"
-					"en_IE@euro.ISO-8859-15"
+					"en_IE"
+					"en_IE@euro"
 					"nl_NL.UTF-8"
-					"nl_NL.ISO-8859-1"
-					"nl_NL@euro.ISO-8859-15"
+					"nl_NL"
+					"nl_NL@euro"
 				];
 				default = "C.UTF-8";
 			};
@@ -51,7 +51,18 @@
 			# an international standard
 			defaultLocale = cfg-lang.defaultLocaleShortlist;
 			defaultCharset = cfg-lang.defaultCharsetShortlist;
-			extraLocales = [ "en_IE.UTF-8/UTF-8" "nl_NL.UTF-8/UTF-8" ];
+			extraLocales = [
+				"en_IE/UTF-8"
+				"en_IE.UTF-8/UTF-8"
+				"en_IE.ISO-8859-1/ISO-8859-1"
+				"en_IE.ISO-8859-15@euro/ISO-8859-15"
+				"en_IE@euro/ISO-8859-15"
+				"nl_NL/UTF-8"
+				"nl_NL.UTF-8/UTF-8"
+				"nl_NL.ISO-8859-1/ISO-8859-1"
+				"nl_NL.ISO-8859-15@euro/ISO-8859-15"
+				"nl_NL@euro/ISO-8859-15"
+			];
 			extraLocaleSettings = {
 				LC_ADDRESS = "nl_NL.UTF-8";
 				LC_COLLATE = "C.UTF-8";
