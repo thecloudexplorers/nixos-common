@@ -60,6 +60,11 @@
     "zfs"
     "zfs_member"
   ];
+  # nvidia-drm.fbdev=1 is required for Blackwell (RTX 5060 Ti) framebuffer on Wayland.
+  boot.kernelParams = [
+    "nvidia-drm.modeset=1"
+    "nvidia-drm.fbdev=1"
+  ];
   boot.zfs.forceImportRoot = false;
   boot.zfs.unsafeAllowHibernation = false;
   # ZFS will also mount the ZFS partitions. This will lead to conflicts.
@@ -195,8 +200,6 @@
       # The video drivers are still set under xserver, also for wayland,
       # even though xserver is disabled.
       videoDrivers = [
-        "modesetting"
-        "amdgpu"
         "nvidia"
       ];
     };
