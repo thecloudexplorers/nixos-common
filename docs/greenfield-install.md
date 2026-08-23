@@ -7,12 +7,13 @@ To install NixOS from command-line, with disko, execute the following commands:
 1. To create the desired partitions:
     - `sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount /run/media/nixos/Ventoy/disko.nix`
 2. If you need to validate hardware settings with a scan, run the following:
-    - `sudo nixos-generate-config --root /mnt`
-3. REPLACE: `/mnt/etc/nixos/configuration.nix` with content, `/run/media/nixos/Ventoy/jevs_configuration.nix`.
-4. To actually install NixOS on the newly created partitions:
+    - `nixos-generate-config --no-filesystems --root /mnt`
+3. Run `cp -p /run/media/nixos/Ventoy/disko.nix /mnt/etc/nixos`.
+4. Run `cp -pf /run/media/nixos/Ventoy/jevs_configuration.nix /mnt/etc/nixos/configuration.nix`.
+5. To actually install NixOS on the newly created partitions:
     - `sudo nixos-install --no-root-passwd`
       - Running `--no-root-passwd` to avoid keyboard issues during the installation process by failing to type the same the password twice.
-5. To set the root password manually execute:
+6. To set the root password manually execute:
     - `sudo nixos-enter --root '/mnt'`
 
     And then run the following in the shell of the new system:
@@ -20,14 +21,17 @@ To install NixOS from command-line, with disko, execute the following commands:
 
     After succesfully setting the new password exit the chroot shell:
     - `logout`
-6. If all has gone well:
+7. If all has gone well:
     - `reboot`
 
 Replace the `.../git/hosts/<Hostname>/disk-config.nix` and `.../git#<Hostname>` options with the intended configuration elements as relevant.
 
+Further reading specific to Disko: [https://github.com/nix-community/disko/blob/master/docs/quickstart.md](https://github.com/nix-community/disko/blob/master/docs/quickstart.md)
+
 ### ZFS Troubleshooting
 
 If the new install goes into emergency mode because the ZFS pool wouldn't load, do the following:
+
 - `systemctl status zfs-import-<zpool_name>.service`
 - `zpool import -f <zpool_name>`
 - `systemctl restart zfs-import-<zpool_name>.service`
@@ -38,22 +42,22 @@ If the new install goes into emergency mode because the ZFS pool wouldn't load, 
 When installing using the minimal installer, no GUI, there are some particular steps to keep in mind:
 
 - Connecting to WiFi can be done with wpa_cli using the following steps:
-    - `sudo systemctl start wpa_supplicant`
-    - `wpa_cli`
-    - `> scan`
-    - `> scan_results`
-    - `> add_network 0`
-    - `> set_network 0 ssid "<SSID>"`
-    - `> set_network 0 psk "<Passphrase>"`
-    - `> enable_network 0`
-    - `> quit`
+  - `sudo systemctl start wpa_supplicant`
+  - `wpa_cli`
+  - `> scan`
+  - `> scan_results`
+  - `> add_network 0`
+  - `> set_network 0 ssid "<SSID>"`
+  - `> set_network 0 psk "<Passphrase>"`
+  - `> enable_network 0`
+  - `> quit`
 - Now to add the Ventoy drive to get the flake for rapid installation:
-    - `lsblk`
-    - `mount -l`
-    - `sudo mkdir /tmp/ventoy`
-    - `sudo mount /dev/mapper/sda1 /tmp/ventoy`
+  - `lsblk`
+  - `mount -l`
+  - `sudo mkdir /tmp/ventoy`
+  - `sudo mount /dev/mapper/sda1 /tmp/ventoy`
 - Cat this document as a reference for the actual installation:
-    - `cat /tmp/ventoy/git/docs/disko-install.md`
+  - `cat /tmp/ventoy/git/docs/disko-install.md`
 
 ## Linux Bootmanager
 
