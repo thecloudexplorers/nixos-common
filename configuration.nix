@@ -26,7 +26,7 @@
 
   # Generate hostId by machine: `head -c 8 /etc/machine-id`
   # Generate hostId at random: `head -c4 /dev/urandom | od -A none -t x4`
-  networking.hostId = "c595b020";
+  networking.hostId = "8bda2338";
   networking.hostName = "faml-pc-home_server";
 
   services = {
