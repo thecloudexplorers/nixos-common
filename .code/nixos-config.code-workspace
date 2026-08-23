@@ -1,0 +1,72 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "[json]": {
+        "editor.tabSize": 2
+    },
+    "[nix]": {
+        "editor.rulers": [
+            {
+                "column": 80,
+                "color": "#5fb8f2"
+            }
+        ],
+        "editor.tabSize": 2
+    },
+    "[powershell]": {
+        "editor.rulers": [
+            {
+                "column": 80,
+                "color": "#5BA150"
+            },
+            {
+                "column": 120,
+                "color": "#0277BD"
+            }
+        ]
+    },
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.renderWhitespace": "all",
+    "editor.tabSize": 4,
+    "explorer.compactFolders": false,
+    "files.associations": {
+        "*.lock": "json",
+        "*.yml": "azure-pipelines"
+    },
+    "files.defaultLanguage": "nix",
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.exclude": {
+        "obj": true,
+        "bin": true
+    },
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "git.autofetch": true,
+    "git.autofetchPeriod": 300,
+    "git.branchProtection": [
+        "main-once-relevant"
+    ],
+    "git.defaultBranchName": "main",
+    "git.enabled": true,
+    "git.enableCommitSigning": true,
+    "git.enableSmartCommit": false,
+    "git.promptToSaveFilesBeforeCommit": "always",
+    "git.pruneOnFetch": true,
+    "powershell.codeFormatting.preset": "OTBS",
+    "powershell.codeFormatting.addWhitespaceAroundPipe": true,
+    "powershell.codeFormatting.alignPropertyValuePairs": true,
+    "powershell.codeFormatting.whitespaceAfterSeparator": true,
+    "powershell.codeFormatting.whitespaceAroundOperator": true,
+    "powershell.codeFormatting.whitespaceBeforeOpenBrace": true,
+    "powershell.codeFormatting.whitespaceBeforeOpenParen": true,
+    "powershell.codeFormatting.whitespaceInsideBrace": true
+  }
+}
