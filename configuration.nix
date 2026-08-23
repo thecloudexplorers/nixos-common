@@ -35,7 +35,24 @@
       );
     in
     lib.mkForce latestKernelPackage;
-  boot.initrd.availableKernelModules = [ "zfs" ];
+  boot.initrd.availableKernelModules = [
+    "ahci"
+    "nvidia"
+    "nvme"
+    "sd_mod"
+    "usb_storage"
+    "usbhid"
+    "xhci_pci"
+    "zfs"
+  ];
+  boot.kernelModules = [
+    "amdgpu"
+    "kvm-amd"
+    "nvidia"
+    "nvidia_modeset"
+    "nvidia_uvm"
+    "nvidia_drm"
+  ];
   boot.supportedFilesystems = [
     "ext4"
     "luks"
@@ -56,32 +73,156 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+
+  hardware = {
+    graphics.enable = true;
+    nvidia = {
+      # Whether to enable the open source NVIDIA kernel module.
+      open = true;
+      # Whether to enable kernel modesetting when using the NVIDIA
+      # proprietary driver.
+      modesetting.enable = true;
+      nvidiaSettings = true;
+      # Whether to enable nvidia-persistenced a update for NVIDIA
+      # GPU headless mode.
+      nvidiaPersistenced = false;
+      powerManagement = {
+        # Whether to enable experimental power management through systemd.
+        enable = true;
+        # Whether to enable experimental power management of PRIME offload.
+        finegrained = false;
+      };
+      # Whether to enable dynamic Boost balances power between the CPU
+      # and the GPU for improved performance on supported laptops using
+      # the nvidia-powerd daemon.
+      dynamicBoost.enable = false;
+      # The NVIDIA driver package to use.
+      # https://www.nvidia.com/en-us/drivers/unix/
+      # https://github.com/NixOS/nixpkgs/pulls?q=nvidiaPackages
+      # config.boot.kernelPackages.nvidiaPackages.stable; # Same as production
+      # config.boot.kernelPackages.nvidiaPackages.production; # Latest production driver
+      # config.boot.kernelPackages.nvidiaPackages.beta;   # Latest beta driver
+      # config.boot.kernelPackages.nvidiaPackages.latest; # Same as production
+      # config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+      # config.boot.kernelPackages.nvidiaPackages.legacy_535; # Older versions
+      # config.boot.kernelPackages.nvidiaPackages.legacy_470;
+      #package = config.boot.kernelPackages.nvidiaPackages.latest;
+      package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+        version = "610.43.03";
+        sha256_64bit = "sha256-ReLUwTSiPDXlDyU6SqY+fl6NF+PRhdSgfIpY6WEu05I=";
+        sha256_aarch64 = "sha256-jSdlXo60ilXLKWKvZfgbBnVqVYuw6zhnGuiDgwxYz94=";
+        openSha256 = "sha256-QCXmqo2xNyIwjGv0da2MUC8ex641Mmc5DUI+uRFVwgE=";
+        settingsSha256 = "sha256-z/t+SdEQdVJPwjKIRHO02d264Kt47eWiOwwsaxmh4xQ=";
+        persistencedSha256 = "sha256-sOKUsAFHh0/COH+nNgbH9+7hWgivOzq4YmTuk9MOFfI=";
+      };
+      # Whether to enable Whether video acceleration (VA-API) should
+      # be enabled.
+      videoAcceleration = false;
+      prime = {
+        # Whether to enable render offload support using the NVIDIA
+        # proprietary driver via PRIME.
+        offload.enable = false;
+        # Needs proprietary NVIDIA driver enabled.
+        # Needs videoDrivers to only have nvidia and nothing else.
+        sync.enable = false;
+        allowExternalGpu = false;
+        # list devices using: `lspci -k -d ::03xx`
+        # 3c:00.0 VGA compatible controller: NVIDIA Corporation GB206 [GeForce RTX 5060 Ti] (rev a1)
+        #nvidiaBusId = "PCI:60@0:0:0";
+      };
+    };
+  };
+
+  hardware = {
+    enableAllHardware = true;
+    enableAllFirmware = true;
+    enableRedistributableFirmware = true;
+  };
+  services.hardware.bolt.enable = true;
+  systemd.packages = with pkgs; [ lact ];
+
   # Generate hostId by machine: `head -c 8 /etc/machine-id`
   # Generate hostId at random: `head -c4 /dev/urandom | od -A none -t x4`
   networking.hostId = "8bda2338";
   networking.hostName = "faml-pc-home_server";
+  networking = {
+    enableIPv6 = true;
+    resolvconf = {
+      enable = true;
+      dnsExtensionMechanism = true;
+      dnsSingleRequest = false;
+      useLocalResolver = false;
+    };
+    useDHCP = true;
+    firewall.enable = true;
+  };
+  systemd.services.NetworkManager-wait-online.enable = false;
+  systemd.targets = {
+    # Disable automatic sleep/suspend/hybrid for this computer,
+    # which should by default be 'always on'. It should only sleep if
+    # manually put to sleep or off.
+    sleep.enable = false;
+    suspend.enable = false;
+    hibernate.enable = false;
+    hybrid-sleep.enable = false;
+  };
+  networking.networkmanager.wifi = {
+    backend = "iwd";
+    powersave = false;
+  };
 
   services = {
-    desktopManager.plasma6.enable = lib.mkDefault true;
+    desktopManager.plasma6.enable = true;
     displayManager = {
-      autoLogin.enable = lib.mkDefault false;
-      defaultSession = lib.mkDefault "plasma";
-      sddm = {
+      autoLogin.enable = false;
+      defaultSession = "plasma";
+      plasma-login-manager = {
         enable = true;
-        wayland.enable = true;
+        settings = {
+          Users = {
+            RememberLastUser = true;
+          };
+        };
       };
     };
     # Disable the X11 windowing system. Make the default pure Wayland.
-    xserver.enable = lib.mkDefault false;
+    xserver = {
+      enable = false;
+      # The video drivers are still set under xserver, also for wayland,
+      # even though xserver is disabled.
+      videoDrivers = [
+        "modesetting"
+        "amdgpu"
+        "nvidia"
+      ];
+    };
   };
   qt = {
-    platformTheme = lib.mkDefault "kde";
-    style = lib.mkDefault "breeze";
+    platformTheme = "kde";
+    style = "breeze";
   };
   environment = {
-    systemPackages = with pkgs.kdePackages; [
-      plasma-systemmonitor
+    systemPackages = with pkgs; [
+      alsa-plugins
+      git
+      git-credential-manager
+      kdePackages.plasma-systemmonitor
     ];
+  };
+
+  # Enable sound with pipewire.
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa = {
+      enable = true;
+      support32Bit = true;
+    };
+    pulse.enable = true;
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -94,8 +235,12 @@
     ];
   };
 
+  programs.git = {
+    enable = true;
+    lfs.enable = true;
+    prompt.enable = false;
+  };
   programs.firefox.enable = true;
-  programs.git.enable = true;
   nixpkgs.config.allowUnfree = true;
 
   #
