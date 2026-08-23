@@ -47,6 +47,7 @@
   ];
   boot.kernelModules = [
     "amdgpu"
+    "k10temp"
     "kvm-amd"
     "nvidia"
     "nvidia_modeset"
@@ -214,6 +215,7 @@
       git
       git-credential-manager
       kdePackages.plasma-systemmonitor
+      lm_sensors
     ];
   };
 
