@@ -3,6 +3,7 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {
+  config,
   lib,
   pkgs,
   ...
@@ -16,11 +17,44 @@
     ./disko-config.nix
   ];
 
+  ###################################
+  # This is all ZFS specific stuff! #
+  ###################################
+  boot.kernelPackages =
+    let
+      zfsCompatibleKernelPackages = lib.filterAttrs (
+        name: kernelPackages:
+        (builtins.match "linux_[0-9]+_[0-9]+" name) != null
+        && (builtins.tryEval kernelPackages).success
+        && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
+      ) pkgs.linuxKernel.packages;
+      latestKernelPackage = lib.last (
+        lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
+          builtins.attrValues zfsCompatibleKernelPackages
+        )
+      );
+    in
+    lib.mkForce latestKernelPackage;
+  boot.initrd.availableKernelModules = [ "zfs" ];
+  boot.supportedFilesystems = [
+    "ext4"
+    "luks"
+    "vfat"
+    "zfs"
+    "zfs_member"
+  ];
+  boot.zfs.forceImportRoot = false;
+  boot.zfs.unsafeAllowHibernation = false;
+  # ZFS will also mount the ZFS partitions. This will lead to conflicts.
+  systemd.services.zfs-mount.enable = false;
+  services.zfs.autoScrub.enable = true;
+  ##############################
+  # End of ZFS specific stuff! #
+  ##############################
+
+  # This is the basic bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Generate hostId by machine: `head -c 8 /etc/machine-id`
   # Generate hostId at random: `head -c4 /dev/urandom | od -A none -t x4`
