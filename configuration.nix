@@ -24,6 +24,11 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  # Generate hostId by machine: `head -c 8 /etc/machine-id`
+  # Generate hostId at random: `head -c4 /dev/urandom | od -A none -t x4`
+  networking.hostId = "c595b020";
+  networking.hostName = "faml-pc-home_server";
+
   services = {
     desktopManager.plasma6.enable = lib.mkDefault true;
     displayManager = {
