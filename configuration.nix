@@ -15,6 +15,7 @@
     ./hardware-configuration.nix
     "${fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
     ./disko-config.nix
+    "${fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz"}/nixos"
   ];
 
   ###################################
@@ -249,6 +250,17 @@
   };
   programs.firefox.enable = true;
   nixpkgs.config.allowUnfree = true;
+
+  # Manage per-user dotfiles/app configs (e.g. Plasma System Monitor pages) declaratively.
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    # Renames pre-existing plain files instead of failing when home-manager wants to manage them.
+    backupFileExtension = "hm-backup";
+    users.jev = {
+      home.stateVersion = "26.05";
+    };
+  };
 
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
