@@ -214,6 +214,7 @@
   };
   environment = {
     systemPackages = with pkgs; [
+      openssl
       alsa-plugins
       git
       git-credential-manager
@@ -259,6 +260,8 @@
     backupFileExtension = "hm-backup";
     users.jev = {
       home.stateVersion = "26.05";
+      programs.git.settings.credential."https://github.com".helper =
+        "${pkgs.git-credential-manager}/bin/git-credential-manager";
     };
   };
 
