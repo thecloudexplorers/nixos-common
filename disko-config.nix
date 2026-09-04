@@ -129,7 +129,6 @@
             };
           };
         };
-        /*
             hdd1 = {
               type = "disk";
               # Set the correct drive ID.
@@ -215,9 +214,7 @@
                 };
               };
             };
-        */
       };
-      /*
         zpool = {
         # This is the pool the disks are added to, note the pool spec on the disk config
           zhdd = {
@@ -247,7 +244,6 @@
             };
           };
         };
-      */
     };
   };
 }
