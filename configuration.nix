@@ -22,20 +22,20 @@
   # This is all ZFS specific stuff! #
   ###################################
   boot.kernelPackages =
-  let
-    zfsCompatibleKernelPackages = lib.filterAttrs (
-      name: kernelPackages:
-      (builtins.match "linux_[0-9]+_[0-9]+" name) != null
-      && (builtins.tryEval kernelPackages).success
-      && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
-    ) pkgs.linuxKernel.packages;
-    latestKernelPackage = lib.last (
-      lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
-        builtins.attrValues zfsCompatibleKernelPackages
-      )
-    );
-  in
-  lib.mkForce latestKernelPackage;
+    let
+      zfsCompatibleKernelPackages = lib.filterAttrs (
+        name: kernelPackages:
+        (builtins.match "linux_[0-9]+_[0-9]+" name) != null
+        && (builtins.tryEval kernelPackages).success
+        && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
+      ) pkgs.linuxKernel.packages;
+      latestKernelPackage = lib.last (
+        lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
+          builtins.attrValues zfsCompatibleKernelPackages
+        )
+      );
+    in
+    lib.mkForce latestKernelPackage;
   boot.zfs = {
     # Since we will be encrypting the ZFS filesystem, we need to ensure that
     # the ZFS kernel module is built with support for encryption. Hibernation
@@ -87,8 +87,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   nix.settings.experimental-features = [
-  "nix-command"
-  "flakes"
+    "nix-command"
+    "flakes"
   ];
 
   hardware.bluetooth = {
