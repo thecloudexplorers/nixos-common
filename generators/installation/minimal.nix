@@ -5,6 +5,7 @@
   pkgs,
   ...
 }:
+# PARAMS
 let
   # Ensure the kernel applied to this this ISO is compatible with ZFS,
   # so that the ISO can be used to install NixOS on a ZFS root filesystem.
@@ -21,6 +22,7 @@ let
   );
 in
 {
+# BODY
   imports = [
     # This is the base configuration for the NixOS installation CD,
     # from the official nixos/nixpkgs repository.
