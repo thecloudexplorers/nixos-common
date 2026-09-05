@@ -28,6 +28,11 @@ in
     # from the official nixos/nixpkgs repository.
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
   ];
+  # Enable flakes so nixos-install doesn't need --extra-experimental-features.
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   # use the latest Linux kernel
   boot = {
     kernelPackages = lib.mkForce latestKernelPackage;

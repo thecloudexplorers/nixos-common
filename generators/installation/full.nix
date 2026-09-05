@@ -25,6 +25,11 @@ in
 {
   # BODY
   imports = [ "${modulesPath}/installer/cd-dvd/installation-cd-base.nix" ];
+  # Enable flakes so nixos-install doesn't need --extra-experimental-features.
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   isoImage = {
     edition = "graphical";
     showConfiguration = lib.mkDefault false;
