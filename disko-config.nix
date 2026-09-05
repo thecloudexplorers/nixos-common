@@ -129,121 +129,121 @@
             };
           };
         };
-            hdd1 = {
-              type = "disk";
-              # Set the correct drive ID.
-              device = "/dev/disk/by-id/wwn-0x5000c50114415644";
-              content = {
-                type = "gpt";
-                partitions = {
-                  zfs = {
-                    size = "100%";
-                    content = {
-                      type = "zfs";
-                      pool = "zhdd";
-                    };
-                  };
+        hdd1 = {
+          type = "disk";
+          # Set the correct drive ID.
+          device = "/dev/disk/by-id/wwn-0x5000c50114415644";
+          content = {
+            type = "gpt";
+            partitions = {
+              zfs = {
+                size = "100%";
+                content = {
+                  type = "zfs";
+                  pool = "zhdd";
                 };
-              };
-            };
-            hdd2 = {
-              type = "disk";
-              # Set the correct drive ID.
-              device = "/dev/disk/by-id/wwn-0x5000c50113ff1107";
-              content = {
-                type = "gpt";
-                partitions = {
-                  zfs = {
-                    size = "100%";
-                    content = {
-                      type = "zfs";
-                      pool = "zhdd";
-                    };
-                  };
-                };
-              };
-            };
-            hdd3 = {
-              type = "disk";
-              # Set the correct drive ID.
-              device = "/dev/disk/by-id/wwn-0x5000c50113fe629c";
-              content = {
-                type = "gpt";
-                partitions = {
-                  zfs = {
-                    size = "100%";
-                    content = {
-                      type = "zfs";
-                      pool = "zhdd";
-                    };
-                  };
-                };
-              };
-            };
-            hdd4 = {
-              type = "disk";
-              # Set the correct drive ID.
-              device = "/dev/disk/by-id/wwn-0x5000c5011440eea6";
-              content = {
-                type = "gpt";
-                partitions = {
-                  zfs = {
-                    size = "100%";
-                    content = {
-                      type = "zfs";
-                      pool = "zhdd";
-                    };
-                  };
-                };
-              };
-            };
-          hdd5 = {
-              type = "disk";
-              # Set the correct drive ID.
-              device = "/dev/disk/by-id/wwn-0x5000c501143f205d";
-              content = {
-                type = "gpt";
-                partitions = {
-                  zfs = {
-                    size = "100%";
-                    content = {
-                      type = "zfs";
-                      pool = "zhdd";
-                    };
-                  };
-                };
-              };
-            };
-      };
-        zpool = {
-        # This is the pool the disks are added to, note the pool spec on the disk config
-          zhdd = {
-            type = "zpool";
-            # RAIDZ == RAID 5
-            mode = "raidz";
-            # Workaround: cannot import 'zhdd': I/O error in disko tests
-            options = {
-              cachefile = "none";
-            };
-            rootFsOptions = {
-              canmount = "off";
-              mountpoint = "none";
-              compression = "zstd";
-              "com.sun:auto-snapshot" = "true";
-            };
-            datasets = {
-              zdata = {
-                type = "zfs_fs";
-                options = {
-                  encryption = "aes-256-gcm";
-                  keyformat = "passphrase";
-                  #keylocation = "file:///var/lib/zfs/secret.key";
-                };
-                mountpoint = "/mnt/zdata";
               };
             };
           };
         };
+        hdd2 = {
+          type = "disk";
+          # Set the correct drive ID.
+          device = "/dev/disk/by-id/wwn-0x5000c50113ff1107";
+          content = {
+            type = "gpt";
+            partitions = {
+              zfs = {
+                size = "100%";
+                content = {
+                  type = "zfs";
+                  pool = "zhdd";
+                };
+              };
+            };
+          };
+        };
+        hdd3 = {
+          type = "disk";
+          # Set the correct drive ID.
+          device = "/dev/disk/by-id/wwn-0x5000c50113fe629c";
+          content = {
+            type = "gpt";
+            partitions = {
+              zfs = {
+                size = "100%";
+                content = {
+                  type = "zfs";
+                  pool = "zhdd";
+                };
+              };
+            };
+          };
+        };
+        hdd4 = {
+          type = "disk";
+          # Set the correct drive ID.
+          device = "/dev/disk/by-id/wwn-0x5000c5011440eea6";
+          content = {
+            type = "gpt";
+            partitions = {
+              zfs = {
+                size = "100%";
+                content = {
+                  type = "zfs";
+                  pool = "zhdd";
+                };
+              };
+            };
+          };
+        };
+        hdd5 = {
+          type = "disk";
+          # Set the correct drive ID.
+          device = "/dev/disk/by-id/wwn-0x5000c501143f205d";
+          content = {
+            type = "gpt";
+            partitions = {
+              zfs = {
+                size = "100%";
+                content = {
+                  type = "zfs";
+                  pool = "zhdd";
+                };
+              };
+            };
+          };
+        };
+      };
+      zpool = {
+        # This is the pool the disks are added to, note the pool spec on the disk config
+        zhdd = {
+          type = "zpool";
+          # RAIDZ == RAID 5
+          mode = "raidz";
+          # Workaround: cannot import 'zhdd': I/O error in disko tests
+          options = {
+            cachefile = "none";
+          };
+          rootFsOptions = {
+            canmount = "off";
+            mountpoint = "none";
+            compression = "zstd";
+            "com.sun:auto-snapshot" = "true";
+          };
+          datasets = {
+            zdata = {
+              type = "zfs_fs";
+              options = {
+                encryption = "aes-256-gcm";
+                keyformat = "passphrase";
+                #keylocation = "file:///var/lib/zfs/secret.key";
+              };
+              mountpoint = "/mnt/zdata";
+            };
+          };
+        };
+      };
     };
   };
 }

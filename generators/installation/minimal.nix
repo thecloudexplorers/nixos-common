@@ -22,7 +22,7 @@ let
   );
 in
 {
-# BODY
+  # BODY
   imports = [
     # This is the base configuration for the NixOS installation CD,
     # from the official nixos/nixpkgs repository.

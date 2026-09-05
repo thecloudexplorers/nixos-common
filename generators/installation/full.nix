@@ -23,7 +23,7 @@ let
 in
 # END PARAMS
 {
-# BODY
+  # BODY
   imports = [ "${modulesPath}/installer/cd-dvd/installation-cd-base.nix" ];
   isoImage = {
     edition = "graphical";
