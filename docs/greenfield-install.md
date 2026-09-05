@@ -31,12 +31,69 @@ Further reading specific to Disko: [https://github.com/nix-community/disko/blob/
 
 ### ZFS Troubleshooting
 
+
+
 If the new install goes into emergency mode because the ZFS pool wouldn't load, do the following:
 
 - `systemctl status zfs-import-<zpool_name>.service`
 - `zpool import -f <zpool_name>`
 - `systemctl restart zfs-import-<zpool_name>.service`
 - `reboot now`
+
+### Post Install checks
+
+>NOTE: The zhdd disks are not directly accessible from the GUI on the left hand side, only via the `/mnt` folder.
+
+#### Adding a test file to the ZFS pool
+In the dolphin file manager, open the home and navigate to  /mnt nand press enter.
+You should see two folders `sdd` and `zdata`, open the `zdata` folder.
+Rightclick in the empty space and see if `+ Create New` is available, it should be greyed out as current user does not have permissions to write on the ZFS pool.
+
+Open console and run the following command to createa test file on the ZFS pool, which should succeed without errors:
+
+`sudo nano /mnt/zdata/testfile.txt`
+
+The file should be created successfully, and you can see it visibly in the `/mnt/zdata` folder in dolphin.
+Modify the access permission to the ZFS pool to allow the current user to write to it, by running the following command:
+
+`sudo chmod 777 /mnt/zdata`
+
+Rightclick in the empty space and see if `+ Create New` is available, it should nolonger be greyed. Test it!
+
+#### Checking the health of the ZFS pool and drives
+
+In Konsole type `zfs list`
+you should see  something like this:
+
+```shell
+NAME        USED  AVAIL  REFER  MOUNTPOINT
+zdata      1.61G  28.9T   153K  none
+zhdd/zdata  288K  28.9T   288K  /mnt/zdata
+```
+
+In Konsole type `zfs status -v zhdd`
+you should see  something like this:
+
+```shell
+pool: zhdd
+ state: ONLINE
+status: Some supported and requested features are not enabled on the pool.
+        The pool can still be used, but some features are unavailable.
+action: Enable the features using 'zpool upgrade'. Once this is done,
+        the pool may no longer be accessible on software that does not support
+        the features. See zpool-features(7) for details.
+config:
+
+        NAME                            STATE     READ WRITE CKSUM
+        zhdd                            ONLINE       0     0     0
+          raidz1-0                      ONLINE       0     0     0
+            wwn-0x5000c5011.....-part1  ONLINE       0     0     0
+            wwn-0x5000c5011.....-part1  ONLINE       0     0     0
+            wwn-0x5000c5011.....-part1  ONLINE       0     0     0
+            wwn-0x5000c5011.....-part1  ONLINE       0     0     0
+            wwn-0x5000c5011.....-part1  ONLINE       0     0     0
+error: No known data errors
+```
 
 ## Minimal Installer
 
