@@ -60,7 +60,9 @@ Include something like the following in your flake, to generate OS images direct
 ```
 
 When you want to build this image and output it in a file, run the following:
-`nix build ~/path/to/repo#<config-name>`
+`nix build ~/path/to/repo#usbInstallerFull`
+
+>NOTE: `usbInstallerFull` is the name of the package defined in the flake.nix
 
 This will then output the ISO/VM image into the `./result/<format>/<file.format>` folder.
 

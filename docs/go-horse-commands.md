@@ -18,6 +18,12 @@ Build, compile, provision, and *add a new config after reboot* (no changes befor
 Build, compile, provision, and *switch* the current (no reboot required) NixOS config:
 `nixos-rebuild switch`
 
+## Workaround for flake is experimental feature
+
+Run: `sudo NIX_CONFIG="experimental-features = nix-command flakes" nixos-install --no-root-passwd`
+      - Running `--no-root-passwd` to avoid keyboard issues during the installation process by failing to type the same the password twice.
+      - `nixos-install` does not accept a `--extra-experimental-features` flag directly (its own argument parser rejects it with `unknown option`), so the feature must be enabled via the `NIX_CONFIG` environment variable instead, because the live installer's Nix does not have flakes enabled by default, even though `configuration.nix` enables it for the installed system.
+
 ## Building the NixImage
 
 ``` shell

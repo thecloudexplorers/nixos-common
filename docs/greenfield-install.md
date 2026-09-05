@@ -13,9 +13,8 @@ To install NixOS from command-line, with disko, execute the following commands:
     - `sudo cp /run/media/nixos/Ventoy/disko-config.nix /mnt/etc/nixos`.
     - `sudo cp /run/media/nixos/Ventoy/configuration.nix /mnt/etc/nixos/configuration.nix`.
 4. To actually install NixOS on the newly created partitions:
-    - `sudo NIX_CONFIG="experimental-features = nix-command flakes" nixos-install --no-root-passwd`
+    - `sudo nixos-install --no-root-passwd`
       - Running `--no-root-passwd` to avoid keyboard issues during the installation process by failing to type the same the password twice.
-      - `nixos-install` does not accept a `--extra-experimental-features` flag directly (its own argument parser rejects it with `unknown option`), so the feature must be enabled via the `NIX_CONFIG` environment variable instead, because the live installer's Nix does not have flakes enabled by default, even though `configuration.nix` enables it for the installed system.
 5. To set the root password manually execute:
     - `sudo nixos-enter --root '/mnt'`
     And then run the following in the shell of the new system:
@@ -24,6 +23,12 @@ To install NixOS from command-line, with disko, execute the following commands:
     - `logout`
 6. If all has gone well:
     - `reboot`
+7. After reboot, type the passphrase for the ssd and zfs pool.
+    > NOTE: Keyboard delay for non wired keyboards before you can start typing the passphrase is about 10 seconds, so be patient!
+8. You will run into the following error: [FAILED] Failed to start Import ZFS pool "zhdd"
+9. Simply import the zfs pool manually the first tyme, by running the following command:
+    - `zpool import -f zhdd`
+   If issues persist, look in the ZFS Troubleshooting section below for more information.
 
 Replace the `.../git/hosts/<Hostname>/disk-config.nix` and `.../git#<Hostname>` options with the intended configuration elements as relevant.
 
@@ -31,13 +36,11 @@ Further reading specific to Disko: [https://github.com/nix-community/disko/blob/
 
 ### ZFS Troubleshooting
 
-
-
 If the new install goes into emergency mode because the ZFS pool wouldn't load, do the following:
 
-- `systemctl status zfs-import-<zpool_name>.service`
-- `zpool import -f <zpool_name>`
-- `systemctl restart zfs-import-<zpool_name>.service`
+- `systemctl status zfs-import-zhdd.service`
+- `zpool import -f zhdd`
+- `systemctl restart zfs-import-zhdd.service`
 - `reboot now`
 
 ### Post Install checks
