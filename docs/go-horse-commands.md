@@ -42,3 +42,7 @@ Retrieve the pub key, ready for copy & paste where needed. *Include the empty li
 Override the default SSH key for auth (for instance `~/.ssh/id_ed25519`), since you want GitHub specific auth/signing keys. Save the default generated key for HomeLab stuff.
 
 `git clone git@github.com:devjevnl/nixos-config.git --config core.sshCommand="ssh -i ~/.ssh/github-authentication"`
+
+## Installing with flakes
+
+`sudo nixos-install --no-root-passwd --extra-experimental-features "nix-command flakes"`
