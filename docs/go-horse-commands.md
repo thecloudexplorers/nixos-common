@@ -2,6 +2,17 @@
 
 All 'Go Horse' quality commands to help bush-fix an otherwise perfect NixOS config.
 
+# Nix Flake Commandos
+
+Shows the configuration set-up
+
+`nix flake show`
+
+Chekcs the consistency and updates the falke.lock
+
+`nix flake check`
+
+
 ## Rebuild based on configuration.nix updates with switch
 
 Don't forget to `sudo` for a switch as it adjusts your boot config (among others), which requires sudo. Only Home-Manager deployments without system level config can switch without `sudo`.
