@@ -230,12 +230,12 @@
   };
   environment = {
     systemPackages = with pkgs; [
-      openssl
       alsa-plugins
       git
       git-credential-manager
       kdePackages.plasma-systemmonitor
       lm_sensors
+      openssl
     ];
   };
 
@@ -256,6 +256,8 @@
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
+      nixd
+      nixfmt
       vscodium
     ];
   };
