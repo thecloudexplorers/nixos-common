@@ -74,7 +74,7 @@ zdata      1.61G  28.9T   153K  none
 zhdd/zdata  288K  28.9T   288K  /mnt/zdata
 ```
 
-In Konsole type `zfs status -v zhdd`
+In Konsole type `zpool status -v zhdd`
 you should see  something like this:
 
 ```shell
