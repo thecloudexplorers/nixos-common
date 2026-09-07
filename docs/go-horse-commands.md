@@ -2,7 +2,7 @@
 
 All 'Go Horse' quality commands to help bush-fix an otherwise perfect NixOS config.
 
-# Nix Flake Commandos
+## Nix Flake Commandos
 
 Shows the configuration set-up
 `nix flake show`

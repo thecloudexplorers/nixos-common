@@ -8,7 +8,9 @@ To install NixOS from command-line, with disko, execute the following commands:
     - `sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount /run/media/nixos/Ventoy/dev/nixos-config/modules/computer/server/faml-pc-home_server/disko-config.nix`
     - Validate the partitions were created and mounted correctly by running `lsblk`. This should result in the exact partitions found in your `disko-config.nix`.
 2. If you need to validate hardware settings with a scan, run the following:
-    - `sudo nixos-generate-config --no-filesystems --root /mnt`
+    - `sudo nixos-generate-config --no-filesystems --show-hardware-config`
+    - If this is a truly 'greenfield' install from scratch, copy the output of this command
+    into your `/path/to/flake/computer/<NEWHOST>/hardware-config.nix` before install.
 3. To actually install NixOS on the newly created partitions:
     - `sudo nixos-install --no-root-passwd --flake /run/media/nixos/Ventoy/dev/nixos-config#faml-pc-home_server`
       - Running `--no-root-passwd` to avoid keyboard issues during the installation process by failing to type the same the password twice.
