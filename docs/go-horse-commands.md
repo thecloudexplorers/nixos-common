@@ -13,6 +13,15 @@ Chekcs the consistency and updates the falke.lock
 Rebuilds the running NixOS using the specified flake
 `nixos-rebuild build --flake ~/dev/nixos-config#faml-pc-home_server`
 
+Rebuilds the running NixOS using the specified flake
+`sudo nixos-rebuild dry-activate --flake ~/dev/nixos-config#faml-pc-home_server`
+
+Rebuilds the running NixOS using the specified flake
+`sudo nixos-rebuild boot --flake ~/dev/nixos-config#faml-pc-home_server`
+
+Rebuilds the running NixOS using the specified flake
+`sudo nixos-rebuild switch --flake ~/dev/nixos-config#faml-pc-home_server`
+
 ## Rebuild based on configuration.nix updates with switch
 
 Don't forget to `sudo` for a switch as it adjusts your boot config (among others), which requires sudo. Only Home-Manager deployments without system level config can switch without `sudo`.
