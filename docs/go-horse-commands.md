@@ -5,13 +5,13 @@ All 'Go Horse' quality commands to help bush-fix an otherwise perfect NixOS conf
 # Nix Flake Commandos
 
 Shows the configuration set-up
-
 `nix flake show`
 
 Chekcs the consistency and updates the falke.lock
-
 `nix flake check`
 
+Rebuilds the running NixOS using the specified flake
+`nixos-rebuild build --flake ~/dev/nixos-config#faml-pc-home_server`
 
 ## Rebuild based on configuration.nix updates with switch
 
