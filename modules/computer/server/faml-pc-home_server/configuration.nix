@@ -235,7 +235,6 @@
       git-credential-manager
       kdePackages.plasma-systemmonitor
       lm_sensors
-      nixd
       openssl
     ];
   };
@@ -257,6 +256,7 @@
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
+      nixd
       nixfmt
       vscodium
     ];
