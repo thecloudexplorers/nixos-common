@@ -1,12 +1,13 @@
 { ... }:
 let
+  rootDomain = "raboes28.nl";
   workloadName = "medivh";
   workloadNode = 1;
   workloadService = "acme";
-  rootDomain = "raboes28.nl";
   heartstoneWorkloadName = "heartstone";
+  heartstoneWorkloadNode = 1;
   heartstoneWorkloadService = "kanidm";
-  hearstoneWorkloadDomain = "idm.${rootDomain}";
+  heartstoneWorkloadDomain = "idm.${rootDomain}";
 in
 {
   containers = {
@@ -41,12 +42,12 @@ in
         };
         # Store the external certificates here
         "/certs/${heartstoneWorkloadName}" = {
-          hostPath = "/mnt/ssd/${heartstoneWorkloadName}/var/lib/${workloadService}/${hearstoneWorkloadDomain}";
-          mountPoint = "/var/lib/${workloadService}/${hearstoneWorkloadDomain}";
+          hostPath = "/mnt/ssd/${heartstoneWorkloadName}/var/lib/${workloadService}/${heartstoneWorkloadDomain}";
+          mountPoint = "/var/lib/${workloadService}/${heartstoneWorkloadDomain}";
           isReadOnly = false;
         };
         "/soulstone-data-lib-private-${heartstoneWorkloadService}" = {
-          hostPath = "/mnt/ssd/${heartstoneWorkloadName}/var/lib/${heartstoneWorkloadService}/secrets";
+          hostPath = "/mnt/ssd/${heartstoneWorkloadName}/${toString heartstoneWorkloadNode}/var/lib/${heartstoneWorkloadService}/secrets";
           mountPoint = "/var/lib/private/${heartstoneWorkloadService}";
           isReadOnly = false;
         };
