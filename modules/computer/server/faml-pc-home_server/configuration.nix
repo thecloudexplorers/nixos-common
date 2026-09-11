@@ -4,7 +4,6 @@
 
 {
   config,
-  customHostName,
   inputs,
   lib,
   pkgs,
@@ -25,6 +24,7 @@
     ./hardware-configuration.nix
     # This is the specific disk drives configuration.
     ./disko-config.nix
+    ./networking.nix
 
     ## Import Nix modules with generic settings for all computers.
     # These are all 'nix' settigns, such as nix store optimisation.
@@ -34,6 +34,7 @@
     # Import all containers here
     ../../../workload/medivh/containers-1/container-1.nix
     ../../../workload/heartstone/containers-1/container-1.nix
+
   ];
 
   ###################################
@@ -183,21 +184,6 @@
   services.hardware.bolt.enable = true;
   systemd.packages = with pkgs; [ lact ];
 
-  # Generate hostId by machine: `head -c 8 /etc/machine-id`
-  # Generate hostId at random: `head -c4 /dev/urandom | od -A none -t x4`
-  networking.hostId = "8bda2338";
-  networking.hostName = customHostName;
-  networking = {
-    enableIPv6 = true;
-    resolvconf = {
-      enable = true;
-      dnsExtensionMechanism = true;
-      dnsSingleRequest = false;
-      useLocalResolver = false;
-    };
-    useDHCP = true;
-    firewall.enable = true;
-  };
   systemd.services.NetworkManager-wait-online.enable = false;
   systemd.targets = {
     # Disable automatic sleep/suspend/hybrid for this computer,
@@ -207,10 +193,6 @@
     suspend.enable = false;
     hibernate.enable = false;
     hybrid-sleep.enable = false;
-  };
-  networking.networkmanager.wifi = {
-    backend = "iwd";
-    powersave = false;
   };
 
   services = {
