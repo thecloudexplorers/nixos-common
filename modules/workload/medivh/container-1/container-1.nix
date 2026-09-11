@@ -4,6 +4,9 @@ let
   workloadNode = 1;
   workloadService = "acme";
   rootDomain = "raboes28.nl";
+  heartstoneWorkloadName = "heartstone";
+  heartstoneWorkloadService = "kanidm";
+  hearstoneWorkloadDomain = "idm.${rootDomain}";
 in
 {
   containers = {
@@ -14,7 +17,6 @@ in
       bindMounts = {
         # All workload service app data to be stored here
         "/${workloadService}/lib" = {
-          # CONTAINER INSTANCE TODO
           hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/${workloadService}";
           mountPoint = "/var/lib/${workloadService}";
           isReadOnly = false;
@@ -37,15 +39,15 @@ in
           mountPoint = "/var/lib/${workloadService}/secrets";
           isReadOnly = true;
         };
-        # Store the external idm.${rootDomain} certificates here
-        "/certs/idm.${rootDomain}" = {
-          hostPath = "/mnt/ssd/heartstone/1/var/lib/acme/idm.${rootDomain}";
-          mountPoint = "/var/lib/acme/idm.${rootDomain}";
+        # Store the external certificates here
+        "/certs/${heartstoneWorkloadName}" = {
+          hostPath = "/mnt/ssd/${heartstoneWorkloadName}/var/lib/${workloadService}/${hearstoneWorkloadDomain}";
+          mountPoint = "/var/lib/${workloadService}/${hearstoneWorkloadDomain}";
           isReadOnly = true;
         };
-        "/soulstone-data-lib-private-kanidm" = {
-          hostPath = "/mnt/ssd/heartstone/1/var/lib/kanidm/secrets";
-          mountPoint = "/var/lib/private/kanidm";
+        "/soulstone-data-lib-private-${heartstoneWorkloadService}" = {
+          hostPath = "/mnt/ssd/${heartstoneWorkloadName}/var/lib/${heartstoneWorkloadService}/secrets";
+          mountPoint = "/var/lib/private/${heartstoneWorkloadService}";
           isReadOnly = false;
         };
       };
