@@ -10,7 +10,7 @@ let
 in
 {
   containers = {
-    "${workloadName}" = {
+    "${workloadName}-${toString workloadNode}" = {
       autoStart = true;
       timeoutStartSec = "15min";
       privateUsers = "identity";
