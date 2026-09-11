@@ -1,4 +1,5 @@
 # on the HOST
+sudo nixos-container root-login medivh-1
 sudo nixos-container root-login heartstone-1
 journalctl -b -p 5
 
@@ -17,3 +18,37 @@ sudo rm -rf  /var/lib/nixos-containers/medivh-1
 sudo rm -rf /mnt/ssd/medivh
 sudo rm -rf /mnt/ssd/heartstone
 sudo rm -rf /mnt/zdata/heartstone
+
+
+sudo bash scripts/set-bindmount-permissions.sh \
+    modules/workload/medivh/container-1/container-1.nix \
+    modules/workload/heartstone/container-1/container-1.nix
+
+
+## Provision files for secrets / ACME workload
+
+In order to bootstrap the ACME workload (`medivh`), provision an env file and a secret file for the DNS challenge.
+
+1. Execute: `nano /mnt/ssd/medivh/environments/acme-transip-env`
+2. Paste content like the following:
+``` plaintext
+TRANSIP_ACCOUNT_NAME = ""
+TRANSIP_PRIVATE_KEY_PATH = "/var/lib/acme/secrets/acme-transip-secret"
+TRANSIP_POLLING_INTERVAL = "10"
+TRANSIP_PROPAGATION_TIMEOUT = "600"
+TRANSIP_TTL = "10"
+```
+3. Execute: `nano /mnt/ssd/medivh/secrets/acme-transip-secret`
+4. Paste [content](https://www.transip.nl/cp/account/api/) like the folloCwing:
+``` plaintext
+-----BEGIN PRIVATE KEY-----
+
+-----END PRIVATE KEY-----
+```
+
+
+
+sudo nixos-rebuild switch --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server
+
+
+Slot7-Treble7-Outdated7-Silo9
