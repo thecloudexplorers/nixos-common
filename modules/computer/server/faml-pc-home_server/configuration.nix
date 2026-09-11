@@ -32,8 +32,8 @@
 
     ## Workloads to be hosted on this server
     # Import all containers here
-    ../../../workload/medivh/container-1/container-1.nix
-    ../../../workload/heartstone/container-1/container-1.nix
+    # ../../../workload/medivh/container-1/container-1.nix
+    # ../../../workload/heartstone/container-1/container-1.nix
 
   ];
 
