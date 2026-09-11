@@ -14,13 +14,21 @@
 
 {
   imports = [
+    ## Import modules from the 'inputs' of the flake.
     # Import Disko for local use.
     inputs.disko.nixosModules.disko
     # Import home-manager's NixOS module.
     inputs.home-manager.nixosModules.default
-    # Include the results of the hardware scan.
+
+    ## Import the Nix modules specific to this computer.
+    # This contains all hardware specific config, except disks.
     ./hardware-configuration.nix
+    # This is the specific disk drives configuration.
     ./disko-config.nix
+
+    ## Import Nix modules with generic settings for all computers.
+    # These are all 'nix' settigns, such as nix store optimisation.
+    ../../../nix/settings.nix
   ];
 
   ###################################
