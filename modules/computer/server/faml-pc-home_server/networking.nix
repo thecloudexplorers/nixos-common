@@ -1,6 +1,6 @@
 { customHostName, lib, ... }:
 let
-  computerId = "19422c04";
+  computerId = "8bda2338";
   ethernetInterfaceName = "enp11s0";
   #ethernetInterfaceMacAddress = "REPLACEME!"; # TODO!!!
   #ethernetInterfaceName = "enp12s0";
