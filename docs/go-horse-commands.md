@@ -68,3 +68,24 @@ Retrieve the pub key, ready for copy & paste where needed. *Include the empty li
 Override the default SSH key for auth (for instance `~/.ssh/id_ed25519`), since you want GitHub specific auth/signing keys. Save the default generated key for HomeLab stuff.
 
 `git clone git@github.com:devjevnl/nixos-config.git --config core.sshCommand="ssh -i ~/.ssh/github-authentication"`
+
+## Provision files for secrets / ACME workload
+
+In order to bootstrap the ACME workload (`medivh`), provision an env file and a secret file for the DNS challenge.
+
+1. Execute: `nano /mnt/ssd/medivh/environments/acme-transip-env`
+2. Paste content like the following:
+``` plaintext
+TRANSIP_ACCOUNT_NAME = "REPLACEMEWITHACCOUNTNAME"
+TRANSIP_PRIVATE_KEY_PATH = "/var/lib/acme/secrets/acme-transip-secret"
+TRANSIP_POLLING_INTERVAL = "10"
+TRANSIP_PROPAGATION_TIMEOUT = "600"
+TRANSIP_TTL = "10"
+```
+3. Execute: `nano /mnt/ssd/medivh/secrets/acme-transip-secret`
+4. Paste content like the following:
+``` plaintext
+-----BEGIN PRIVATE KEY-----
+REALLY SECRET ENCRYPTED STUFF HERE PASTED FROM TRANSIP TOKEN
+-----END PRIVATE KEY-----
+```
