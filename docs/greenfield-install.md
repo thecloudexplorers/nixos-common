@@ -5,32 +5,31 @@
 To install NixOS from command-line, with disko, execute the following commands:
 
 1. To create the desired partitions:
-    - `sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount /run/media/nixos/Ventoy/disko-config.nix`
+    - `sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount /run/media/nixos/Ventoy/dev/nixos-config/modules/computer/server/faml-pc-home_server/disko-config.nix`
     - Validate the partitions were created and mounted correctly by running `lsblk`. This should result in the exact partitions found in your `disko-config.nix`.
 2. If you need to validate hardware settings with a scan, run the following:
-    - `sudo nixos-generate-config --no-filesystems --root /mnt`
-3. Run the following commands:
-    - `sudo cp /run/media/nixos/Ventoy/disko-config.nix /mnt/etc/nixos`.
-    - `sudo cp /run/media/nixos/Ventoy/configuration.nix /mnt/etc/nixos/configuration.nix`.
-4. To actually install NixOS on the newly created partitions:
-    - `sudo nixos-install --no-root-passwd`
+    - `sudo nixos-generate-config --no-filesystems --show-hardware-config`
+    - If this is a truly 'greenfield' install from scratch, copy the output of this command
+    into your `/path/to/flake/computer/<NEWHOST>/hardware-config.nix` before install.
+3. To actually install NixOS on the newly created partitions:
+    - `sudo nixos-install --no-root-passwd --flake /run/media/nixos/Ventoy/dev/nixos-config#faml-pc-home_server`
       - Running `--no-root-passwd` to avoid keyboard issues during the installation process by failing to type the same the password twice.
-5. To set the root password manually execute:
+4. To set the root password manually execute:
     - `sudo nixos-enter --root '/mnt'`
     And then run the following in the shell of the new system:
     - `passwd`
     After succesfully setting the new password exit the chroot shell:
     - `logout`
-6. If all has gone well:
+5. If all has gone well:
     - `reboot`
-7. After reboot, type the passphrase for the ssd and zfs pool.
+6. After reboot, type the passphrase for the ssd and zfs pool.
     > NOTE: Keyboard delay for non wired keyboards before you can start typing the passphrase is about 10 seconds, so be patient!
-8. You will run into the following error: [FAILED] Failed to start Import ZFS pool "zhdd"
-9. Simply import the zfs pool manually the first tyme, by running the following command:
+7. You will run into the following error: [FAILED] Failed to start Import ZFS pool "zhdd"
+8. Simply import the zfs pool manually the first tyme, by running the following command:
     - `zpool import -f zhdd`
    If issues persist, look in the ZFS Troubleshooting section below for more information.
 
-Replace the `.../git/hosts/<Hostname>/disk-config.nix` and `.../git#<Hostname>` options with the intended configuration elements as relevant.
+Replace the `../<Hostname>/disk-config.nix` and `../#<Hostname>` options with the intended configuration elements as relevant.
 
 Further reading specific to Disko: [https://github.com/nix-community/disko/blob/master/docs/quickstart.md](https://github.com/nix-community/disko/blob/master/docs/quickstart.md)
 
@@ -48,6 +47,7 @@ If the new install goes into emergency mode because the ZFS pool wouldn't load, 
 >NOTE: The zhdd disks are not directly accessible from the GUI on the left hand side, only via the `/mnt` folder.
 
 #### Adding a test file to the ZFS pool
+
 In the dolphin file manager, open the home and navigate to  /mnt nand press enter.
 You should see two folders `sdd` and `zdata`, open the `zdata` folder.
 Rightclick in the empty space and see if `+ Create New` is available, it should be greyed out as current user does not have permissions to write on the ZFS pool.
@@ -74,7 +74,7 @@ zdata      1.61G  28.9T   153K  none
 zhdd/zdata  288K  28.9T   288K  /mnt/zdata
 ```
 
-In Konsole type `zfs status -v zhdd`
+In Konsole type `zpool status -v zhdd`
 you should see  something like this:
 
 ```shell

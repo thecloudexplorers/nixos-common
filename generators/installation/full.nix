@@ -77,6 +77,7 @@ in
     systemPackages = with pkgs; [
       disko
       git
+      git-credential-manager
       openssl
       busybox
       netcat
@@ -85,7 +86,13 @@ in
       # NixOS on a system with support for configuring a TPM 2.0 chip. This is
       # required for systems with full disk encryption with LUKS and TPM 2.0.
       tpm2-tss
+      # Editor for reviewing/editing the flake and configuration files during install.
+      vscodium
     ];
+  };
+  programs.git = {
+    enable = true;
+    config.credential."https://github.com".helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
   };
   # Enable xrpd remote desktop service so that the ISO can be used to install
   # NixOS through a remote desktop GUI session. The target environment does

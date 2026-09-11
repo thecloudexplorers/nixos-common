@@ -4,18 +4,23 @@
 
 {
   config,
+  customHostName,
+  inputs,
   lib,
   pkgs,
+  stateVersion,
   ...
 }:
 
 {
   imports = [
+    # Import Disko for local use.
+    inputs.disko.nixosModules.disko
+    # Import home-manager's NixOS module.
+    inputs.home-manager.nixosModules.default
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    "${fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
     ./disko-config.nix
-    "${fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz"}/nixos"
   ];
 
   ###################################
@@ -168,7 +173,7 @@
   # Generate hostId by machine: `head -c 8 /etc/machine-id`
   # Generate hostId at random: `head -c4 /dev/urandom | od -A none -t x4`
   networking.hostId = "8bda2338";
-  networking.hostName = "faml-pc-home_server";
+  networking.hostName = customHostName;
   networking = {
     enableIPv6 = true;
     resolvconf = {
@@ -225,12 +230,12 @@
   };
   environment = {
     systemPackages = with pkgs; [
-      openssl
       alsa-plugins
       git
       git-credential-manager
       kdePackages.plasma-systemmonitor
       lm_sensors
+      openssl
     ];
   };
 
@@ -251,6 +256,8 @@
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
+      nixd
+      nixfmt
       vscodium
     ];
   };
@@ -278,6 +285,6 @@
 
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "26.05"; # Did you read the comment?
+  system.stateVersion = stateVersion; # Did you read the comment?
   system.autoUpgrade.channel = "https://nixos.org/channels/nixos-26.05/";
 }
