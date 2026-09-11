@@ -12,5 +12,8 @@ ls -la /var/lib
 
 
 sudo rm -rf /var/lib/nixos-containers/heartstone-1
-sudo rm -rf  /var/lib/nixos-containers/medivh-1/
-sudo rm -rf /var/lib/nixos-containers/medivh/
+sudo rm -rf  /var/lib/nixos-containers/medivh-1
+
+sudo rm -rf /mnt/ssd/medivh
+sudo rm -rf /mnt/ssd/heartstone
+sudo rm -rf /mnt/zdata/heartstone
