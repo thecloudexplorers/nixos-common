@@ -43,7 +43,7 @@ in
         "/certs/${heartstoneWorkloadName}" = {
           hostPath = "/mnt/ssd/${heartstoneWorkloadName}/var/lib/${workloadService}/${hearstoneWorkloadDomain}";
           mountPoint = "/var/lib/${workloadService}/${hearstoneWorkloadDomain}";
-          isReadOnly = true;
+          isReadOnly = false;
         };
         "/soulstone-data-lib-private-${heartstoneWorkloadService}" = {
           hostPath = "/mnt/ssd/${heartstoneWorkloadName}/var/lib/${heartstoneWorkloadService}/secrets";

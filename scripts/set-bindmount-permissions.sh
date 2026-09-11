@@ -16,9 +16,9 @@
 set -euo pipefail
 
 # uid:gid from modules/users/users/workloads/acme.nix
-ACME_ID=2114071989
+ACME_ID=966
 # uid:gid from modules/users/users/workloads/kanidm.nix
-KANIDM_ID=2125606634
+KANIDM_ID=960
 
 if [ "$#" -eq 0 ]; then
   echo "Usage: $0 <container.nix> [container.nix ...]" >&2
