@@ -9,3 +9,8 @@ sudo systemctl start container@heartstone-1
 
 
 ls -la /var/lib
+
+
+sudo rm -rf /var/lib/nixos-containers/heartstone-1
+sudo rm -rf  /var/lib/nixos-containers/medivh-1/
+sudo rm -rf /var/lib/nixos-containers/medivh/
