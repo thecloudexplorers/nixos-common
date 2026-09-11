@@ -83,7 +83,7 @@ TRANSIP_PROPAGATION_TIMEOUT = "600"
 TRANSIP_TTL = "10"
 ```
 3. Execute: `nano /mnt/ssd/medivh/secrets/acme-transip-secret`
-4. Paste content like the following:
+4. Paste [content](https://www.transip.nl/cp/account/api/) like the following:
 ``` plaintext
 -----BEGIN PRIVATE KEY-----
 REALLY SECRET ENCRYPTED STUFF HERE PASTED FROM TRANSIP TOKEN
