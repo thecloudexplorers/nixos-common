@@ -1,6 +1,7 @@
 { ... }:
 let
   workloadName = "medivh";
+  workloadNode = 1;
   workloadService = "acme";
   rootDomain = "raboes28.nl";
 in
@@ -13,13 +14,14 @@ in
       bindMounts = {
         # All workload service app data to be stored here
         "/${workloadService}/lib" = {
-          hostPath = "/mnt/ssd/${workloadName}/var/lib/${workloadService}";
+          # CONTAINER INSTANCE TODO
+          hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/${workloadService}";
           mountPoint = "/var/lib/${workloadService}";
           isReadOnly = false;
         };
         # All workload service log files to be stored here
         "/${workloadService}/log" = {
-          hostPath = "/mnt/ssd/${workloadName}/var/log/${workloadService}";
+          hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/var/log/${workloadService}";
           mountPoint = "/var/log/${workloadService}";
           isReadOnly = false;
         };
@@ -39,7 +41,7 @@ in
         "/certs/idm.${rootDomain}" = {
           hostPath = "/mnt/ssd/heartstone/1/var/lib/acme/idm.${rootDomain}";
           mountPoint = "/var/lib/acme/idm.${rootDomain}";
-          isReadOnly = false;
+          isReadOnly = true;
         };
         "/soulstone-data-lib-private-kanidm" = {
           hostPath = "/mnt/ssd/heartstone/1/var/lib/kanidm/secrets";

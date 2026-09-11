@@ -15,12 +15,12 @@ in
         # Store all workload service lib data that needs to be persisted
         # here as the container would not be persistent otherwise
         "/heartstone-data-lib-${workloadService}" = {
-          hostPath = "/mnt/ssd/${workloadName}-${toString workloadNode}/var/lib/${workloadService}";
+          hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/${workloadService}";
           mountPoint = "/var/lib/${workloadService}";
           isReadOnly = false;
         };
         "/heartstone-data-backups" = {
-          hostPath = "/mnt/zdata/${workloadName}-${toString workloadNode}/backups";
+          hostPath = "/mnt/zdata/${workloadName}/${toString workloadNode}/backups";
           mountPoint = "/var/lib/${workloadService}/backups";
           isReadOnly = false;
         };
@@ -29,7 +29,7 @@ in
         # persistent manner while also offloading ACME requests
         # to a separate workload
         "/heartstone-secrets-acme" = {
-          hostPath = "/mnt/ssd/${workloadName}-${toString workloadNode}/var/lib/acme/${workloadDomain}";
+          hostPath = "/mnt/ssd/${workloadName}/var/lib/acme/${workloadDomain}";
           mountPoint = "/var/lib/acme/${workloadDomain}";
           isReadOnly = true;
         };
