@@ -20,6 +20,12 @@ set_owner() {
     mkdir -p "$path"
   fi
   chown -R "${id}:${id}" "$path"
+  # Fail fast if any file/dir underneath wasn't actually set to the expected owner
+  if find "$path" ! -uid "$id" -o ! -gid "$id" | grep -q .; then
+    echo "ERROR: ownership mismatch under $path (expected ${id}:${id})" >&2
+    exit 1
+  fi
+  echo "OK: $path is owned by ${id}:${id}"
 }
 
 # --- modules/workload/medivh/container-1/container-1.nix ---
