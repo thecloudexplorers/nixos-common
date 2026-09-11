@@ -26,16 +26,21 @@ if [ "$#" -eq 0 ]; then
 fi
 
 # Resolves ${name} / ${toString name} references in a nix string using the
-# name -> value bindings captured from that file's `let` block. A single
-# pass also resolves one level of nesting (e.g. a let-bound var that itself
-# references another let-bound var).
+# name -> value bindings captured from that file's `let` block. Repeats
+# until stable so nesting (e.g. a let-bound var that itself references
+# another let-bound var) resolves regardless of associative array order.
 resolve_nix_string() {
   local value="$1"
   local -n vars_ref="$2"
-  local name
-  for name in "${!vars_ref[@]}"; do
-    value="${value//\$\{toString $name\}/${vars_ref[$name]}}"
-    value="${value//\$\{$name\}/${vars_ref[$name]}}"
+  local name previous
+  while [[ "$value" == *'${'* ]]; do
+    previous="$value"
+    for name in "${!vars_ref[@]}"; do
+      value="${value//\$\{toString $name\}/${vars_ref[$name]}}"
+      value="${value//\$\{$name\}/${vars_ref[$name]}}"
+    done
+    # No substitution changed anything this pass, stop to avoid looping forever
+    [ "$value" == "$previous" ] && break
   done
   echo "$value"
 }
