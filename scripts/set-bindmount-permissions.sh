@@ -5,6 +5,11 @@
 #
 # Usage: sudo bash scripts/set-bindmount-permissions.sh <container.nix> [container.nix ...]
 #
+# Example:
+#   sudo bash scripts/set-bindmount-permissions.sh \
+#     modules/workload/medivh/container-1/container-1.nix \
+#     modules/workload/heartstone/containers-1/container-1.nix
+#
 # The workload users (acme, kanidm) only exist inside the containers, not
 # on the host, so we chown by numeric uid:gid instead of by name.
 
