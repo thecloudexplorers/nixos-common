@@ -29,6 +29,11 @@
     ## Import Nix modules with generic settings for all computers.
     # These are all 'nix' settigns, such as nix store optimisation.
     ../../../nix/settings.nix
+
+    ## Workloads to be hosted on this server
+    # Import all containers here
+    ../../../workload/medivh/containers-1/container-1.nix
+    ../../../workload/heartstone/containers-1/container-1.nix
   ];
 
   ###################################
