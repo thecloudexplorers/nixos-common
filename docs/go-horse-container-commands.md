@@ -3,11 +3,12 @@ sudo nixos-container root-login medivh-1
 sudo nixos-container root-login heartstone-1
 journalctl -b -p 5
 
+# reboot  the containers
 
-sudo nixos-container restart medivh-1
 sudo systemctl stop container@heartstone-1
 sudo systemctl start container@heartstone-1
 
+sudo nixos-container restart medivh-1
 
 ls -la /var/lib
 
@@ -49,6 +50,3 @@ TRANSIP_TTL = "10"
 
 
 sudo nixos-rebuild switch --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server
-
-
-Slot7-Treble7-Outdated7-Silo9
