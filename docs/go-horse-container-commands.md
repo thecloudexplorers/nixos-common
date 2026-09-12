@@ -51,3 +51,10 @@ TRANSIP_TTL = "10"
 
 
 sudo nixos-rebuild switch --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server
+
+
+# find the container's current IP first
+sudo nixos-container run heartstone-1 -- ip -4 addr show eth0
+
+# then test using that IP directly, without relying on DNS
+curl -vk --resolve idm.raboes28.nl:443:<that-ip> https://idm.raboes28.nl/status
