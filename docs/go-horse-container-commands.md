@@ -7,6 +7,7 @@ journalctl -b -p 5
 
 sudo systemctl stop container@heartstone-1
 sudo systemctl start container@heartstone-1
+sudo systemctl restart container@heartstone-1
 
 sudo nixos-container restart medivh-1
 
