@@ -3,7 +3,7 @@ let
   workloadService = "acme";
   workloadServiceUser = workloadService;
   workloadServiceGroup = workloadServiceUser;
-  letsEncryptStaging = true;
+  letsEncryptStaging = false;
   letsEncryptUrlSuffix = "v02.api.letsencrypt.org/directory";
   letsEncryptAccUrl = "https://${workloadService}-staging-${letsEncryptUrlSuffix}";
   letsEncryptProdUrl = "https://${workloadService}-${letsEncryptUrlSuffix}";
