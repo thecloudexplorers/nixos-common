@@ -11,6 +11,11 @@ in
     bindaddress = "${listeningAddressIPv4}:${toString workloadServicePort}";
     ldapbindaddress = "${listeningAddressIPv4}:${toString workloadServiceLdapPort}";
   };
+  # Wait for DHCP to actually assign ${listeningAddressIPv4} before binding to it
+  systemd.services."${workloadService}" = {
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+  };
   networking.firewall.allowedTCPPorts = [
     workloadServicePort
     workloadServiceLdapPort
