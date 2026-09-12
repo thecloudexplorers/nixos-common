@@ -8,7 +8,7 @@ let
   computerName = "lxc-${workloadName}-${toString workloadNode}";
   ethernetInterfaceName = "eth0";
   # Fill this in after deployment of the container!!!
-  ethernetInterfaceMacAddress = "c2:51:cd:8e:23:01";
+  # ethernetInterfaceMacAddress = "c2:51:cd:8e:23:01";
   workloadTCPPorts = [ ];
 in
 {
@@ -18,7 +18,7 @@ in
     interfaces = {
       "${ethernetInterfaceName}" = {
         name = ethernetInterfaceName;
-        macAddress = ethernetInterfaceMacAddress;
+        # macAddress = ethernetInterfaceMacAddress;
         useDHCP = lib.mkForce true;
         tempAddress = "disabled";
       };
