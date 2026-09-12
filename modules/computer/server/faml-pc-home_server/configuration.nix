@@ -253,7 +253,7 @@
     packages = with pkgs; [
       nixd
       nixfmt
-      vscodium
+      vscode
     ];
   };
 
