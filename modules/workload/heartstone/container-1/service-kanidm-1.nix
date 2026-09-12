@@ -1,7 +1,7 @@
 { ... }:
 let
   workloadService = "kanidm";
-  listeningAddressIPv4 = "192.168.1.209";
+  #listeningAddressIPv4 = "[::]";
   workloadServicePort = 443;
   workloadServiceLdapPort = 636;
 in
