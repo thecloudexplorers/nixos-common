@@ -54,6 +54,22 @@ cd /home/jev/dev/gh/devjevnl/nixos-config/
 nix build .#usbInstallerFull
 ```
 
+## Local custom overview in Plasma (declarative)
+
+Apply the configuration:
+`sudo nixos-rebuild switch --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
+
+Confirm hardware sensors are visible:
+`sensors`
+
+Open Plasma System Monitor:
+`plasma-systemmonitor`
+
+Open the page titled `Temperatures` (custom overview layout).
+
+The page is managed declaratively via Home Manager at:
+`~/.local/share/plasma-systemmonitor/temperatures.page`
+
 ## Generate SSH Key for github
 
 Keep in mind that this generates the SSH key locally in your `/home/<user>/.ssh` folder, which also provisions the `.pub` file. Just don't append the `-f` parameter with .pub, that is done automatically.

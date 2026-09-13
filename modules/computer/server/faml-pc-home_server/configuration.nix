@@ -77,6 +77,7 @@
   ];
   boot.kernelModules = [
     "amdgpu"
+    "drivetemp"
     "k10temp"
     "kvm-amd"
     "nvidia"
@@ -291,6 +292,221 @@
       imports = [ inputs.plasma-manager.homeModules.plasma-manager ];
 
       home.stateVersion = "26.05";
+
+      xdg.dataFile."plasma-systemmonitor/temperatures.page".text = ''
+        [Face-170000000000001][Appearance]
+        Title=CPU Usage
+        chartFace=org.kde.ksysguard.piechart
+
+        [Face-170000000000001][Sensors]
+        highPrioritySensorIds=["cpu/all/usage"]
+        totalSensors=["cpu/all/usage"]
+
+        [Face-170000000000001][org.kde.ksysguard.piechart][General]
+        showLegend=false
+
+        [Face-170000000000002][Appearance]
+        Title=Memory
+        chartFace=org.kde.ksysguard.piechart
+
+        [Face-170000000000002][Sensors]
+        highPrioritySensorIds=["memory/physical/used"]
+        totalSensors=["memory/physical/used","memory/physical/total"]
+
+        [Face-170000000000002][org.kde.ksysguard.piechart][General]
+        showLegend=false
+
+        [Face-170000000000003][Appearance]
+        Title=GPU Usage
+        chartFace=org.kde.ksysguard.piechart
+
+        [Face-170000000000003][Sensors]
+        highPrioritySensorIds=["gpu/all/usage"]
+        totalSensors=["gpu/all/usage"]
+
+        [Face-170000000000003][org.kde.ksysguard.piechart][General]
+        showLegend=false
+
+        [Face-170000000000004][Appearance]
+        Title=CPU Core Temperatures
+        chartFace=org.kde.ksysguard.linechart
+
+        [Face-170000000000004][Sensors]
+        highPrioritySensorIds=["cpu/cpu[0-9]+/temperature"]
+
+        [Face-170000000000004][org.kde.ksysguard.linechart][General]
+        rangeAutoY=true
+
+        [Face-170000000000005][Appearance]
+        Title=CPU Temperature
+        chartFace=org.kde.ksysguard.piechart
+
+        [Face-170000000000005][Sensors]
+        highPrioritySensorIds=["cpu/all/averageTemperature"]
+        totalSensors=["cpu/all/averageTemperature"]
+
+        [Face-170000000000005][org.kde.ksysguard.piechart][General]
+        rangeAuto=false
+        rangeTo=110
+        showLegend=false
+
+        [Face-170000000000006][Appearance]
+        Title=NVMe SSD Temperatures
+        chartFace=org.kde.ksysguard.textonly
+
+        [Face-170000000000006][Sensors]
+        highPrioritySensorIds=["lmsensors/nvme-pci-.*/temp[0-9]+"]
+
+        [Face-170000000000006][SensorLabels]
+        lmsensors/nvme-pci-0200/temp1=OS SSD Composite
+        lmsensors/nvme-pci-0200/temp2=OS SSD Sensor 1
+        lmsensors/nvme-pci-0200/temp3=OS SSD Sensor 2
+        lmsensors/nvme-pci-0300/temp1=Data SSD Composite
+        lmsensors/nvme-pci-0300/temp2=Data SSD Sensor 1
+        lmsensors/nvme-pci-0300/temp3=Data SSD Sensor 2
+
+        [Face-170000000000006][org.kde.ksysguard.textonly][General]
+        groupByTotal=true
+
+        [Face-170000000000007][Appearance]
+        Title=Network
+        chartFace=org.kde.ksysguard.textonly
+
+        [Face-170000000000007][Sensors]
+        highPrioritySensorIds=["network/(?!all).*/download","network/(?!all).*/upload","network/(?!all).*/ipv4address"]
+        totalSensors=["network/(?!all).*/network"]
+
+        [Face-170000000000007][org.kde.ksysguard.textonly][General]
+        groupByTotal=true
+
+        [Face-170000000000008][Appearance]
+        Title=Disk Usage
+        chartFace=org.kde.ksysguard.horizontalbars
+
+        [Face-170000000000008][Sensors]
+        highPrioritySensorIds=["disk/(?!all).*/used"]
+
+        [Face-170000000000009][Appearance]
+        Title=Fans
+        chartFace=org.kde.ksysguard.textonly
+
+        [Face-170000000000009][Sensors]
+        highPrioritySensorIds=["lmsensors/.*/fan.*"]
+
+        [Face-170000000000009][org.kde.ksysguard.textonly][General]
+        groupByTotal=true
+
+        [page]
+        Title=Temperatures
+        actionsFace=
+        icon=speedometer
+        loadType=
+        margin=2
+        version=1
+
+        [page][row-0]
+        Title=Overview
+        heightMode=minimum
+        isTitle=false
+        name=row-0
+
+        [page][row-0][column-0]
+        name=column-0
+        noMargins=false
+        showBackground=true
+
+        [page][row-0][column-0][section-0]
+        face=Face-170000000000001
+        isSeparator=false
+        name=section-0
+
+        [page][row-0][column-1]
+        name=column-1
+        noMargins=false
+        showBackground=true
+
+        [page][row-0][column-1][section-0]
+        face=Face-170000000000002
+        isSeparator=false
+        name=section-0
+
+        [page][row-0][column-2]
+        name=column-2
+        noMargins=false
+        showBackground=true
+
+        [page][row-0][column-2][section-0]
+        face=Face-170000000000003
+        isSeparator=false
+        name=section-0
+
+        [page][row-1]
+        Title=Thermals
+        heightMode=balanced
+        isTitle=false
+        name=row-1
+
+        [page][row-1][column-0]
+        name=column-0
+        noMargins=false
+        showBackground=true
+
+        [page][row-1][column-0][section-0]
+        face=Face-170000000000004
+        isSeparator=false
+        name=section-0
+
+        [page][row-1][column-1]
+        name=column-1
+        noMargins=false
+        showBackground=true
+
+        [page][row-1][column-1][section-0]
+        face=Face-170000000000005
+        isSeparator=false
+        name=section-0
+
+        [page][row-1][column-1][section-1]
+        face=Face-170000000000006
+        isSeparator=false
+        name=section-1
+
+        [page][row-1][column-2]
+        name=column-2
+        noMargins=false
+        showBackground=true
+
+        [page][row-1][column-2][section-0]
+        face=Face-170000000000009
+        isSeparator=false
+        name=section-0
+
+        [page][row-2]
+        Title=System
+        heightMode=balanced
+        isTitle=false
+        name=row-2
+
+        [page][row-2][column-0]
+        name=column-0
+        noMargins=false
+        showBackground=true
+
+        [page][row-2][column-0][section-0]
+        face=Face-170000000000008
+        isSeparator=false
+        name=section-0
+
+        [page][row-2][column-1]
+        name=column-1
+        noMargins=false
+        showBackground=true
+
+        [page][row-2][column-1][section-0]
+        face=Face-170000000000007
+        isSeparator=false
+        name=section-0
+      '';
 
       programs.plasma = {
         enable = true;
