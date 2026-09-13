@@ -63,7 +63,7 @@
     # Since we will be encrypting the ZFS filesystem, we need to ensure that
     # the ZFS kernel module is built with support for encryption. Hibernation
     # is not supported on encrypted ZFS filesystems, so we disable it.
-    allowHibernation = false;
+    unsafeAllowHibernation = false;
   };
   boot.initrd.availableKernelModules = [
     "ahci"
@@ -97,7 +97,6 @@
     "nvidia-drm.fbdev=1"
   ];
   boot.zfs.forceImportRoot = false;
-  boot.zfs.unsafeAllowHibernation = false;
   # ZFS will also mount the ZFS partitions. This will lead to conflicts.
   systemd.services.zfs-mount.enable = false;
   services.zfs.autoScrub.enable = true;
@@ -108,6 +107,19 @@
   # This is the basic bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Central European Time (CET/CEST)
+  time.timeZone = "Europe/Amsterdam";
+
+  # Keep the system language as-is, but use Dutch time/date formatting.
+  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_TIME = "nl_NL.UTF-8";
+  };
+  i18n.supportedLocales = [
+    "en_US.UTF-8/UTF-8"
+    "nl_NL.UTF-8/UTF-8"
+  ];
 
   nix.settings.experimental-features = [
     "nix-command"
@@ -276,7 +288,17 @@
     # Renames pre-existing plain files instead of failing when home-manager wants to manage them.
     backupFileExtension = "hm-backup";
     users.jev = {
+      imports = [ inputs.plasma-manager.homeModules.plasma-manager ];
+
       home.stateVersion = "26.05";
+
+      programs.plasma = {
+        enable = true;
+        workspace = {
+          colorScheme = "BreezeDark";
+        };
+      };
+
       programs.git.settings.credential."https://github.com".helper =
         "${pkgs.git-credential-manager}/bin/git-credential-manager";
     };

@@ -40,7 +40,7 @@ in
       # Since we will be encrypting the ZFS filesystem, we need to ensure that
       # the ZFS kernel module is built with support for encryption. Hibernation
       # is not supported on encrypted ZFS filesystems, so we disable it.
-      allowHibernation = false;
+      unsafeAllowHibernation = false;
     };
     # Needed for https://github.com/NixOS/nixpkgs/issues/58959
     supportedFilesystems = lib.mkForce [
