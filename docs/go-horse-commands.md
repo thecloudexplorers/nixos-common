@@ -10,6 +10,9 @@ Shows the configuration set-up
 Chekcs the consistency and updates the falke.lock
 `nix flake check`
 
+Checks the flake configuration without building derivations
+`nix flake check --no-build`
+
 Rebuilds the running NixOS using the specified flake
 `nixos-rebuild build --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
 
