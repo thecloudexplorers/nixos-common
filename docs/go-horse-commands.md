@@ -11,16 +11,16 @@ Chekcs the consistency and updates the falke.lock
 `nix flake check`
 
 Rebuilds the running NixOS using the specified flake
-`nixos-rebuild build --flake ~/dev/nixos-config#faml-pc-home_server`
+`nixos-rebuild build --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
 
 Rebuilds the running NixOS using the specified flake
-`sudo nixos-rebuild dry-activate --flake ~/dev/nixos-config#faml-pc-home_server`
+`sudo nixos-rebuild dry-activate --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
 
 Rebuilds the running NixOS using the specified flake
-`sudo nixos-rebuild boot --flake ~/dev/nixos-config#faml-pc-home_server`
+`sudo nixos-rebuild boot --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
 
 Rebuilds the running NixOS using the specified flake
-`sudo nixos-rebuild switch --flake ~/dev/nixos-config#faml-pc-home_server`
+`sudo nixos-rebuild switch --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
 
 ## Rebuild based on configuration.nix updates with switch
 
@@ -47,7 +47,7 @@ Run: `sudo NIX_CONFIG="experimental-features = nix-command flakes" nixos-install
 ## Building the NixImage
 
 ``` shell
-cd /home/jev/dev/nixos-config/
+cd /home/jev/dev/gh/devjevnl/nixos-config/
 nix build .#usbInstallerFull
 ```
 
