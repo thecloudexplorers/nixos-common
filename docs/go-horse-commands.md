@@ -11,16 +11,16 @@ Chekcs the consistency and updates the falke.lock
 `nix flake check`
 
 Rebuilds the running NixOS using the specified flake
-`nixos-rebuild build --flake ~/dev/nixos-config#faml-pc-home_server`
+`nixos-rebuild build --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
 
 Rebuilds the running NixOS using the specified flake
-`sudo nixos-rebuild dry-activate --flake ~/dev/nixos-config#faml-pc-home_server`
+`sudo nixos-rebuild dry-activate --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
 
 Rebuilds the running NixOS using the specified flake
-`sudo nixos-rebuild boot --flake ~/dev/nixos-config#faml-pc-home_server`
+`sudo nixos-rebuild boot --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
 
 Rebuilds the running NixOS using the specified flake
-`sudo nixos-rebuild switch --flake ~/dev/nixos-config#faml-pc-home_server`
+`sudo nixos-rebuild switch --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
 
 ## Rebuild based on configuration.nix updates with switch
 
@@ -47,7 +47,7 @@ Run: `sudo NIX_CONFIG="experimental-features = nix-command flakes" nixos-install
 ## Building the NixImage
 
 ``` shell
-cd /home/jev/dev/nixos-config/
+cd /home/jev/dev/gh/devjevnl/nixos-config/
 nix build .#usbInstallerFull
 ```
 
@@ -68,3 +68,24 @@ Retrieve the pub key, ready for copy & paste where needed. *Include the empty li
 Override the default SSH key for auth (for instance `~/.ssh/id_ed25519`), since you want GitHub specific auth/signing keys. Save the default generated key for HomeLab stuff.
 
 `git clone git@github.com:devjevnl/nixos-config.git --config core.sshCommand="ssh -i ~/.ssh/github-authentication"`
+
+## Provision files for secrets / ACME workload
+
+In order to bootstrap the ACME workload (`medivh`), provision an env file and a secret file for the DNS challenge.
+
+1. Execute: `nano /mnt/ssd/medivh/environments/acme-transip-env`
+2. Paste content like the following:
+``` plaintext
+TRANSIP_ACCOUNT_NAME = "REPLACEMEWITHACCOUNTNAME"
+TRANSIP_PRIVATE_KEY_PATH = "/var/lib/acme/secrets/acme-transip-secret"
+TRANSIP_POLLING_INTERVAL = "10"
+TRANSIP_PROPAGATION_TIMEOUT = "600"
+TRANSIP_TTL = "10"
+```
+3. Execute: `nano /mnt/ssd/medivh/secrets/acme-transip-secret`
+4. Paste [content](https://www.transip.nl/cp/account/api/) like the following:
+``` plaintext
+-----BEGIN PRIVATE KEY-----
+REALLY SECRET ENCRYPTED STUFF HERE PASTED FROM TRANSIP TOKEN
+-----END PRIVATE KEY-----
+```

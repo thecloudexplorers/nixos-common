@@ -423,6 +423,7 @@ FodyWeavers.xsd
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 !.vscode/*.code-workspace
+!.vscode/mcp.json
 
 # Local History for Visual Studio Code
 .history/
