@@ -1,15 +1,17 @@
 { ... }:
 let
   workloadService = "kanidm";
-  #listeningAddressIPv4 = "[::]";
+  listeningAddressIPv4 = "[::]";
   workloadServicePort = 443;
   workloadServiceLdapPort = 636;
 in
 {
   services."${workloadService}".server.settings = {
     role = "WriteReplica";
-    bindaddress = "0.0.0.0:${toString workloadServicePort}";
-    ldapbindaddress = "0.0.0.0:${toString workloadServiceLdapPort}";
+    # bindaddress = "0.0.0.0:${toString workloadServicePort}";
+    # ldapbindaddress = "0.0.0.0:${toString workloadServiceLdapPort}";
+    bindaddress = "${listeningAddressIPv4}:${toString workloadServicePort}";
+    ldapbindaddress = "${listeningAddressIPv4}:${toString workloadServiceLdapPort}";
   };
   # Option B (didn't work): bind to listeningAddressIPv4 directly and wait for
   # DHCP to assign it before starting, instead of binding to 0.0.0.0 above.
