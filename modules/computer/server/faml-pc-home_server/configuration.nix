@@ -243,6 +243,7 @@
   environment = {
     systemPackages = with pkgs; [
       alsa-plugins
+      btop
       git
       git-credential-manager
       kdePackages.plasma-systemmonitor
@@ -292,6 +293,31 @@
       imports = [ inputs.plasma-manager.homeModules.plasma-manager ];
 
       home.stateVersion = "26.05";
+
+      home.packages = with pkgs; [
+        btop
+      ];
+
+      xdg.configFile."btop/btop.conf".text = ''
+        color_theme = "Default"
+        theme_background = False
+        truecolor = True
+        force_tty = False
+        updates = 0
+        update_ms = 2000
+        proc_tree = True
+        proc_colors = True
+        show_cpu_name = True
+        show_cpu_freq = True
+        check_temp = true
+        cpu_sensor = "Auto"
+        show_coretemp = true
+        show_gpu_info = "On"
+        temp_scale = "celsius"
+        graphs = True
+        shown_gpus = "nvidia amd intel apple"
+        disks_filter = ""
+      '';
 
       xdg.dataFile."plasma-systemmonitor/temperatures.page".text = ''
         [Face-170000000000001][Appearance]
