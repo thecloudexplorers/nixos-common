@@ -5,7 +5,7 @@
     "[nix]": {
         "editor.rulers": [
             {
-                "column": 80,
+                "column": 120,
                 "color": "#5fb8f2"
             }
         ],
