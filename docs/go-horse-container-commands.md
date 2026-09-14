@@ -52,12 +52,16 @@ sudo rm -rf /mnt/ssd/heartstone
 sudo rm -rf /mnt/zdata/heartstone
 ```
 
-## Set bind mount permissions
+## Bind mount directories
+
+The bind-mount host paths are now created and owned declaratively via NixOS
+`systemd.tmpfiles` rules in the server configuration, which is the normal
+operation path. The legacy shell script at
+`scripts/set-bindmount-permissions.sh` remains available as a backup option if
+manual recovery or troubleshooting is needed:
 
 ```bash
-sudo bash scripts/set-bindmount-permissions.sh \
-    modules/workload/medivh/container-1/container-1.nix \
-    modules/workload/heartstone/container-1/container-1.nix
+sudo bash /home/jev/dev/gh/devjevnl/nixos-config/scripts/set-bindmount-permissions.sh
 ```
 
 ## Provision files for ACME workload
