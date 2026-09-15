@@ -19,6 +19,21 @@ in
           online_backup.versions = 5;
         };
       };
+      provision = {
+        enable = true;
+
+        # Declarative Kanidm identities.
+        # Add or remove entries here, then deploy with nixos-rebuild.
+        groups = {
+          faml-users = { };
+        };
+        persons = {
+          marlous = {
+            displayName = "Marlous";
+            groups = [ "faml-users" ];
+          };
+        };
+      };
     };
   };
   systemd.services."${workloadService}" = {
