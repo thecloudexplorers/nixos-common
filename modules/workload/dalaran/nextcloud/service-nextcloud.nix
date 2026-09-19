@@ -46,10 +46,4 @@ in
     };
   };
 
-  systemd.services.nextcloud-setup.preStart = ''
-    install -d -m 0750 -o nextcloud -g nextcloud /var/lib/${workloadService}
-    install -d -m 0750 -o nextcloud -g nextcloud ${workloadDataDirectory}
-    install -d -m 0750 -o nextcloud -g nextcloud ${workloadDataDirectory}/config
-    chown -R nextcloud:nextcloud /var/lib/${workloadService}
-  '';
 }
