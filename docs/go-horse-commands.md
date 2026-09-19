@@ -10,6 +10,9 @@ Shows the configuration set-up
 Chekcs the consistency and updates the falke.lock
 `nix flake check`
 
+Checks the flake configuration without building derivations
+`nix flake check --no-build`
+
 Rebuilds the running NixOS using the specified flake
 `nixos-rebuild build --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
 
@@ -50,6 +53,22 @@ Run: `sudo NIX_CONFIG="experimental-features = nix-command flakes" nixos-install
 cd /home/jev/dev/gh/devjevnl/nixos-config/
 nix build .#usbInstallerFull
 ```
+
+## Local custom overview in Plasma (declarative)
+
+Apply the configuration:
+`sudo nixos-rebuild switch --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server`
+
+Confirm hardware sensors are visible:
+`sensors`
+
+Open Plasma System Monitor:
+`plasma-systemmonitor`
+
+Open the page titled `Temperatures` (custom overview layout).
+
+The page is managed declaratively via Home Manager at:
+`~/.local/share/plasma-systemmonitor/temperatures.page`
 
 ## Generate SSH Key for github
 

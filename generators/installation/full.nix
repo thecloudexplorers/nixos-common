@@ -55,7 +55,7 @@ in
       # Since we will be encrypting the ZFS filesystem, we need to ensure that
       # the ZFS kernel module is built with support for encryption. Hibernation
       # is not supported on encrypted ZFS filesystems, so we disable it.
-      allowHibernation = false;
+      unsafeAllowHibernation = false;
     };
     # Needed for https://github.com/NixOS/nixpkgs/issues/58959
     supportedFilesystems = lib.mkForce [
@@ -92,7 +92,8 @@ in
   };
   programs.git = {
     enable = true;
-    config.credential."https://github.com".helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
+    config.credential."https://github.com".helper =
+      "${pkgs.git-credential-manager}/bin/git-credential-manager";
   };
   # Enable xrpd remote desktop service so that the ISO can be used to install
   # NixOS through a remote desktop GUI session. The target environment does
