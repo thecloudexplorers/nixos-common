@@ -60,6 +60,22 @@
           format = "iso";
         };
       };
+      # Provide a project-local Nix development environment for editor tooling.
+      # This ensures VS Code/Nix IDE has a stable `nixd` LSP server and
+      # `nixfmt` formatter available from the flake instead of depending on
+      # whatever happens to be installed globally on the host machine.
+      devShells.x86_64-linux.default =
+        let
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+          };
+        in
+        pkgs.mkShell {
+          packages = with pkgs; [
+            nixd
+            nixfmt
+          ];
+        };
       # The actual computers/servers config starts here, with module imports.
       nixosConfigurations = {
         faml-pc-home_server = nixpkgs.lib.nixosSystem {
