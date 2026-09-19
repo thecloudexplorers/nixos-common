@@ -26,10 +26,15 @@ in
         # Add or remove entries here, then deploy with nixos-rebuild.
         groups = {
           faml-users = { };
+          test-users = { };
         };
         persons = {
           marlous = {
             displayName = "Marlous";
+            groups = [ "faml-users" ];
+          };
+          peon = {
+            displayName = "Peon";
             groups = [ "faml-users" ];
           };
         };
