@@ -95,7 +95,7 @@ Create a reset token as admin:
 ```bash
 kanidm person credential create-reset-token <your-username>
 
-EXAMPLE: kanidm person credential create-reset-token jdoe
+EXAMPLE: kanidm person credential create-reset-token peon
 ```
 
 Use the token to set credentials:
