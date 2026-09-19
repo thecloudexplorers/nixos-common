@@ -3,6 +3,7 @@ let
   workloadName = "dalaran";
   workloadNode = 1;
   workloadService = "nextcloud";
+  rootDomain = "raboes28.nl";
 in
 {
   containers = {
@@ -23,11 +24,11 @@ in
           mountPoint = "/var/lib/${workloadService}/data";
           isReadOnly = false;
         };
-        # Read ACME-issued certificate material for the service.
+        # Read the certificate issued centrally by the medivh ACME workload.
         "/${workloadName}-acme-${workloadService}" = {
-          hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/acme";
-          mountPoint = "/var/lib/acme";
-          isReadOnly = false;
+          hostPath = "/mnt/ssd/medivh/1/var/lib/acme/nextcloud.${rootDomain}";
+          mountPoint = "/var/lib/acme/nextcloud.${rootDomain}";
+          isReadOnly = true;
         };
         # Bootstrap the initial Nextcloud admin password.
         "/${workloadName}-secrets-admin-${workloadService}" = {
