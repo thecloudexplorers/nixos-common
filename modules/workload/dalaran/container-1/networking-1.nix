@@ -9,6 +9,10 @@ let
     443 # The only open port outside of the container.
     18443 # The remote accessible port.
   ];
+  workloadUDPPorts = [
+    3478 # Required for Talk.
+  ];
+
 in
 {
   networking = {
@@ -30,6 +34,7 @@ in
       enable = true;
       # Open ports in the firewall.
       allowedTCPPorts = workloadTCPPorts;
+      allowedUDPPorts = workloadUDPPorts;
     };
     networkmanager = {
       # Disable networkmanager as it may interfere with DHCP
