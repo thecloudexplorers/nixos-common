@@ -27,6 +27,11 @@ From this point on, run commands inside the container shell.
 
 ```bash
 sudo nixos-container root-login dalaran-1
+journalctl -u nextcloud-setup.service
+journalctl -u systemd-tmpfiles-setup
+
+
+ls -ld /var/lib/nextcloud /var/lib/nextcloud/data /var/lib/nextcloud/data/config
 ```
 
 ## 3. Verify bootstrap secret inside container

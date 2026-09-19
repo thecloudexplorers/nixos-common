@@ -46,12 +46,25 @@ resolve_nix_string() {
 }
 
 # Owner is inferred from the mountPoint, since that's where the literal
-# service name (acme/kanidm) survives interpolation.
+# service name survives interpolation. For Nextcloud, resolve the runtime UID
+# from the actual container so we do not hardcode a guessed value.
 owner_id_for() {
   local mount_point="$1"
+  local container_name="${2:-}"
   case "$mount_point" in
     *kanidm*) echo "$KANIDM_ID" ;;
     *acme*) echo "$ACME_ID" ;;
+    *nextcloud*)
+      if [ -n "$container_name" ]; then
+        local uid
+        uid="$(nixos-container run "$container_name" -- id -u nextcloud 2>/dev/null || true)"
+        if [[ "$uid" =~ ^[0-9]+$ ]]; then
+          echo "$uid"
+          return
+        fi
+      fi
+      echo ""
+      ;;
     *) echo "" ;;
   esac
 }
@@ -87,6 +100,11 @@ process_file() {
   done < <(sed -n '/^let/,/^in/p' "$file")
 
   local host_path=""
+  local container_name=""
+  if [ -n "${vars[workloadName]:-}" ] && [ -n "${vars[workloadNode]:-}" ]; then
+    container_name="${vars[workloadName]}-${vars[workloadNode]}"
+  fi
+
   while IFS= read -r line; do
     if [[ "$line" =~ hostPath[[:space:]]*=[[:space:]]*\"([^\"]*)\"\; ]]; then
       host_path="${BASH_REMATCH[1]}"
@@ -95,7 +113,7 @@ process_file() {
       local resolved_path resolved_mount id
       resolved_path="$(resolve_nix_string "$host_path" vars)"
       resolved_mount="$(resolve_nix_string "$mount_point" vars)"
-      id="$(owner_id_for "$resolved_mount")"
+      id="$(owner_id_for "$resolved_mount" "$container_name")"
       if [ -z "$id" ]; then
         echo "WARN: could not determine owner for $resolved_path (mountPoint: $resolved_mount), skipping" >&2
       else
