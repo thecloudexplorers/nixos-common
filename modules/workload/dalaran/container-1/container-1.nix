@@ -23,6 +23,12 @@ in
           mountPoint = "/var/lib/${workloadService}/data";
           isReadOnly = false;
         };
+        # Read ACME-issued certificate material for the service.
+        "/${workloadName}-acme-${workloadService}" = {
+          hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/acme";
+          mountPoint = "/var/lib/acme";
+          isReadOnly = false;
+        };
         # Bootstrap the initial Nextcloud admin password.
         "/${workloadName}-secrets-admin-${workloadService}" = {
           hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/secrets/admin";

@@ -15,6 +15,11 @@ in
     "z /mnt/zdata/${workloadName}/${toString workloadNode}/var/lib/nextcloud/data 0750 nextcloud nextcloud -"
     "d /mnt/zdata/${workloadName}/${toString workloadNode}/var/lib/nextcloud/data/config 0750 nextcloud nextcloud -"
     "z /mnt/zdata/${workloadName}/${toString workloadNode}/var/lib/nextcloud/data/config 0750 nextcloud nextcloud -"
+    # ACME certificate material for the served domain.
+    "d /mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/acme 0755 root root -"
+    "z /mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/acme 0755 root root -"
+    "d /mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/acme/nextcloud.raboes28.nl 0755 root root -"
+    "z /mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/acme/nextcloud.raboes28.nl 0755 root root -"
     # Bootstrap the initial admin password from a host-managed secret.
     "d /mnt/ssd/${workloadName}/${toString workloadNode}/secrets/admin 0700 root root -"
     "z /mnt/ssd/${workloadName}/${toString workloadNode}/secrets/admin 0700 root root -"

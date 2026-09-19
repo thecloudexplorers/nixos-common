@@ -10,6 +10,20 @@ let
   nginxGroup = nginxUser;
 in
 {
+  security.acme = {
+    acceptTerms = true;
+    defaults = {
+      email = "jev+letsencrypt@${rootDomain}";
+      group = nginxUser;
+      reloadServices = [ "nginx.service" ];
+    };
+    certs."${workloadHostName}" = {
+      domain = workloadHostName;
+      group = nginxUser;
+      reloadServices = [ "nginx.service" ];
+    };
+  };
+
   services = {
     "${workloadService}" = {
       enable = true;
