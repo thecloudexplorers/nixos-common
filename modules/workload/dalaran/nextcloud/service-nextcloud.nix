@@ -10,10 +10,27 @@ let
   nginxGroup = nginxUser;
 in
 {
+  # Grant nginx read/traverse access to the ACME-managed certificate
+  # directory (gid 966, shared across all containers in this repo via
+  # modules/users/users/workloads/acme.nix), matching the group-based
+  # access pattern already used for kanidm/heartstone rather than
+  # chown'ing or copying certificate material across containers.
+  users.users."${nginxUser}".extraGroups = [ "acme" ];
+  systemd.services."${workloadService}" = {
+    serviceConfig = {
+      SupplementaryGroups = [
+        "acme"
+        "sharedstorage"
+      ];
+      AmbientCapabilities = lib.mkForce [ "CAP_NET_BIND_SERVICE" ];
+      CapabilityBoundingSet = lib.mkForce [ "CAP_NET_BIND_SERVICE" ];
+    };
+  };
+
   services = {
     "${workloadService}" = {
       enable = true;
-      package = pkgs.nextcloud33;
+      package = pkgs.nextcloud34;
       hostName = workloadHostName;
       home = "/var/lib/${workloadService}";
       datadir = workloadDataDirectory;
@@ -77,17 +94,6 @@ in
           ];
         };
       };
-    };
-  };
-
-  systemd.services."${workloadService}" = {
-    serviceConfig = {
-      SupplementaryGroups = [
-        "acme"
-        "sharedstorage"
-      ];
-      AmbientCapabilities = lib.mkForce [ "CAP_NET_BIND_SERVICE" ];
-      CapabilityBoundingSet = lib.mkForce [ "CAP_NET_BIND_SERVICE" ];
     };
   };
 }

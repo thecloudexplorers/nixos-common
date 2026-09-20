@@ -25,6 +25,10 @@ in
           isReadOnly = false;
         };
         # Read the certificate issued centrally by the medivh ACME workload.
+        # nginx is a member of the shared "acme" group (gid 966, see
+        # modules/users/users/workloads/acme.nix), which the ACME module
+        # grants group-read/traverse access to, so no copying or world
+        # readable permissions are needed here.
         "/${workloadName}-acme-${workloadService}" = {
           hostPath = "/mnt/ssd/medivh/1/var/lib/acme/nextcloud.${rootDomain}";
           mountPoint = "/var/lib/acme/nextcloud.${rootDomain}";
