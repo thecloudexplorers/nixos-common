@@ -15,7 +15,9 @@ in
   # modules/users/users/workloads/acme.nix), matching the group-based
   # access pattern already used for kanidm/heartstone rather than
   # chown'ing or copying certificate material across containers.
-  users.users."${nginxUser}".extraGroups = [ "acme" ];
+  users.users."${nginxUser}".extraGroups = [
+    "acme"
+  ];
   systemd.services."${workloadService}" = {
     serviceConfig = {
       SupplementaryGroups = [
