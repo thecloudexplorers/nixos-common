@@ -8,6 +8,10 @@ let
   heartstoneWorkloadNode = 1;
   heartstoneWorkloadService = "kanidm";
   heartstoneWorkloadDomain = "idm.${rootDomain}";
+  ironforgeWorkloadName = "ironforge";
+  ironforgeWorkloadNode = 1;
+  ironforgeWorkloadService = "postgresql";
+  ironforgeWorkloadDomain = "ironforge.${rootDomain}";
 in
 {
   containers = {
@@ -49,6 +53,18 @@ in
         "/soulstone-data-lib-private-${heartstoneWorkloadService}" = {
           hostPath = "/mnt/ssd/${heartstoneWorkloadName}/${toString heartstoneWorkloadNode}/var/lib/${heartstoneWorkloadService}/secrets";
           mountPoint = "/var/lib/private/${heartstoneWorkloadService}";
+          isReadOnly = false;
+        };
+        # Store the external ironforge.${rootDomain} certificate here, in a
+        # location postgres itself owns (postgres enforces that its ssl_key_file
+        # be owned by the database user or root, so it cannot read directly out
+        # of the read-only ACME mount the way nginx/kanidm's group-read access
+        # does). See modules/workload/medivh/acme/service-acme-ironforge.nix's
+        # postRun for the copy/chown step, and this same host path is bind
+        # mounted inside ironforge-1 at /var/lib/postgresql/secrets.
+        "/ironforge-data-lib-private-${ironforgeWorkloadService}" = {
+          hostPath = "/mnt/ssd/${ironforgeWorkloadName}/${toString ironforgeWorkloadNode}/var/lib/${ironforgeWorkloadService}/secrets";
+          mountPoint = "/var/lib/private/${ironforgeWorkloadService}";
           isReadOnly = false;
         };
       };

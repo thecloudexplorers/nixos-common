@@ -3,7 +3,6 @@ let
   workloadName = "ironforge";
   workloadNode = 1;
   workloadService = "postgresql";
-  rootDomain = "raboes28.nl";
 in
 {
   containers = {
@@ -11,7 +10,18 @@ in
       autoStart = true;
       privateUsers = "identity";
       bindMounts = {
-        # Persist the PostgreSQL data directory.
+        # Persist the PostgreSQL data directory. Its "secrets" subdirectory
+        # (/var/lib/postgresql/secrets) is populated externally: medivh's
+        # ACME postRun hook writes the cert/key for ironforge.raboes28.nl
+        # into the same host path via its own separate, writable bind mount
+        # (see modules/workload/medivh/container-1/container-1.nix and
+        # modules/workload/medivh/acme/service-acme-ironforge.nix), already
+        # owned by postgres (uid/gid 71, a fixed nixpkgs system id shared
+        # across containers via modules/users/users/workloads/postgres.nix).
+        # This avoids postgres needing direct read access to the ACME
+        # mount, since PostgreSQL enforces that ssl_key_file be owned by
+        # the database user (or root) -- group-read access alone (as used
+        # for nginx/kanidm) is not sufficient.
         "/${workloadName}-data-lib-${workloadService}" = {
           hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/${workloadService}";
           mountPoint = "/var/lib/${workloadService}";
@@ -22,16 +32,6 @@ in
           hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/var/log/${workloadService}";
           mountPoint = "/var/log/${workloadService}";
           isReadOnly = false;
-        };
-        # Read the certificate issued centrally by the medivh ACME workload.
-        # postgres is a member of the shared "acme" group (gid 966, see
-        # modules/users/users/workloads/acme.nix), which the ACME module
-        # grants group-read/traverse access to, so no copying or world
-        # readable permissions are needed here.
-        "/${workloadName}-acme-${workloadName}" = {
-          hostPath = "/mnt/ssd/medivh/1/var/lib/acme/${workloadName}.${rootDomain}";
-          mountPoint = "/var/lib/acme/${workloadName}.${rootDomain}";
-          isReadOnly = true;
         };
       };
       privateNetwork = true;
