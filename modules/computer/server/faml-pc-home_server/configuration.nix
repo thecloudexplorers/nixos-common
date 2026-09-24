@@ -101,6 +101,11 @@
     "nvidia-drm.modeset=1"
     "nvidia-drm.fbdev=1"
   ];
+  # Required by redis (used by containerized workloads, e.g. Nextcloud) to
+  # avoid background save/replication failures under low memory conditions.
+  # This is a host-wide kernel setting; containers share the host kernel and
+  # cannot set it themselves.
+  boot.kernel.sysctl."vm.overcommit_memory" = 1;
   boot.zfs.forceImportRoot = false;
   # ZFS will also mount the ZFS partitions. This will lead to conflicts.
   systemd.services.zfs-mount.enable = false;
