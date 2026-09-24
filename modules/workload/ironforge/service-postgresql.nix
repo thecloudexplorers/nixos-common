@@ -4,10 +4,9 @@ let
   workloadService = "postgresql";
   workloadTCPPort = 5432;
   rootDomain = "raboes28.nl";
-  # TODO: Fill in the dalaran-1 container's LAN IP address after it has been
-  # deployed (set up a DHCP reservation via its MAC address so this stays
-  # stable), then restrict pg_hba access to that single address.
-  dalaranWorkloadAddressIPv4 = "192.168.1.xxx";
+  # Dalaran-1's LAN IP, set via a DHCP reservation on the router (see
+  # modules/workload/dalaran/container-1/networking-1.nix for its MAC).
+  dalaranWorkloadAddressIPv4 = "192.168.1.69";
 in
 {
   services = {
