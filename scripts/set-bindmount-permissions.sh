@@ -46,8 +46,10 @@ resolve_nix_string() {
 }
 
 # Owner is inferred from the mountPoint, since that's where the literal
-# service name survives interpolation. For Nextcloud, resolve the runtime UID
-# from the actual container so we do not hardcode a guessed value.
+# service name survives interpolation. For Nextcloud and PostgreSQL, resolve
+# the runtime UID from the actual container so we do not hardcode a guessed
+# value (their UIDs are dynamically allocated by the respective NixOS
+# modules, unlike acme/kanidm which use fixed shared UIDs).
 owner_id_for() {
   local mount_point="$1"
   local container_name="${2:-}"
@@ -58,6 +60,17 @@ owner_id_for() {
       if [ -n "$container_name" ]; then
         local uid
         uid="$(nixos-container run "$container_name" -- id -u nextcloud 2>/dev/null || true)"
+        if [[ "$uid" =~ ^[0-9]+$ ]]; then
+          echo "$uid"
+          return
+        fi
+      fi
+      echo ""
+      ;;
+    *postgresql*)
+      if [ -n "$container_name" ]; then
+        local uid
+        uid="$(nixos-container run "$container_name" -- id -u postgres 2>/dev/null || true)"
         if [[ "$uid" =~ ^[0-9]+$ ]]; then
           echo "$uid"
           return

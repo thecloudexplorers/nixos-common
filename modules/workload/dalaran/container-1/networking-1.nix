@@ -12,6 +12,16 @@ let
   workloadUDPPorts = [
     3478 # Required for Talk.
   ];
+  # Ironforge-1's LAN IP, set via a DHCP reservation on the router (see
+  # modules/workload/ironforge/container-1/networking-1.nix for its MAC).
+  # Resolved as a static hosts entry rather than relying on public DNS:
+  # systemd-resolved refuses to route arbitrary-domain queries (like
+  # ironforge.raboes28.nl) through the router's DHCP-provided DNS server
+  # here, since that link's DNS routing domain isn't the default route
+  # ("~."), causing "No appropriate name servers or networks for name
+  # found" errors.
+  ironforgeWorkloadAddressIPv4 = "192.168.1.112";
+  ironforgeWorkloadHostName = "ironforge.raboes28.nl";
 
 in
 {
@@ -22,6 +32,9 @@ in
     # Use systemd-resolved inside the container.
     # Workaround for bug https://github.com/NixOS/nixpkgs/issues/162686
     useHostResolvConf = lib.mkForce false;
+    extraHosts = ''
+      ${ironforgeWorkloadAddressIPv4} ${ironforgeWorkloadHostName}
+    '';
     interfaces = {
       "${ethernetInterfaceName}" = {
         name = ethernetInterfaceName;
