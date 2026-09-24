@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   workloadName = "dalaran";
   workloadService = "nextcloud";
@@ -117,7 +122,33 @@ in
       };
       autoUpdateApps.enable = true;
       extraAppsEnable = true;
-
+      extraApps = with config.services.nextcloud.package.packages.apps; {
+        # List of apps we want to install and are already packaged in
+        # https://github.com/NixOS/nixpkgs/blob/master/pkgs/servers/nextcloud/packages/nextcloud-apps.json
+        inherit
+          bookmarks
+          calendar # Calendar app
+          checksum
+          contacts # Contacts app
+          cookbook # Cookbook app
+          cospend
+          deck # For Kanban stuff
+          drawio
+          end_to_end_encryption # Encryption stuff
+          gpoddersync # Podcast Sync
+          integration_openai # For Nextcloud Assistant
+          maps # Maps app
+          news # News app
+          notes # Notes app
+          previewgenerator
+          richdocuments
+          spreed # NC Talk app
+          tasks # Tasks app
+          twofactor_admin # 2FA Admin app
+          twofactor_webauthn
+          user_oidc # OIDC App
+          ;
+      };
     };
 
     nginx = {
