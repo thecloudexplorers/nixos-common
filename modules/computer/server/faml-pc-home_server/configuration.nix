@@ -36,6 +36,8 @@
     ../../../workload/medivh/container-1/container-1.nix
     ../../../workload/heartstone/host-data.nix
     ../../../workload/heartstone/container-1/container-1.nix
+    ../../../workload/ironforge/host-data.nix
+    ../../../workload/ironforge/container-1/container-1.nix
     ../../../workload/dalaran/host-data.nix
     ../../../workload/dalaran/container-1/container-1.nix
 

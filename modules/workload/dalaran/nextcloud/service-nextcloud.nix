@@ -20,6 +20,8 @@ let
   proxyAddressIPv6 = "::";
   nginxUser = "nginx";
   nginxGroup = nginxUser;
+  databaseHost = "ironforge.${rootDomain}";
+  databasePort = 5432;
 in
 {
   environment.systemPackages = with pkgs; [
@@ -43,7 +45,9 @@ in
       hostName = workloadHostName;
       home = "/var/lib/${workloadService}";
       datadir = workloadServiceDataFolder;
-      database.createLocally = true;
+      # PostgreSQL now runs in the separate "ironforge" container instead of
+      # locally inside dalaran; see modules/workload/ironforge.
+      database.createLocally = false;
       configureRedis = true;
       https = true;
       maxUploadSize = "16G";
@@ -51,6 +55,7 @@ in
         adminuser = "admin";
         adminpassFile = workloadAdminPasswordFile;
         dbtype = "pgsql";
+        dbhost = "${databaseHost}:${toString databasePort}";
         dbname = workloadService;
         dbuser = workloadService;
       };
