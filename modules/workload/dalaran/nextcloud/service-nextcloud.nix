@@ -125,6 +125,12 @@ in
         "output_buffering" = "0";
       };
       autoUpdateApps.enable = true;
+      # Apps are pinned declaratively via extraApps below, so the writable
+      # app store (which requires a writable /var/lib/nextcloud/store-apps
+      # directory that isn't created by our tmpfiles rules) is not needed.
+      # Leaving this enabled causes occ app:enable to throw "Cannot write
+      # into apps directory" since that directory doesn't exist.
+      appstoreEnable = false;
       extraAppsEnable = true;
       extraApps = with config.services.nextcloud.package.packages.apps; {
         # List of apps we want to install and are already packaged in
