@@ -18,7 +18,6 @@ let
   workloadServiceAddressIPv6 = "::";
   proxyAddressIPv4 = "0.0.0.0";
   proxyAddressIPv6 = "::";
-  workloadServiceOfficeDomain = "office.${rootDomain}";
   nginxUser = "nginx";
   nginxGroup = nginxUser;
 in
