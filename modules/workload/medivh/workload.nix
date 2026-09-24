@@ -7,6 +7,8 @@ in
     # Workload Specific
     ./acme/service-acme.nix
     ./acme/service-acme-idm.nix
+    ./acme/service-acme-nextcloud.nix
+    ./acme/service-acme-ironforge.nix
   ]
   # Generic modules
   ++ [

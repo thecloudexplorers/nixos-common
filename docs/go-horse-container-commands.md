@@ -14,17 +14,24 @@ Example paths for `heartstone-1`:
 `/var/lib/nixos-containers/heartstone-1/`
 `/var/lib/nixos-containers/heartstone-1/rootfs`
 
+Example paths for `dalaran-1`:
+
+`/var/lib/nixos-containers/dalaran-1/`
+`/var/lib/nixos-containers/dalaran-1/rootfs`
+
 Persistent application data in this repo is stored via bind mounts under
 `/mnt`, not in `/var/lib/nixos-containers`. Check the `hostPath` values in:
 
 - `modules/workload/medivh/container-1/container-1.nix`
 - `modules/workload/heartstone/container-1/container-1.nix`
+- `modules/workload/dalaran/container-1/container-1.nix`
 
 ## Login and quick logs
 
 ```bash
 sudo nixos-container root-login medivh-1
 sudo nixos-container root-login heartstone-1
+sudo nixos-container root-login dalaran-1
 journalctl -b -p 5
 ```
 
@@ -38,7 +45,12 @@ sudo systemctl stop container@heartstone-1
 sudo systemctl start container@heartstone-1
 sudo systemctl restart container@heartstone-1
 
+sudo systemctl stop container@dalaran-1
+sudo systemctl start container@dalaran-1
+sudo systemctl restart container@dalaran-1
+
 sudo nixos-container restart medivh-1
+sudo nixos-container restart dalaran-1
 ```
 
 ## Remove container folders
@@ -46,10 +58,13 @@ sudo nixos-container restart medivh-1
 ```bash
 sudo rm -rf /var/lib/nixos-containers/heartstone-1
 sudo rm -rf /var/lib/nixos-containers/medivh-1
+sudo rm -rf /var/lib/nixos-containers/dalaran-1
 
 sudo rm -rf /mnt/ssd/medivh
 sudo rm -rf /mnt/ssd/heartstone
+sudo rm -rf /mnt/ssd/dalaran
 sudo rm -rf /mnt/zdata/heartstone
+sudo rm -rf /mnt/zdata/dalaran
 ```
 
 ## Bind mount directories
@@ -99,6 +114,23 @@ nano /mnt/ssd/medivh/secrets/acme-transip-secret
 ```
 
 1. Rebuild and switch:
+
+```bash
+sudo nixos-rebuild switch --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server
+```
+
+## Provision files for Dalaran Nextcloud workload
+
+The new Nextcloud container uses a separate admin password bootstrap file.
+
+1. Create the admin password file at `/mnt/ssd/dalaran/1/secrets/admin/nextcloud-admin-pass`.
+2. Fill it with the initial Nextcloud admin password.
+
+```bash
+nano /mnt/ssd/dalaran/1/secrets/admin/nextcloud-admin-pass
+```
+
+3. Rebuild and switch:
 
 ```bash
 sudo nixos-rebuild switch --flake ~/dev/gh/devjevnl/nixos-config#faml-pc-home_server
