@@ -40,6 +40,12 @@ in
           mountPoint = "/tmp/${workloadName}-admin";
           isReadOnly = true;
         };
+        # Kanidm OAuth2 client secret for the "user_oidc" SSO provider.
+        "/${workloadName}-secrets-oidc-${workloadService}" = {
+          hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/secrets/oidc";
+          mountPoint = "/tmp/${workloadName}-oidc";
+          isReadOnly = true;
+        };
       };
       privateNetwork = true;
       hostBridge = "br0";

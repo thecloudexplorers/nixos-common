@@ -18,5 +18,9 @@ in
     # Bootstrap the initial admin password from a host-managed secret.
     "d /mnt/ssd/${workloadName}/${toString workloadNode}/secrets/admin 0700 root root -"
     "z /mnt/ssd/${workloadName}/${toString workloadNode}/secrets/admin 0700 root root -"
+    # Holds the Kanidm OAuth2 client secret for the Nextcloud "user_oidc"
+    # provider. Populated manually, see docs/nextcloud-kanidm-sso.md.
+    "d /mnt/ssd/${workloadName}/${toString workloadNode}/secrets/oidc 0700 root root -"
+    "z /mnt/ssd/${workloadName}/${toString workloadNode}/secrets/oidc 0700 root root -"
   ];
 }

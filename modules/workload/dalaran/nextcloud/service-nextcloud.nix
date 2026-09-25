@@ -10,6 +10,10 @@ let
   rootDomain = "raboes28.nl";
   workloadHostName = "${workloadService}.${rootDomain}";
   workloadAdminPasswordFile = "/tmp/${workloadName}-admin/${workloadService}-admin-pass";
+  oidcClientSecretFile = "/tmp/${workloadName}-oidc/${workloadService}-client-secret";
+  oidcProviderIdentifier = "kanidm";
+  oidcClientId = "nextcloud";
+  oidcDiscoveryUri = "https://idm.${rootDomain}/oauth2/openid/${oidcClientId}/.well-known/openid-configuration";
   workloadServiceDataFolder = "/var/lib/${workloadService}/data";
   workloadServiceFolder = "/var/lib/${workloadService}";
   workloadServicePort = 443;
@@ -216,4 +220,34 @@ in
   systemd.services.nextcloud-cron.path = [
     pkgs.ffmpeg
   ];
+
+  # Registers/updates the Kanidm OIDC provider for the "user_oidc" app so
+  # users can sign in to Nextcloud with their Kanidm account. Runs on every
+  # boot so config drift (e.g. discovery URL/scope changes made here) is
+  # reconciled automatically; occ upserts by identifier so this is
+  # idempotent. The client secret itself is a host-managed secret, see
+  # docs/nextcloud-kanidm-sso.md.
+  systemd.services.nextcloud-oidc-setup = {
+    description = "Configure the Nextcloud user_oidc provider for Kanidm SSO";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "nextcloud-setup.service" ];
+    requires = [ "nextcloud-setup.service" ];
+    script = ''
+      ${lib.getExe config.services.nextcloud.occ} user_oidc:provider ${oidcProviderIdentifier} \
+        --clientid="${oidcClientId}" \
+        --clientsecret-file="$CREDENTIALS_DIRECTORY/oidc-client-secret" \
+        --discoveryuri="${oidcDiscoveryUri}" \
+        --scope="openid profile email" \
+        --unique-uid=0 \
+        --mapping-uid=preferred_username
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      LoadCredential = [
+        "oidc-client-secret:${oidcClientSecretFile}"
+      ]
+      ++ config.systemd.services.nextcloud-cron.serviceConfig.LoadCredential;
+      inherit (config.systemd.services.nextcloud-cron.serviceConfig) User KillMode;
+    };
+  };
 }
