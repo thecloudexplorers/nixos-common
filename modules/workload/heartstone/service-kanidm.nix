@@ -36,6 +36,8 @@ in
             members = [
               "marlous"
               "peon"
+              "jev"
+              "lyov"
             ];
           };
         };
@@ -51,6 +53,10 @@ in
           jev = {
             displayName = "Jev";
             groups = [ "faml-users" ];
+          };
+          lyov = {
+            displayName = "Lyov";
+            groups = [ "kids-users" ];
           };
         };
 
