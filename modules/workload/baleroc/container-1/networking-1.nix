@@ -10,7 +10,7 @@ let
   # Fill this in after deployment of the container, and create a DHCP
   # reservation for it on the router. The router port forwards (80/443) and
   # dalaran's Nextcloud `trusted_proxies` both point at this address.
-  # ethernetInterfaceMacAddress = "00:00:00:00:00:00";
+  ethernetInterfaceMacAddress = "aa:e1:bd:dd:d2:40";
   workloadTCPPorts = [
     80 # Only used to redirect to HTTPS.
     443 # The public facing reverse proxy.
@@ -23,7 +23,7 @@ in
     interfaces = {
       "${ethernetInterfaceName}" = {
         name = ethernetInterfaceName;
-        # macAddress = ethernetInterfaceMacAddress;
+        macAddress = ethernetInterfaceMacAddress;
         useDHCP = lib.mkForce true;
         tempAddress = "disabled";
       };

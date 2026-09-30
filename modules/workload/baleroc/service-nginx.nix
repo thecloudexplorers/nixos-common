@@ -12,6 +12,8 @@ let
   # serves and is verified against the real certificate for
   # ${nextcloudHostName}.
   dalaranAddressIPv4 = "192.168.1.69";
+  # Stable SLAAC (EUI-64) address derived from dalaran-1's MAC.
+  dalaranAddressIPv6 = "2a02:a441:f08f:0:781e:46ff:feb4:6f11";
   nextcloudProxyPass = "https://${nextcloudHostName}";
 in
 {
@@ -22,6 +24,7 @@ in
 
   networking.extraHosts = ''
     ${dalaranAddressIPv4} ${nextcloudHostName}
+    ${dalaranAddressIPv6} ${nextcloudHostName}
   '';
 
   services."${workloadService}" = {

@@ -20,8 +20,11 @@ let
   workloadServiceTalkPort = 3478;
   workloadServiceAddressIPv4 = "0.0.0.0";
   workloadServiceAddressIPv6 = "::";
-  proxyAddressIPv4 = "0.0.0.0";
-  proxyAddressIPv6 = "::";
+  # Baleroc-1 (public facing reverse proxy). The IPv4 address is set via a DHCP
+  # reservation on the router. The IPv6 address is the stable SLAAC (EUI-64)
+  # address derived from its MAC (privacy extensions are disabled).
+  proxyAddressIPv4 = "192.168.1.191";
+  proxyAddressIPv6 = "2a02:a441:f08f:0:a8e1:bdff:fedd:d240";
   nginxUser = "nginx";
   nginxGroup = nginxUser;
   databaseHost = "ironforge.${rootDomain}";
