@@ -3,6 +3,7 @@ let
   workloadService = "kanidm";
   rootDomain = "raboes28.nl";
   serviceDomain = "idm.${rootDomain}";
+  nextcloudHostName = "nextcloud.${rootDomain}";
 in
 {
   services = {
@@ -26,7 +27,19 @@ in
         # Add or remove entries here, then deploy with nixos-rebuild.
         groups = {
           faml-users = { };
+          kids-users = { };
           test-users = { };
+          # Members allowed to authenticate to Nextcloud via OIDC. See
+          # ../dalaran/nextcloud/service-nextcloud.nix for the client side of
+          # this integration.
+          nextcloud-users = {
+            members = [
+              "marlous"
+              "peon"
+              "jev"
+              "lyov"
+            ];
+          };
         };
         persons = {
           marlous = {
@@ -35,8 +48,42 @@ in
           };
           peon = {
             displayName = "Peon";
+            groups = [ "test-users" ];
+          };
+          jev = {
+            displayName = "Jev";
             groups = [ "faml-users" ];
           };
+          lyov = {
+            displayName = "Lyov";
+            groups = [ "kids-users" ];
+          };
+        };
+
+        # OAuth2/OIDC resource servers. Nextcloud's `user_oidc` app is
+        # configured as the client, see
+        # ../dalaran/nextcloud/service-nextcloud.nix and
+        # docs/nextcloud-kanidm-sso.md.
+        systems.oauth2.nextcloud = {
+          displayName = "Nextcloud";
+          # Landing page shown from the Kanidm application portal.
+          originLanding = "https://${nextcloudHostName}/";
+          # Must exactly match the callback registered by the Nextcloud
+          # `user_oidc` app.
+          originUrl = "https://${nextcloudHostName}/apps/user_oidc/code";
+          # `basicSecretFile` is intentionally left unset: kanidm generates a
+          # random client secret on its own, which is retrieved once via
+          # `kanidm system oauth2 show-basic-secret nextcloud` and stored as
+          # a host-managed secret for Nextcloud (see docs/nextcloud-kanidm-sso.md).
+          # `openid` is mandatory for OIDC clients to function at all.
+          scopeMaps.nextcloud-users = [
+            "openid"
+            "profile"
+            "email"
+          ];
+          # Use the short Kanidm username (e.g. "marlous") instead of the
+          # full SPN (e.g. "marlous@idm.raboes28.nl") as preferred_username.
+          preferShortUsername = true;
         };
       };
     };
