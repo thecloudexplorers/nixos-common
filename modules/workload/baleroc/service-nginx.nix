@@ -15,6 +15,13 @@ let
   # Stable SLAAC (EUI-64) address derived from dalaran-1's MAC.
   dalaranAddressIPv6 = "2a02:a441:f08f:0:781e:46ff:feb4:6f11";
   nextcloudProxyPass = "https://${nextcloudHostName}";
+  idmHostName = "idm.${rootDomain}";
+  idmProxyPass = "https://${idmHostName}";
+  # Heartstone-1's LAN IP, set via a DHCP reservation on the router (MAC
+  # c2:51:cd:8e:23:01). Same static hosts entry approach as for dalaran.
+  heartstoneAddressIPv4 = "192.168.1.209";
+  # Stable SLAAC (EUI-64) address derived from heartstone-1's MAC.
+  heartstoneAddressIPv6 = "2a02:a441:f08f:0:c051:cdff:fe8e:2301";
 in
 {
   # Grant nginx read/traverse access to the ACME-managed certificate
@@ -25,6 +32,8 @@ in
   networking.extraHosts = ''
     ${dalaranAddressIPv4} ${nextcloudHostName}
     ${dalaranAddressIPv6} ${nextcloudHostName}
+    ${heartstoneAddressIPv4} ${idmHostName}
+    ${heartstoneAddressIPv6} ${idmHostName}
   '';
 
   services."${workloadService}" = {
@@ -39,6 +48,12 @@ in
     enableReload = true;
     # Do not advertise the nginx version to the public internet.
     serverTokens = false;
+    # Per client IP request limit for the identity provider, which is a
+    # sensitive public endpoint (credential stuffing / brute force).
+    appendHttpConfig = ''
+      limit_req_zone $binary_remote_addr zone=idm:10m rate=10r/s;
+      limit_req_status 429;
+    '';
     virtualHosts = {
       # Catch-all for anything not addressed to a known hostname (scanners,
       # requests by bare IP). TLS handshakes for unknown names are refused
@@ -81,6 +96,24 @@ in
           proxyPass = nextcloudProxyPass;
           proxyWebsockets = true;
         };
+      };
+      "${idmHostName}" = {
+        serverName = idmHostName;
+        forceSSL = true;
+        sslCertificate = "/var/lib/acme/${idmHostName}/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/${idmHostName}/key.pem";
+        extraConfig = ''
+          limit_req zone=idm burst=30 nodelay;
+
+          # Talk to the backend over HTTPS and verify its certificate.
+          proxy_ssl_server_name on;
+          proxy_ssl_verify on;
+          proxy_ssl_verify_depth 5;
+          proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+
+          add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;
+        '';
+        locations."/".proxyPass = idmProxyPass;
       };
     };
   };

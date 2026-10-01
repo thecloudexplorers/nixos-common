@@ -21,6 +21,14 @@ in
           mountPoint = "/var/lib/acme/nextcloud.${rootDomain}";
           isReadOnly = true;
         };
+        # Same for the Kanidm (idm) certificate. Medivh writes it into
+        # heartstone's ACME directory (see
+        # modules/workload/heartstone/host-data.nix), so it is read from there.
+        "/${workloadName}-acme-idm" = {
+          hostPath = "/mnt/ssd/heartstone/var/lib/acme/idm.${rootDomain}";
+          mountPoint = "/var/lib/acme/idm.${rootDomain}";
+          isReadOnly = true;
+        };
       };
       # Ensure the container has a dedicated virtual interface
       privateNetwork = true;
