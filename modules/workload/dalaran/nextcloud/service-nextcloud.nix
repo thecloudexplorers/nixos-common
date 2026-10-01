@@ -73,6 +73,15 @@ in
           "${proxyAddressIPv6}"
         ];
         overwriteprotocol = "https";
+        # Unique ID of this PHP server. Only really needed when several PHP
+        # servers share one Nextcloud instance (load balancing), but setting it
+        # silences the "Configuration server ID" setup check. Any unique
+        # integer works; this is the only server, so it is fixed at 1.
+        serverid = 1;
+        # Base URL used when there is no web request (cron, occ, background
+        # jobs, notify_push). Without it Nextcloud generates http://localhost
+        # URLs there, which also triggers the "HTTPS access and URLs" check.
+        "overwrite.cli.url" = "https://${workloadHostName}";
         mail_domain = "${rootDomain}";
         "profile.enabled" = true;
         allow_local_remote_servers = true;
@@ -132,6 +141,17 @@ in
         "output_buffering" = "0";
       };
       autoUpdateApps.enable = true;
+      # Client Push (notify_push): a small daemon next to Nextcloud that pushes
+      # events (e.g. Talk notifications) to clients over a websocket. The module
+      # also enables the app and adds a /push/ location to the nginx vhost, which
+      # the baleroc proxy already forwards (websockets are enabled there).
+      notify_push = {
+        enable = true;
+        # The daemon and `occ notify_push:setup` call the public Nextcloud URL.
+        # Resolve it to this container instead of looping out through the router
+        # and the baleroc proxy, and trust localhost as a proxy for that call.
+        bendDomainToLocalhost = true;
+      };
       # Apps are pinned declaratively via extraApps below, so the writable
       # app store (which requires a writable /var/lib/nextcloud/store-apps
       # directory that isn't created by our tmpfiles rules) is not needed.
