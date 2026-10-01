@@ -180,7 +180,7 @@ in
           serverName = workloadHostName;
           forceSSL = true;
           extraConfig = "client_body_buffer_size 512M;";
-          sslCertificate = "/var/lib/acme/${workloadHostName}/cert.pem";
+          sslCertificate = "/var/lib/acme/${workloadHostName}/fullchain.pem";
           sslCertificateKey = "/var/lib/acme/${workloadHostName}/key.pem";
           listen = [
             {

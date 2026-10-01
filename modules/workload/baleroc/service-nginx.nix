@@ -52,7 +52,7 @@ in
       "${nextcloudHostName}" = {
         serverName = nextcloudHostName;
         forceSSL = true;
-        sslCertificate = "/var/lib/acme/${nextcloudHostName}/cert.pem";
+        sslCertificate = "/var/lib/acme/${nextcloudHostName}/fullchain.pem";
         sslCertificateKey = "/var/lib/acme/${nextcloudHostName}/key.pem";
         extraConfig = ''
           # Nextcloud uploads/downloads can be huge; stream them instead of
@@ -70,6 +70,9 @@ in
           # Talk to the backend over HTTPS and verify its certificate.
           proxy_ssl_server_name on;
           proxy_ssl_verify on;
+          # The Let's Encrypt chain is 4 certificates deep (leaf, intermediate,
+          # cross-signed root, ISRG Root X2); nginx defaults to a depth of 1.
+          proxy_ssl_verify_depth 5;
           proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
 
           add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;
