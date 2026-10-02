@@ -185,6 +185,19 @@ in
           twofactor_webauthn
           user_oidc # OIDC App
           ;
+        # Not packaged in nixpkgs, so fetched straight from the app store release.
+        integration_giphy =
+          let
+            organisation = "nextcloud-releases";
+            application = "integration_giphy";
+            version = "2.3.0";
+            hash = "sha256-WrhKOPcKUnrT5Rui48/aD/hUub2CRAcw1As1qoC/I6Y=";
+          in
+          pkgs.fetchNextcloudApp {
+            sha256 = hash;
+            url = "https://github.com/${organisation}/${application}/releases/download/v${version}/${application}-v${version}.tar.gz";
+            license = "agpl3Plus";
+          };
       };
     };
 
