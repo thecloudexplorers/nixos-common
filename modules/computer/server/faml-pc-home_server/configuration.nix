@@ -254,10 +254,11 @@
   };
   environment = {
     systemPackages = with pkgs; [
-      alsa-plugins
-      btop
+      alsa-plugins # ALSA plugins that let ALSA apps route audio through PipeWire/PulseAudio
+      btop # Terminal resource monitor with graphs for CPU, memory, disk and network
       git
       git-credential-manager
+      htop # Interactive terminal process viewer to inspect and kill processes
       kdePackages.plasma-systemmonitor
       lm_sensors
       openssl
