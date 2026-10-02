@@ -30,7 +30,7 @@ in
           kids-users = { };
           test-users = { };
           # Members allowed to authenticate to Nextcloud via OIDC. See
-          # ../dalaran/nextcloud/service-nextcloud.nix for the client side of
+          # ../dalaran/service-nextcloud.nix for the client side of
           # this integration.
           nextcloud-users = {
             members = [
@@ -62,7 +62,7 @@ in
 
         # OAuth2/OIDC resource servers. Nextcloud's `user_oidc` app is
         # configured as the client, see
-        # ../dalaran/nextcloud/service-nextcloud.nix and
+        # ../dalaran/service-nextcloud.nix and
         # docs/nextcloud-kanidm-sso.md.
         systems.oauth2.nextcloud = {
           displayName = "Nextcloud";

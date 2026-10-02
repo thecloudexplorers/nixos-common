@@ -24,7 +24,7 @@ already familiar with both.
   CLI and copied into a host-managed secret file, the same pattern already
   used for Nextcloud's admin password bootstrap.
 - On the Nextcloud side, a `nextcloud-oidc-setup.service` (see
-  [service-nextcloud.nix](../modules/workload/dalaran/nextcloud/service-nextcloud.nix))
+  [service-nextcloud.nix](../modules/workload/dalaran/service-nextcloud.nix))
   runs after `nextcloud-setup.service` on every boot and registers/updates the
   `user_oidc` provider (identifier `kanidm`) via `occ user_oidc:provider`,
   reading the client secret from that same host-managed file.

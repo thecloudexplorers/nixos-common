@@ -51,7 +51,7 @@ sudo nixos-container restart dalaran-1
 
 ## What runs here
 
-- **Nextcloud 34** ([nextcloud/service-nextcloud.nix](nextcloud/service-nextcloud.nix)),
+- **Nextcloud 34** ([service-nextcloud.nix](service-nextcloud.nix)),
   with `configureRedis` for caching and `notify_push` for client push.
 - **nginx** terminating TLS with the certificate issued by `medivh`.
 - **Declarative apps** (`extraApps`): calendar, contacts, deck, notes, tasks,
