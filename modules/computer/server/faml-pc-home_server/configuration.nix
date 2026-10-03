@@ -322,6 +322,15 @@
     ];
   };
 
+  # Lets the generic-Linux VS Code Server (Remote - SSH) run on NixOS.
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc
+      zlib
+    ];
+  };
+
   programs.git = {
     enable = true;
     lfs.enable = true;
