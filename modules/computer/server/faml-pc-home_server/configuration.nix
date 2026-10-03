@@ -247,6 +247,37 @@
         "nvidia"
       ];
     };
+    # SSH access, key-only (no password logins).
+    openssh = {
+      enable = true;
+      openFirewall = true;
+      settings = {
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+        PermitRootLogin = "no";
+        AllowUsers = [ "jev" ];
+      };
+    };
+    # PARKED: xrdp (RDP) login. Session reaches Plasma but stays black
+    # (kwin_x11 hangs on software GL under xorgxrdp). Last attempted
+    # settings: defaultWindowManager = "startplasma-x11", audio off, and
+    # sesman [SessionVariables] KWIN_COMPOSE=N, QT_QUICK_BACKEND=software,
+    # LIBGL_ALWAYS_SOFTWARE=1, __GLX_VENDOR_LIBRARY_NAME=mesa.
+    # xrdp = {
+    #   enable = true;
+    #   port = 3389;
+    #   openFirewall = true;
+    #   defaultWindowManager = "startplasma-x11";
+    #   audio.enable = false;
+    #   extraConfDirCommands = ''
+    #     sed -i -e '/.*SessionVariables.*/ a\
+    #     KWIN_COMPOSE=N\
+    #     QT_QUICK_BACKEND=software\
+    #     LIBGL_ALWAYS_SOFTWARE=1\
+    #     __GLX_VENDOR_LIBRARY_NAME=mesa
+    #     ' $out/sesman.ini
+    #   '';
+    # };
   };
   qt = {
     platformTheme = "kde";
@@ -281,6 +312,9 @@
     initialPassword = "1234abcd";
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK+y+39nfXbNe3nglH9tD0V6pap/MMho2i1BPISLtseW jev-win11"
+    ];
     packages = with pkgs; [
       nixd
       nixfmt
