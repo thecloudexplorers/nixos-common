@@ -1,0 +1,1 @@
+Read [AGENTS.md](../AGENTS.md) first; it is the full guide. Never, even if unread: put secrets in Nix files, change `stateVersion`, run `nixos-rebuild switch`/`nixos-install`/`disko`, or ask for a sudo password.
