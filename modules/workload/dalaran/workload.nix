@@ -5,7 +5,7 @@ in
 {
   imports = [
     # Workload Specific
-    ./nextcloud/service-nextcloud.nix
+    ./service-nextcloud.nix
   ];
   environment.systemPackages = with pkgs; [ openssl ];
   system.stateVersion = workloadStateVersion;

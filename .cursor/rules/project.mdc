@@ -1,0 +1,6 @@
+---
+description: Project guidance for the NixOS config repo
+alwaysApply: true
+---
+
+Follow all instructions in AGENTS.md at the repository root. Read it before making changes.

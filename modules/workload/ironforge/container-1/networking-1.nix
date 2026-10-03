@@ -7,6 +7,10 @@ let
   computerId = "b7f2c9d1";
   computerName = "lxc-${workloadName}-${toString workloadNode}";
   ethernetInterfaceName = "eth0";
+  # TODO: The MAC address is still commented out, so this container gets a
+  # random MAC and the DHCP reservation on the router is not stable. Fill it
+  # in after deployment of the container, uncomment it here and below, and
+  # set the reservation on the router.
   # Fill this in after deployment of the container!!!
   # ethernetInterfaceMacAddress = "c2:51:cd:8e:23:02";
   workloadTCPPorts = [ ];

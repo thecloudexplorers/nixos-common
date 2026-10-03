@@ -9,7 +9,7 @@ This document describes the end-to-end flow for your current setup:
 - database: PostgreSQL runs in a separate container, `ironforge-1`
   (`ironforge.raboes28.nl:5432`), not locally inside `dalaran-1`
 - apps: all Nextcloud apps are installed declaratively via `extraApps` in
-  [service-nextcloud.nix](../modules/workload/dalaran/nextcloud/service-nextcloud.nix);
+  [service-nextcloud.nix](../modules/workload/dalaran/service-nextcloud.nix);
   the Nextcloud App Store is disabled (`appstoreEnable = false`) since apps
   are managed by Nix, not fetched at runtime
 
@@ -194,7 +194,7 @@ app:enable` fails its writability check and the whole oneshot service exits
 non-zero — even though the database install itself already succeeded.
 
 Fix: set `services.nextcloud.appstoreEnable = false;` in
-[service-nextcloud.nix](../modules/workload/dalaran/nextcloud/service-nextcloud.nix)
+[service-nextcloud.nix](../modules/workload/dalaran/service-nextcloud.nix)
 (already applied), then rebuild and rerun setup.
 
 ### Benign "Error trying to connect as postgres" warning
