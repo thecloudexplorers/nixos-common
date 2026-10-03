@@ -20,6 +20,12 @@ generators and docs.
 
 ## Conventions
 
+- All workload names, and therefore their container names, must be inspired by
+  World of Warcraft lore. Choose a character, place, or other reference whose
+  role or story is as close as possible to the workload's purpose; avoid
+  arbitrary or unrelated names. For example, `baleroc` is a fitting name for
+  the externally facing nginx reverse proxy because Baleroc is known as the
+  Gatekeeper.
 - Workload file naming: `workload.nix`, `service-<name>.nix`, `host-data.nix`, `container-<N>/container-<N>.nix`, `container-<N>/networking-<N>.nix`, `container-<N>/service-<name>-<N>.nix` (only when a node differs).
 - Shared service config goes in `service-<name>.nix`; node-specific settings only in the per-node file.
 - Host-side bind mount dirs/permissions go in `host-data.nix` (`systemd.tmpfiles`), not inside containers.
