@@ -10,7 +10,7 @@ let
   workloadServiceBindAddress = "127.0.0.1";
   workloadServicePort = 11434;
   workloadDomain = "ollama.${rootDomain}";
-  proxyPort = 11435;
+  proxyPort = 443;
   proxyListeners = [
     {
       addr = "0.0.0.0";

@@ -7,7 +7,7 @@ let
   ethernetInterfaceName = "eth0";
   # Reserve this address on the router so the proxy endpoint remains stable.
   ethernetInterfaceMacAddress = "02:38:9a:9f:02:ab";
-  workloadTCPPorts = [ 11435 ];
+  workloadTCPPorts = [ 443 ];
 in
 {
   networking = {

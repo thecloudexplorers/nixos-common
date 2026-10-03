@@ -4,11 +4,12 @@ Ollama model server and HTTPS reverse proxy (container `cho-1`).
 
 ## Access
 
-- API endpoint: `https://ollama.raboes28.nl:11435`
+- API endpoint: `https://ollama.raboes28.nl` (HTTPS on port `443`)
 - Ollama listens only on `127.0.0.1:11434`; the container firewall opens only
-  the HTTPS proxy port, `11435`.
+  the HTTPS proxy port, `443`.
 - The API has no user authentication. Keep this endpoint on your LAN/VPN and
-  do not forward port `11435` from the internet.
+  do not forward port `443` from the internet. This endpoint is served directly
+  by `cho-1`, not through Baleroc.
 - The router needs a DHCP reservation for MAC `02:38:9a:9f:02:ab`. Point the
   LAN DNS record for `ollama.raboes28.nl` at that reserved address.
 - If this workload was already deployed as `jarvis`, copy its Ollama data from
@@ -33,8 +34,8 @@ sudo nixos-container run cho-1 -- ollama list
 sudo nixos-container run cho-1 -- ollama run mistral-small:latest
 
 # Check the HTTPS endpoint and certificate
-curl -sS https://ollama.raboes28.nl:11435/api/tags
-echo | openssl s_client -connect ollama.raboes28.nl:11435 -servername ollama.raboes28.nl 2>/dev/null | openssl x509 -noout -dates -subject
+curl -sS https://ollama.raboes28.nl/api/tags
+echo | openssl s_client -connect ollama.raboes28.nl:443 -servername ollama.raboes28.nl 2>/dev/null | openssl x509 -noout -dates -subject
 
 # Container lifecycle (avoid unless recovering)
 sudo nixos-container restart cho-1

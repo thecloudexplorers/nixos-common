@@ -64,9 +64,9 @@ Notes:
 - **medivh:** it has several certificates, so its service files are grouped in
   `acme/`. `service-acme.nix` holds the shared defaults and each
   `service-acme-<domain>.nix` defines one certificate.
-- **cho:** Ollama is reachable through its HTTPS proxy on the LAN/VPN only.
-  Do not forward its proxy port from the internet; the Ollama API has no
-  user-authentication layer.
+- **cho:** Ollama is reachable directly at `https://ollama.raboes28.nl` on
+  `cho-1`'s LAN/VPN address (port 443), not through Baleroc. Do not forward
+  port 443 from the internet; the Ollama API has no user-authentication layer.
 - **Subfolders:** only group service files into a subfolder when a workload has
   several of them (as `medivh/acme/`). With one service file, keep it directly in the
   workload folder.
