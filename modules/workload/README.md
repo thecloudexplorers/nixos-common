@@ -9,6 +9,7 @@ service. Per-workload docs and handy commands are in each workload's own README.
 | `dalaran`    | Nextcloud                  | [dalaran](dalaran/README.md)       |
 | `heartstone` | Kanidm (identity provider) | [heartstone](heartstone/README.md) |
 | `ironforge`  | PostgreSQL                 | [ironforge](ironforge/README.md)   |
+| `cho`        | Ollama                     | [cho](cho/README.md)               |
 | `medivh`     | ACME certificates          | [medivh](medivh/README.md)         |
 
 ## Folder structure
@@ -50,6 +51,7 @@ service. Per-workload docs and handy commands are in each workload's own README.
 | `dalaran`    | [service-nextcloud.nix](dalaran/service-nextcloud.nix)     | none                                                                |
 | `heartstone` | [service-kanidm.nix](heartstone/service-kanidm.nix)        | [service-kanidm-1.nix](heartstone/container-1/service-kanidm-1.nix) |
 | `ironforge`  | [service-postgresql.nix](ironforge/service-postgresql.nix) | none                                                                |
+| `cho`        | [service-ollama.nix](cho/service-ollama.nix)               | none                                                                |
 | `medivh`     | [acme/](medivh/acme/)                                      | none                                                                |
 
 Notes:
@@ -62,6 +64,9 @@ Notes:
 - **medivh:** it has several certificates, so its service files are grouped in
   `acme/`. `service-acme.nix` holds the shared defaults and each
   `service-acme-<domain>.nix` defines one certificate.
+- **cho:** Ollama is reachable directly at `https://ollama.raboes28.nl` on
+  `cho-1`'s LAN/VPN address (port 443), not through Baleroc. Do not forward
+  port 443 from the internet; the Ollama API has no user-authentication layer.
 - **Subfolders:** only group service files into a subfolder when a workload has
   several of them (as `medivh/acme/`). With one service file, keep it directly in the
   workload folder.
