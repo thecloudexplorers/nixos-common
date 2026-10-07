@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 let
   rootDomain = "raboes28.nl";
   workloadName = "cho";
@@ -31,6 +31,8 @@ in
   services = {
     "${workloadService}" = {
       enable = true;
+      # CUDA build so Ollama uses the NVIDIA GPU passed into the container.
+      package = pkgs.ollama-cuda;
       user = workloadServiceUser;
       group = workloadServiceGroup;
       home = workloadServicePath;
@@ -38,7 +40,14 @@ in
       host = workloadServiceBindAddress;
       port = workloadServicePort;
       openFirewall = false;
-      loadModels = [ "mistral-small:latest" ];
+      # Every model listed here is downloaded and can be selected per request
+      # through the "model" field. Ollama loads one on demand and unloads idle ones.
+      loadModels = [
+        "mistral-small:latest"
+        "ministral-3:14b"
+        # "qwen3.5:9b" # Q4, ~7 GB; replaced by the Q8 variant below
+        "qwen3.5:9b-q8_0"
+      ];
       syncModels = true;
     };
 

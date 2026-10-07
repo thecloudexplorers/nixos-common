@@ -12,12 +12,6 @@ Ollama model server and HTTPS reverse proxy (container `cho-1`).
   by `cho-1`, not through Baleroc.
 - The router needs a DHCP reservation for MAC `02:38:9a:9f:02:ab`. Point the
   LAN DNS record for `ollama.raboes28.nl` at that reserved address.
-- If this workload was already deployed as `jarvis`, copy its Ollama data from
-  `/mnt/ssd/jarvis/1/var/lib/ollama` and
-  `/mnt/zdata/jarvis/1/var/lib/ollama/models` to the corresponding `cho`
-  directories before starting `cho-1`. Stop `jarvis-1` first so both containers
-  do not compete for its reserved address; keep the old data until the new
-  container, models, and `ollama.raboes28.nl` certificate are confirmed working.
 
 ## Handy commands
 
@@ -46,10 +40,87 @@ sudo nixos-container restart cho-1
 - Ollama listens on localhost port `11434`, so it is not directly exposed to
   the LAN.
 - Nginx terminates TLS using the certificate issued by [medivh](../medivh/README.md)
-  and proxies requests to Ollama on port `11435`.
-- `mistral-small:latest` is downloaded automatically. `syncModels = true` keeps
-  the installation synchronized with the declared model list, so update
+  and proxies requests to Ollama on port `11434`.
+- The models in `loadModels` (currently `mistral-small:latest`,
+  `ministral-3:14b` and `qwen3.5:9b-q8_0`) are downloaded automatically.
+  Choose one per request with
+  the `model` field; Ollama loads it on demand and unloads idle models.
+  `syncModels = true` keeps the installation synchronized with that list and
+  removes any other model when the service restarts, so update
   [service-ollama.nix](service-ollama.nix) before adding other persistent models.
+
+## Test the API
+
+Run from any machine on the LAN/VPN that resolves `ollama.raboes28.nl`.
+
+```bash
+# List installed models
+curl -sS https://ollama.raboes28.nl/api/tags
+
+# Chat (single JSON response)
+curl -sS https://ollama.raboes28.nl/api/chat -d '{
+  "model": "mistral-small:latest",
+  "messages": [{"role": "user", "content": "How old is your training data?"}],
+  "stream": false
+}'
+
+# Chat (streamed, one JSON object per line; this is the default)
+curl -sS https://ollama.raboes28.nl/api/chat -d '{
+  "model": "mistral-small:latest",
+  "messages": [{"role": "user", "content": "Say hello in one sentence."}]
+}'
+
+# Show only the answer text (requires jq)
+curl -sS https://ollama.raboes28.nl/api/chat -d '{
+  "model": "mistral-small:latest",
+  "messages": [{"role": "user", "content": "Say hello in one sentence."}],
+  "stream": false
+}' | jq -r '.message.content'
+
+# OpenAI compatible endpoint
+curl -sS https://ollama.raboes28.nl/v1/chat/completions -d '{
+  "model": "mistral-small:latest",
+  "messages": [{"role": "user", "content": "Say hello in one sentence."}]
+}'
+```
+
+The first request after a restart or idle period is slow because the model
+must be loaded into GPU memory. Afterwards, check on the host that it runs on the
+GPU with `sudo nixos-container run cho-1 -- ollama ps` (`PROCESSOR` should read
+`100% GPU`).
+
+## GPU (NVIDIA CUDA)
+
+Ollama runs the CUDA build (`pkgs.ollama-cuda`) on the host's NVIDIA GPU.
+
+- [container-1/container-1.nix](container-1/container-1.nix) bind mounts
+  `/dev/nvidia0`, `/dev/nvidiactl` and `/dev/nvidia-uvm` and allows them in the
+  container's device cgroup (`allowedDevices`); both are required.
+- The container reuses the host's pinned driver package
+  (`config.hardware.nvidia.package`) for its userspace libraries, so they always
+  match the host kernel driver. A separate driver from the container's nixpkgs
+  causes `Driver/library version mismatch`. The `.out` output must be linked
+  (it holds `libcuda`); the default `bin` output does not, and Ollama then
+  silently falls back to the CPU.
+- After a host driver update, restart the container so it picks up the new
+  version: `sudo nixos-container restart cho-1`.
+
+```bash
+# Driver and GPU visible in the container
+sudo nixos-container run cho-1 -- nvidia-smi
+
+# Ollama should report library=CUDA and the VRAM size, not id=cpu
+sudo nixos-container run cho-1 -- journalctl -u ollama.service -b --no-pager | grep -iE "inference compute|vram"
+
+# After loading a model, PROCESSOR should read 100% GPU
+sudo nixos-container run cho-1 -- ollama ps
+
+# Watch GPU utilization and VRAM live while sending a request (Ctrl+C to stop)
+watch -n 1 nvidia-smi
+
+# The ollama process should be listed with its VRAM usage
+sudo nixos-container run cho-1 -- nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
+```
 
 ## Persistent data
 
