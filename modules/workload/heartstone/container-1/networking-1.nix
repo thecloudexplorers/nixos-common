@@ -7,12 +7,11 @@ let
   computerId = "5a717d57";
   computerName = "lxc-${workloadName}-${toString workloadNode}";
   ethernetInterfaceName = "eth0";
-  # TODO: The MAC address is still commented out, so this container gets a
-  # random MAC and the DHCP reservation on the router is not stable. Fill it
-  # in after deployment of the container, uncomment it here and below, and
-  # set the reservation on the router.
-  # Fill this in after deployment of the container!!!
-  # ethernetInterfaceMacAddress = "c2:51:cd:8e:23:01";
+  # Fixed MAC address so the DHCP reservation on the router (192.168.1.209)
+  # stays stable. Baleroc's static hosts entries for idm.raboes28.nl use this
+  # address and its SLAAC (EUI-64) IPv6 address derived from this MAC, see
+  # ../../baleroc/service-nginx.nix. Changing the MAC requires updating both.
+  ethernetInterfaceMacAddress = "c2:51:cd:8e:23:01";
   workloadTCPPorts = [ ];
 in
 {
@@ -22,7 +21,7 @@ in
     interfaces = {
       "${ethernetInterfaceName}" = {
         name = ethernetInterfaceName;
-        # macAddress = ethernetInterfaceMacAddress;
+        macAddress = ethernetInterfaceMacAddress;
         useDHCP = lib.mkForce true;
         tempAddress = "disabled";
       };
