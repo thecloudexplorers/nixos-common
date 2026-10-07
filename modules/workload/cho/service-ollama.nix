@@ -40,6 +40,9 @@ in
       host = workloadServiceBindAddress;
       port = workloadServicePort;
       openFirewall = false;
+      # Keep a model in VRAM for 60 minutes after the last request instead of the
+      # 5 minute default, so repeated use does not pay the model load time again.
+      environmentVariables.OLLAMA_KEEP_ALIVE = "60m";
       # Every model listed here is downloaded and can be selected per request
       # through the "model" field. Ollama loads one on demand and unloads idle ones.
       loadModels = [

@@ -59,14 +59,14 @@ curl -sS https://ollama.raboes28.nl/api/tags
 
 # Chat (single JSON response)
 curl -sS https://ollama.raboes28.nl/api/chat -d '{
-  "model": "mistral-small:latest",
+  "model": "qwen3.5:9b-q8_0",
   "messages": [{"role": "user", "content": "How old is your training data?"}],
   "stream": false
 }'
 
 # Chat (streamed, one JSON object per line; this is the default)
 curl -sS https://ollama.raboes28.nl/api/chat -d '{
-  "model": "mistral-small:latest",
+  "model": "qwen3.5:9b-q8_0",
   "messages": [{"role": "user", "content": "Say hello in one sentence."}]
 }'
 
@@ -125,6 +125,8 @@ sudo nixos-container run cho-1 -- nvidia-smi --query-compute-apps=pid,process_na
 ## Persistent data
 
 - `/mnt/ssd/cho/1/var/lib/ollama` stores Ollama service state.
-- `/mnt/zdata/cho/1/var/lib/ollama/models` stores downloaded models.
+- `/mnt/ssd/cho/1/var/lib/ollama/models` stores downloaded models. They are on
+  the SSD (not the `zdata` pool) so loading a model into VRAM is fast. Models
+  can be downloaded again, so they are not backed up.
 - `/mnt/ssd/medivh/1/var/lib/acme/ollama.raboes28.nl` provides the read-only TLS
   certificate.

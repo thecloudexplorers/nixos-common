@@ -13,16 +13,12 @@ in
       autoStart = true;
       privateUsers = "identity";
       bindMounts = {
-        # Persist Ollama service state on the host.
+        # Persist Ollama service state on the host. The models live in the
+        # `models` subdirectory of this mount, so they are on the SSD too: it is
+        # much faster than the zdata pool at loading a model into VRAM.
         "/${workloadName}-data-lib-${workloadService}" = {
           hostPath = "/mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/${workloadService}";
           mountPoint = "/var/lib/private/${workloadService}";
-          isReadOnly = false;
-        };
-        # Store the large model files on the data volume.
-        "/${workloadName}-models-${workloadService}" = {
-          hostPath = "/mnt/zdata/${workloadName}/${toString workloadNode}/var/lib/${workloadService}/models";
-          mountPoint = "/var/lib/private/${workloadService}/models";
           isReadOnly = false;
         };
         # Expose the NVIDIA device nodes so Ollama (CUDA) can use the host GPU.
