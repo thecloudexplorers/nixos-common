@@ -13,6 +13,7 @@ in
   networking = {
     hostId = computerId;
     hostName = computerName;
+    enableIPv6 = lib.mkForce true;
     interfaces = {
       "${ethernetInterfaceName}" = {
         name = ethernetInterfaceName;
