@@ -10,6 +10,7 @@ service. Per-workload docs and handy commands are in each workload's own README.
 | `heartstone` | Kanidm (identity provider) | [heartstone](heartstone/README.md) |
 | `ironforge`  | PostgreSQL                 | [ironforge](ironforge/README.md)   |
 | `cho`        | Ollama                     | [cho](cho/README.md)               |
+| `khadgar`    | Hermes Agent               | [khadgar](khadgar/README.md)       |
 | `medivh`     | ACME certificates          | [medivh](medivh/README.md)         |
 
 ## Folder structure
@@ -45,14 +46,15 @@ service. Per-workload docs and handy commands are in each workload's own README.
 
 ## Per-service config
 
-| Workload     | Shared service config                                      | Node specific service config                                        |
-| ------------ | ---------------------------------------------------------- | ------------------------------------------------------------------- |
-| `baleroc`    | [service-nginx.nix](baleroc/service-nginx.nix)             | none                                                                |
-| `dalaran`    | [service-nextcloud.nix](dalaran/service-nextcloud.nix)     | none                                                                |
-| `heartstone` | [service-kanidm.nix](heartstone/service-kanidm.nix)        | [service-kanidm-1.nix](heartstone/container-1/service-kanidm-1.nix) |
-| `ironforge`  | [service-postgresql.nix](ironforge/service-postgresql.nix) | none                                                                |
-| `cho`        | [service-ollama.nix](cho/service-ollama.nix)               | none                                                                |
-| `medivh`     | [acme/](medivh/acme/)                                      | none                                                                |
+| Workload     | Shared service config                                        | Node specific service config                                        |
+| ------------ | ------------------------------------------------------------ | ------------------------------------------------------------------- |
+| `baleroc`    | [service-nginx.nix](baleroc/service-nginx.nix)               | none                                                                |
+| `dalaran`    | [service-nextcloud.nix](dalaran/service-nextcloud.nix)       | none                                                                |
+| `heartstone` | [service-kanidm.nix](heartstone/service-kanidm.nix)          | [service-kanidm-1.nix](heartstone/container-1/service-kanidm-1.nix) |
+| `ironforge`  | [service-postgresql.nix](ironforge/service-postgresql.nix)   | none                                                                |
+| `cho`        | [service-ollama.nix](cho/service-ollama.nix)                 | none                                                                |
+| `khadgar`    | [service-hermes-agent.nix](khadgar/service-hermes-agent.nix) | none                                                                |
+| `medivh`     | [acme/](medivh/acme/)                                        | none                                                                |
 
 Notes:
 
@@ -67,6 +69,10 @@ Notes:
 - **cho:** Ollama is reachable directly at `https://ollama.raboes28.nl` on
   `cho-1`'s LAN/VPN address (port 443), not through Baleroc. Do not forward
   port 443 from the internet; the Ollama API has no user-authentication layer.
+- **khadgar:** Hermes Agent is served directly by `khadgar-1` on three HTTPS
+  ports (dashboard `9120`, OpenAI compatible API `8643`, A2A `9901`), not
+  through Baleroc. Keep them on the LAN/VPN. Secrets are in a host managed
+  `hermes.env`, see its README.
 - **Subfolders:** only group service files into a subfolder when a workload has
   several of them (as `medivh/acme/`). With one service file, keep it directly in the
   workload folder.

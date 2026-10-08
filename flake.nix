@@ -21,6 +21,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    # Hermes Agent and its NixOS module, used by the khadgar workload. It is
+    # intentionally not made to follow our nixpkgs, because the agent's Python
+    # and Node dependencies are built against the nixpkgs it ships with.
+    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
   outputs =
     {

@@ -43,6 +43,8 @@
     ../../../workload/baleroc/container-1/container-1.nix
     ../../../workload/cho/host-data.nix
     ../../../workload/cho/container-1/container-1.nix
+    ../../../workload/khadgar/host-data.nix
+    ../../../workload/khadgar/container-1/container-1.nix
 
     ## Services running on this server
     ## Import all services here
