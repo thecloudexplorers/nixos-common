@@ -35,8 +35,9 @@ let
   ollamaServiceName = "Ollama";
   ollamaUrl = "https://ollama.${rootDomain}/v1";
   # Must be one of the models in cho's loadModels.
-  ollamaDefaultModel = "qwen3.5:9b-q8_0";
-  # qwen3.5 is a thinking model: its reasoning counts against max_tokens. With
+  ollamaDefaultModel = "gemma4:e4b";
+  # Thinking models (qwen3.5, and gemma4 when thinking is on) count their
+  # reasoning against max_tokens. With
   # the app default (1000) the reasoning often uses the whole budget, the
   # request ends with finish_reason "length" and an empty answer, which the
   # Assistant shows as a blank reply. Leave room for reasoning plus the answer.
