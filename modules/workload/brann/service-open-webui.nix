@@ -112,6 +112,46 @@ in
         # questions after every answer.
         ENABLE_TAGS_GENERATION = "False";
         ENABLE_FOLLOW_UP_GENERATION = "False";
+
+        # Web search is off by default in Open WebUI and has no engine until
+        # one is set. DuckDuckGo needs no API key (so no secret in the Nix
+        # store) and is bundled with Open WebUI. It scrapes results, so it can
+        # be rate limited; keep the result count low to stay under that.
+        ENABLE_WEB_SEARCH = "True";
+        WEB_SEARCH_ENGINE = "duckduckgo";
+        # Engines the DDGS library queries, tried in this order. The default
+        # (`auto`) asks Wikipedia and Grokipedia first, which is a poor fit for
+        # live questions like the weather. With one request at a time (below),
+        # later engines are only used when an earlier one fails or is rate
+        # limited.
+        DDGS_BACKEND = "duckduckgo,brave,bing,google,yahoo,mojeek";
+        WEB_SEARCH_RESULT_COUNT = "5";
+        WEB_SEARCH_CONCURRENT_REQUESTS = "1";
+        # Use only the snippets DuckDuckGo returns instead of fetching every
+        # result page, and hand them to the model directly instead of chunking
+        # and embedding them first. This is faster, needs no embedding model
+        # for searches and keeps the prompt small, at the cost of less detail
+        # per result.
+        BYPASS_WEB_SEARCH_WEB_LOADER = "True";
+        BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL = "True";
+        # Code interpreter is enabled by default in Open WebUI. The engine is
+        # Pyodide, which runs the code in the user's browser instead of on the
+        # server, so nothing from a chat executes inside brann-1.
+        ENABLE_CODE_INTERPRETER = "True";
+        CODE_INTERPRETER_ENGINE = "pyodide";
+        # Switch the web search and code interpreter toggles on by default in
+        # every new chat. Users can still turn them off per chat. A model that
+        # was given its own settings in Admin Panel > Models keeps those instead.
+        DEFAULT_MODEL_METADATA = builtins.toJSON {
+          capabilities = {
+            web_search = true;
+            code_interpreter = true;
+          };
+          defaultFeatureIds = [
+            "web_search"
+            "code_interpreter"
+          ];
+        };
       };
     };
 
