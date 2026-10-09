@@ -99,6 +99,11 @@ in
         "profile.enabled" = true;
         allow_local_remote_servers = true;
         allow_user_to_change_email = false;
+        # Kanidm may leave the email claim out of the ID token. With this on,
+        # user_oidc also reads the userinfo endpoint and fills in any claim
+        # that is missing from the ID token (the ID token still wins), so the
+        # email set in Kanidm reaches the Nextcloud profile at login.
+        user_oidc.enrich_login_id_token_with_userinfo = true;
         default_phone_region = "NL";
         default_language = "en";
         default_locale = "nl_NL";
