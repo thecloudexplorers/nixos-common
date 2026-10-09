@@ -25,7 +25,7 @@ sudo nixos-container run cho-1 -- journalctl -u nginx.service -f
 
 # Models
 sudo nixos-container run cho-1 -- ollama list
-sudo nixos-container run cho-1 -- ollama run mistral-small:latest
+sudo nixos-container run cho-1 -- ollama run gemma4:e4b
 
 # Check the HTTPS endpoint and certificate
 curl -sS https://ollama.raboes28.nl/api/tags
@@ -41,8 +41,8 @@ sudo nixos-container restart cho-1
   the LAN.
 - Nginx terminates TLS using the certificate issued by [medivh](../medivh/README.md)
   and proxies requests to Ollama on port `11434`.
-- The models in `loadModels` (currently `mistral-small:latest`,
-  `ministral-3:14b` and `qwen3.5:9b-q8_0`) are downloaded automatically.
+- The models in `loadModels` (currently `qwen3.6:35b`, `laguna-xs-2.1`,
+  `gemma4:26b`, `gemma4:e4b` and `qwen3.5:9b-q8_0`) are downloaded automatically.
   Choose one per request with
   the `model` field; Ollama loads it on demand and unloads idle models.
   `syncModels = true` keeps the installation synchronized with that list and
@@ -72,14 +72,14 @@ curl -sS https://ollama.raboes28.nl/api/chat -d '{
 
 # Show only the answer text (requires jq)
 curl -sS https://ollama.raboes28.nl/api/chat -d '{
-  "model": "mistral-small:latest",
+  "model": "gemma4:e4b",
   "messages": [{"role": "user", "content": "Say hello in one sentence."}],
   "stream": false
 }' | jq -r '.message.content'
 
 # OpenAI compatible endpoint
 curl -sS https://ollama.raboes28.nl/v1/chat/completions -d '{
-  "model": "mistral-small:latest",
+  "model": "gemma4:e4b",
   "messages": [{"role": "user", "content": "Say hello in one sentence."}]
 }'
 ```
@@ -88,6 +88,12 @@ The first request after a restart or idle period is slow because the model
 must be loaded into GPU memory. Afterwards, check on the host that it runs on the
 GPU with `sudo nixos-container run cho-1 -- ollama ps` (`PROCESSOR` should read
 `100% GPU`).
+
+The context window is set to 64k (`OLLAMA_CONTEXT_LENGTH`). Ollama's OpenAI
+compatible endpoint ignores a client's context setting and otherwise uses a much
+smaller default, which silently truncates long prompts such as Hermes' (the
+agent then loses the earlier conversation). `ollama ps` shows the loaded
+context in the `CONTEXT` column.
 
 ## GPU (NVIDIA CUDA)
 
