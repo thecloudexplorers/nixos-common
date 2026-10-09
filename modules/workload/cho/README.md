@@ -118,7 +118,8 @@ sudo nixos-container run cho-1 -- nvidia-smi
 # Ollama should report library=CUDA and the VRAM size, not id=cpu
 sudo nixos-container run cho-1 -- journalctl -u ollama.service -b --no-pager | grep -iE "inference compute|vram"
 
-# After loading a model, PROCESSOR should read 100% GPU
+# After loading a model, PROCESSOR should read 100% GPU. A split such as
+# 44%/56% CPU/GPU means the model plus its context does not fit in VRAM.
 sudo nixos-container run cho-1 -- ollama ps
 
 # Watch GPU utilization and VRAM live while sending a request (Ctrl+C to stop)

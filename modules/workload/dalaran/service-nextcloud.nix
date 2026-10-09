@@ -35,7 +35,7 @@ let
   ollamaServiceName = "Ollama";
   ollamaUrl = "https://ollama.${rootDomain}/v1";
   # Must be one of the models in cho's loadModels.
-  ollamaDefaultModel = "gemma4:e4b";
+  ollamaDefaultModel = "gemma4:26b";
   # Thinking models (qwen3.5, and gemma4 when thinking is on) count their
   # reasoning against max_tokens. With
   # the app default (1000) the reasoning often uses the whole budget, the

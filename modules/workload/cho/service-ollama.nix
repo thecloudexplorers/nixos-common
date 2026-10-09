@@ -43,7 +43,7 @@ in
       # Keep a model in VRAM for 60 minutes after the last request instead of the
       # 5 minute default, so repeated use does not pay the model load time again.
       environmentVariables = {
-        OLLAMA_KEEP_ALIVE = "60m";
+        OLLAMA_KEEP_ALIVE = "20m";
         # Ollama's OpenAI compatible endpoint ignores the context size a client
         # configures and falls back to its own default (4k on a small GPU). Hermes
         # alone sends a larger system prompt and tool list than that, so the
@@ -65,11 +65,12 @@ in
         # Coding (PowerShell, Bicep) and agentic work.
         "qwen3.6:35b"
         "laguna-xs-2.1"
-        # Architecture documents and writing.
+        # Architecture documents and writing; default model of Hermes (khadgar)
+        # and the Nextcloud Assistant (dalaran).
         "gemma4:26b"
-        # Small and fast; simple chat and the Nextcloud Assistant.
+        # Small and fast; simple chat.
         "gemma4:e4b"
-        # Used by Hermes (khadgar).
+        # Small and fast model that Hermes (khadgar) can switch to.
         "qwen3.5:9b-q8_0"
       ];
       syncModels = true;

@@ -124,10 +124,33 @@ in
       settings = {
         timezone = "Europe/Amsterdam";
         model = {
-          default = "qwen3.5:9b-q8_0";
+          default = "gemma4:26b";
           provider = "custom";
           base_url = workloadServiceCustomBaseUrl;
           context_length = workloadServiceDefaultContextLength;
+        };
+        # Named provider for the same Ollama server that lists the models
+        # available for switching inside a session with
+        # `/model custom:ollama:<model>`. Keep the list in sync with cho's
+        # loadModels in ../cho/service-ollama.nix. The context length is set per
+        # model because Hermes cannot read it reliably from Ollama's API, and it
+        # must match OLLAMA_CONTEXT_LENGTH on the server.
+        providers.ollama = {
+          api = workloadServiceCustomBaseUrl;
+          models = builtins.listToAttrs (
+            map
+              (name: {
+                inherit name;
+                value.context_length = workloadServiceDefaultContextLength;
+              })
+              [
+                "qwen3.6:35b"
+                "laguna-xs-2.1"
+                "gemma4:26b"
+                "gemma4:e4b"
+                "qwen3.5:9b-q8_0"
+              ]
+          );
         };
         toolsets = [
           "hermes-cli"
@@ -150,6 +173,12 @@ in
           max_turns = 150;
           gateway_timeout = 1800;
         };
+        # No cloud fallback. A Mistral entry from an earlier interactive setup
+        # lived in the state config.yaml (the module only deep merges these
+        # settings over it, so keys missing here are never removed). It turned
+        # every Ollama error into a misleading "401 Invalid API Key". An empty
+        # list replaces it on the next container activation.
+        fallback_providers = [ ];
         terminal.backend = "local";
         browser.cdp_url = "http://${chromiumCdpBindAddress}:${toString chromiumCdpBindPort}";
         # A non-loopback public_url switches on the login gate of the dashboard

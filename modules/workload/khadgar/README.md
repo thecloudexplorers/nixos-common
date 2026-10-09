@@ -84,7 +84,11 @@ sudo nixos-container restart khadgar-1
   [service-hermes-agent.nix](service-hermes-agent.nix). The Hermes container
   mode is off; this NixOS container is the sandbox.
 - Models: Ollama on [cho](../cho/README.md) (`https://ollama.raboes28.nl/v1`,
-  `qwen3.5:9b-q8_0`, 64k context) is the only model backend; there is no cloud
+  `gemma4:26b` by default, 64k context) is the only model backend. The
+  named provider `ollama` also lists `qwen3.6:35b`, `laguna-xs-2.1`,
+  `gemma4:e4b` and `qwen3.5:9b-q8_0`; switch in a session with
+  `/model custom:ollama:<model>`. Keep that list in sync with cho's
+  `loadModels`. There is no cloud
   fallback. `khadgar-1` resolves `ollama.raboes28.nl` through a static host
   entry in [container-1/networking-1.nix](container-1/networking-1.nix), like
   the IdP; without it model requests fail with "Connection error" and Hermes
