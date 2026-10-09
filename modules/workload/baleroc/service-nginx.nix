@@ -22,6 +22,13 @@ let
   heartstoneAddressIPv4 = "192.168.1.209";
   # Stable SLAAC (EUI-64) address derived from heartstone-1's MAC.
   heartstoneAddressIPv6 = "2a02:a441:f08f:0:c051:cdff:fe8e:2301";
+  openWebuiHostName = "brann.${rootDomain}";
+  openWebuiProxyPass = "https://${openWebuiHostName}";
+  # Brann-1's LAN IP, set via a DHCP reservation on the router (MAC
+  # 02:b4:a1:7e:3c:5d). Same static hosts entry approach as for dalaran.
+  brannAddressIPv4 = "192.168.1.211";
+  # Stable SLAAC (EUI-64) address derived from brann-1's MAC.
+  brannAddressIPv6 = "2a02:a441:f08f:0:b4:a1ff:fe7e:3c5d";
 in
 {
   # Grant nginx read/traverse access to the ACME-managed certificate
@@ -34,6 +41,8 @@ in
     ${dalaranAddressIPv6} ${nextcloudHostName}
     ${heartstoneAddressIPv4} ${idmHostName}
     ${heartstoneAddressIPv6} ${idmHostName}
+    ${brannAddressIPv4} ${openWebuiHostName}
+    ${brannAddressIPv6} ${openWebuiHostName}
   '';
 
   services."${workloadService}" = {
@@ -52,6 +61,10 @@ in
     # sensitive public endpoint (credential stuffing / brute force).
     appendHttpConfig = ''
       limit_req_zone $binary_remote_addr zone=idm:10m rate=10r/s;
+      # Open WebUI is a single page app that fetches many assets on first load,
+      # so the rate is higher than for idm and the burst is large; the limit is
+      # there to stop scripted hammering, not to throttle normal use.
+      limit_req_zone $binary_remote_addr zone=openwebui:10m rate=20r/s;
       limit_req_status 429;
     '';
     virtualHosts = {
@@ -114,6 +127,39 @@ in
           add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;
         '';
         locations."/".proxyPass = idmProxyPass;
+      };
+      "${openWebuiHostName}" = {
+        serverName = openWebuiHostName;
+        forceSSL = true;
+        sslCertificate = "/var/lib/acme/${openWebuiHostName}/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/${openWebuiHostName}/key.pem";
+        extraConfig = ''
+          limit_req zone=openwebui burst=100 nodelay;
+
+          # Document uploads for chats with files (matches brann's own limit).
+          client_max_body_size 100m;
+
+          # Stream tokens to the browser as they are generated instead of
+          # buffering the whole answer, and allow for slow answers from a model
+          # that is partly on the CPU.
+          proxy_buffering off;
+          proxy_connect_timeout 60s;
+          proxy_send_timeout 3600s;
+          proxy_read_timeout 3600s;
+
+          # Talk to the backend over HTTPS and verify its certificate.
+          proxy_ssl_server_name on;
+          proxy_ssl_verify on;
+          proxy_ssl_verify_depth 5;
+          proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+
+          add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;
+        '';
+        locations."/" = {
+          proxyPass = openWebuiProxyPass;
+          # Open WebUI uses websockets for live updates and streaming.
+          proxyWebsockets = true;
+        };
       };
     };
   };

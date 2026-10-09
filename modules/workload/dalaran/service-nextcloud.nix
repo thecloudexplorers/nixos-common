@@ -29,6 +29,19 @@ let
   nginxGroup = nginxUser;
   databaseHost = "ironforge.${rootDomain}";
   databasePort = 5432;
+  # Ollama in the cho workload. integration_openai appends the endpoint paths
+  # (e.g. chat/completions) to this base URL, so it must end in the /v1 prefix
+  # of Ollama's OpenAI compatible API. Ollama needs no API key.
+  ollamaServiceName = "Ollama";
+  ollamaUrl = "https://ollama.${rootDomain}/v1";
+  # Must be one of the models in cho's loadModels.
+  ollamaDefaultModel = "gemma4:26b";
+  # Thinking models (qwen3.5, and gemma4 when thinking is on) count their
+  # reasoning against max_tokens. With
+  # the app default (1000) the reasoning often uses the whole budget, the
+  # request ends with finish_reason "length" and an empty answer, which the
+  # Assistant shows as a blank reply. Leave room for reasoning plus the answer.
+  ollamaMaxTokens = 8192;
 in
 {
   environment.systemPackages = with pkgs; [
@@ -86,6 +99,11 @@ in
         "profile.enabled" = true;
         allow_local_remote_servers = true;
         allow_user_to_change_email = false;
+        # Kanidm may leave the email claim out of the ID token. With this on,
+        # user_oidc also reads the userinfo endpoint and fills in any claim
+        # that is missing from the ID token (the ID token still wins), so the
+        # email set in Kanidm reaches the Nextcloud profile at login.
+        user_oidc.enrich_login_id_token_with_userinfo = true;
         default_phone_region = "NL";
         default_language = "en";
         default_locale = "nl_NL";
@@ -186,6 +204,21 @@ in
           user_oidc # OIDC App
           ;
         # Not packaged in nixpkgs, so fetched straight from the app store release.
+        # The Nextcloud Assistant UI on top of the AI providers registered by
+        # integration_openai (here: Ollama). 3.5.0 is the last release that
+        # supports Nextcloud 34; 4.x requires Nextcloud 35.
+        assistant =
+          let
+            organisation = "nextcloud-releases";
+            application = "assistant";
+            version = "3.5.0";
+            hash = "sha256-9LBikhcnYtMiy1zHHxFTPe5ekxDny3f8DnStqYFsq4k=";
+          in
+          pkgs.fetchNextcloudApp {
+            sha256 = hash;
+            url = "https://github.com/${organisation}/${application}/releases/download/v${version}/${application}-v${version}.tar.gz";
+            license = "agpl3Plus";
+          };
         integration_giphy =
           let
             organisation = "nextcloud-releases";
@@ -284,6 +317,60 @@ in
       ]
       ++ config.systemd.services.nextcloud-cron.serviceConfig.LoadCredential;
       inherit (config.systemd.services.nextcloud-cron.serviceConfig) User KillMode;
+    };
+  };
+
+  # Points the integration_openai app at the Ollama server in the cho workload
+  # so the Nextcloud Assistant can use it. App settings live in the database,
+  # not in config.php, so they are set with occ on every boot (idempotent) to
+  # reconcile drift. No secret is involved: Ollama has no API key.
+  systemd.services.nextcloud-ollama-setup = {
+    description = "Configure the Nextcloud integration_openai app for Ollama";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "nextcloud-setup.service" ];
+    requires = [ "nextcloud-setup.service" ];
+    script =
+      let
+        occ = lib.getExe config.services.nextcloud.occ;
+      in
+      ''
+        ${occ} config:app:set integration_openai url --value="${ollamaUrl}"
+        ${occ} config:app:set integration_openai service_name --lazy --value="${ollamaServiceName}"
+        ${occ} config:app:set integration_openai default_completion_model_id --lazy --value="${ollamaDefaultModel}"
+        # Ollama serves the chat endpoint, which the Assistant chat needs.
+        ${occ} config:app:set integration_openai chat_endpoint_enabled --lazy --value=1
+        # A model that is not loaded yet must first be read into GPU memory, so
+        # allow more than the 300 second default.
+        ${occ} config:app:set integration_openai request_timeout --lazy --value=600
+        ${occ} config:app:set integration_openai max_tokens --lazy --value=${toString ollamaMaxTokens}
+      '';
+    serviceConfig = {
+      Type = "oneshot";
+      inherit (config.systemd.services.nextcloud-cron.serviceConfig) User KillMode;
+    };
+  };
+
+  # Dedicated worker for AI tasks (Assistant, translation, ...). Without it,
+  # tasks are only picked up by the background job runner (nextcloud-cron,
+  # every 5 minutes), so the Assistant looks like it hangs. The worker polls
+  # for tasks every second and runs them against Ollama straight away.
+  systemd.services.nextcloud-taskprocessing-worker = {
+    description = "Nextcloud task processing worker (AI tasks)";
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "nextcloud-setup.service"
+      "nextcloud-ollama-setup.service"
+    ];
+    requires = [ "nextcloud-setup.service" ];
+    serviceConfig = {
+      # --timeout makes the worker exit every 5 minutes so that it picks up
+      # configuration changes (e.g. a changed default model); Restart= starts
+      # it again right away.
+      ExecStart = "${lib.getExe config.services.nextcloud.occ} taskprocessing:worker --timeout 300";
+      Restart = "always";
+      RestartSec = 1;
+      LoadCredential = config.systemd.services.nextcloud-cron.serviceConfig.LoadCredential;
+      inherit (config.systemd.services.nextcloud-cron.serviceConfig) User;
     };
   };
 }

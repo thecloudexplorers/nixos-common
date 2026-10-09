@@ -42,13 +42,35 @@ in
       openFirewall = false;
       # Keep a model in VRAM for 60 minutes after the last request instead of the
       # 5 minute default, so repeated use does not pay the model load time again.
-      environmentVariables.OLLAMA_KEEP_ALIVE = "60m";
+      environmentVariables = {
+        OLLAMA_KEEP_ALIVE = "20m";
+        # Ollama's OpenAI compatible endpoint ignores the context size a client
+        # configures and falls back to its own default (4k on a small GPU). Hermes
+        # alone sends a larger system prompt and tool list than that, so the
+        # conversation history was cut off and follow-up questions lost their
+        # context. Keep this equal to context_length in khadgar's
+        # service-hermes-agent.nix.
+        OLLAMA_CONTEXT_LENGTH = "65536";
+        # Flash attention is required for a quantized KV cache and lowers memory
+        # use at long context sizes.
+        OLLAMA_FLASH_ATTENTION = "1";
+        # Store the KV cache as q8_0 instead of f16. This roughly halves its VRAM
+        # use at a 64k context with little quality loss, so more of each model
+        # stays on the 16 GB GPU instead of being offloaded to the CPU.
+        OLLAMA_KV_CACHE_TYPE = "q8_0";
+      };
       # Every model listed here is downloaded and can be selected per request
       # through the "model" field. Ollama loads one on demand and unloads idle ones.
       loadModels = [
-        "mistral-small:latest"
-        "ministral-3:14b"
-        # "qwen3.5:9b" # Q4, ~7 GB; replaced by the Q8 variant below
+        # Coding (PowerShell, Bicep) and agentic work.
+        "qwen3.6:35b"
+        "laguna-xs-2.1"
+        # Architecture documents and writing; default model of Hermes (khadgar)
+        # and the Nextcloud Assistant (dalaran).
+        "gemma4:26b"
+        # Small and fast; simple chat.
+        "gemma4:e4b"
+        # Small and fast model that Hermes (khadgar) can switch to.
         "qwen3.5:9b-q8_0"
       ];
       syncModels = true;
