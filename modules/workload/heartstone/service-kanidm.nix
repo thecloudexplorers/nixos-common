@@ -4,6 +4,9 @@ let
   rootDomain = "raboes28.nl";
   serviceDomain = "idm.${rootDomain}";
   nextcloudHostName = "nextcloud.${rootDomain}";
+  # Hermes Agent dashboard (khadgar workload). It listens on its own port.
+  hermesHostName = "khadgar.${rootDomain}";
+  hermesDashboardUrl = "https://${hermesHostName}:9120";
 in
 {
   services = {
@@ -39,6 +42,12 @@ in
               "jev"
               "lyov"
             ];
+          };
+          # Members allowed to log in to the Hermes Agent dashboard. Hermes can
+          # run code and use tools, so only add people who should have that.
+          # See ../khadgar/service-hermes-agent.nix for the client side.
+          hermes-users = {
+            members = [ "jev" ];
           };
         };
         persons = {
@@ -83,6 +92,25 @@ in
           ];
           # Use the short Kanidm username (e.g. "marlous") instead of the
           # full SPN (e.g. "marlous@idm.raboes28.nl") as preferred_username.
+          preferShortUsername = true;
+        };
+
+        # Hermes Agent dashboard login. Hermes' generic OIDC provider is a
+        # public client: it uses PKCE and has no client secret, so no secret
+        # has to be fetched or stored on the host.
+        systems.oauth2.hermes = {
+          displayName = "Hermes Agent";
+          public = true;
+          # Landing page shown from the Kanidm application portal.
+          originLanding = "${hermesDashboardUrl}/";
+          # Hermes sends <dashboard.public_url>/auth/callback as redirect URI.
+          originUrl = "${hermesDashboardUrl}/auth/callback";
+          # `openid` is mandatory for OIDC clients to function at all.
+          scopeMaps.hermes-users = [
+            "openid"
+            "profile"
+            "email"
+          ];
           preferShortUsername = true;
         };
       };

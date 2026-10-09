@@ -7,7 +7,7 @@ A2A endpoint) and HTTPS reverse proxies (container `khadgar-1`).
 
 | Service   | URL                                   | Auth                                      |
 | --------- | ------------------------------------- | ----------------------------------------- |
-| Dashboard | `https://khadgar.raboes28.nl:9120`    | login (basic auth, 15 minute sessions)    |
+| Dashboard | `https://khadgar.raboes28.nl:9120`    | Kanidm login (members of `hermes-users`)  |
 | API       | `https://khadgar.raboes28.nl:8643/v1` | `Authorization: Bearer $API_SERVER_KEY`   |
 | A2A       | `https://khadgar.raboes28.nl:9901`    | `Authorization: Bearer $A2A_BEARER_TOKEN` |
 
@@ -21,20 +21,28 @@ A2A endpoint) and HTTPS reverse proxies (container `khadgar-1`).
   [medivh](../medivh/README.md) issue it first
   (`systemctl start acme-khadgar.raboes28.nl.service` in `medivh-1`), then
   restart `khadgar-1`.
+- The dashboard login is Kanidm SSO. The OAuth2 client `hermes` and the group
+  `hermes-users` are defined in
+  [service-kanidm.nix](../heartstone/service-kanidm.nix); add members there to
+  give someone access. It is a public client (PKCE, no client secret), so no
+  secret has to be created. `khadgar-1` must be able to resolve and reach
+  `idm.raboes28.nl` because Hermes does OIDC discovery from inside the
+  container itself before it redirects back to the dashboard; the static LAN
+  host entry in [container-1/networking-1.nix](container-1/networking-1.nix)
+  keeps that private IdP backend stable even though the public route is through
+  the router and proxy stack. Deploy the Kanidm change before opening the
+  dashboard.
 
 ## Secrets (you create these, they never go in Nix)
 
 Create `/mnt/ssd/khadgar/1/secrets/hermes/hermes.env` on the host (the directory
-is created by `host-data.nix`, mode `0700 root root`). One `KEY=value` per line:
+is created by `host-data.nix`, mode `0700 root root`). One `KEY=value` per line.
+The dashboard login needs no secret here (see Access).
 
 ```bash
 sudo tee /mnt/ssd/khadgar/1/secrets/hermes/hermes.env >/dev/null <<EOF
-MISTRAL_API_KEY=<your Mistral API key>
 API_SERVER_KEY=$(openssl rand -base64 32)
 A2A_BEARER_TOKEN=$(openssl rand -base64 32)
-HERMES_DASHBOARD_BASIC_AUTH_USERNAME=<dashboard user>
-HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=<long dashboard password>
-HERMES_DASHBOARD_BASIC_AUTH_SECRET=$(openssl rand -base64 32)
 EOF
 sudo chmod 600 /mnt/ssd/khadgar/1/secrets/hermes/hermes.env
 ```
@@ -43,10 +51,11 @@ sudo chmod 600 /mnt/ssd/khadgar/1/secrets/hermes/hermes.env
   not start, so it can never run unauthenticated.
 - `A2A_BEARER_TOKEN`: required. Without it Hermes treats every caller as local,
   and the proxy would expose A2A to the LAN without authentication.
-- `HERMES_DASHBOARD_BASIC_AUTH_*`: the dashboard login. The gate is switched on
-  because `dashboard.public_url` is a non-loopback URL.
-- `MISTRAL_API_KEY`: only used for the fallback model.
-- Restart after changing the file: `sudo nixos-container run khadgar-1 -- systemctl restart hermes-agent`.
+- Hermes only reads this file when the container is activated: the module
+  merges it into the Hermes state `.env` at container start (and on a system
+  switch), not when a service restarts. After creating or changing it, restart
+  the container: `sudo nixos-container restart khadgar-1`. Restarting only the
+  Hermes services keeps the old values.
 
 ## Handy commands
 
@@ -56,6 +65,7 @@ Run on the host.
 # Shell / logs
 sudo nixos-container root-login khadgar-1
 sudo nixos-container run khadgar-1 -- journalctl -u hermes-agent.service -f
+sudo nixos-container run khadgar-1 -- journalctl -u hermes-backend.service -f
 sudo nixos-container run khadgar-1 -- journalctl -u nginx.service -f
 sudo nixos-container run khadgar-1 -- journalctl -u chromium-cdp.service -f
 
@@ -74,8 +84,12 @@ sudo nixos-container restart khadgar-1
   [service-hermes-agent.nix](service-hermes-agent.nix). The Hermes container
   mode is off; this NixOS container is the sandbox.
 - Models: Ollama on [cho](../cho/README.md) (`https://ollama.raboes28.nl/v1`,
-  `qwen3.5:9b-q8_0`, 64k context) is the primary backend. Mistral cloud
-  (`mistral-small-2603`) is the fallback. Hermes needs a large context window;
+  `qwen3.5:9b-q8_0`, 64k context) is the only model backend; there is no cloud
+  fallback. `khadgar-1` resolves `ollama.raboes28.nl` through a static host
+  entry in [container-1/networking-1.nix](container-1/networking-1.nix), like
+  the IdP; without it model requests fail with "Connection error" and Hermes
+  then tries a runtime-configured fallback provider and reports a misleading
+  "401 Invalid API Key". Hermes needs a large context window;
   check on the host with `sudo nixos-container run cho-1 -- ollama ps` that the
   loaded model has the context you expect.
 - Nginx terminates TLS using the certificate from medivh and proxies each port

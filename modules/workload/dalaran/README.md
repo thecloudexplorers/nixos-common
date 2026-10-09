@@ -63,7 +63,9 @@ sudo nixos-container restart dalaran-1
   `integration_openai` app at the Ollama server in `cho`
   (`https://ollama.raboes28.nl/v1`, default model `qwen3.5:9b-q8_0`) on
   every boot, so the **Assistant** app (pinned to 3.5.0, the last release
-  supporting Nextcloud 34) can use it. No API key is needed.
+  supporting Nextcloud 34) can use it. No API key is needed. `max_tokens` is
+  raised to 8192 because qwen3.5 is a thinking model: with the default of 1000
+  its reasoning can use the whole budget and the Assistant shows a blank reply.
 - **`nextcloud-taskprocessing-worker`** long-running `occ taskprocessing:worker`
   that runs AI tasks immediately. Without it, tasks wait for the 5 minute cron
   run and the Assistant appears to hang.

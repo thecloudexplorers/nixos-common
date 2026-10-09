@@ -10,6 +10,11 @@ let
   workloadServiceApiPort = 8642;
   workloadServiceA2aPort = 9900;
   workloadDomain = "${workloadName}.${rootDomain}";
+  # Dashboard login through Kanidm (heartstone). The issuer is the per-client
+  # OIDC issuer; the matching client is defined in
+  # ../heartstone/service-kanidm.nix (systems.oauth2.hermes).
+  oidcClientId = "hermes";
+  oidcIssuer = "https://idm.${rootDomain}/oauth2/openid/${oidcClientId}";
   # Ollama on cho-1 is the primary model backend; it is OpenAI compatible.
   workloadServiceCustomBaseUrl = "https://ollama.${rootDomain}/v1";
   workloadServiceDefaultContextLength = 65536;
@@ -77,12 +82,8 @@ in
       # Makes the `hermes` command available for administration in the container.
       addToSystemPackages = true;
       # Secrets (never in the Nix store). Expected variables, see the README:
-      #   MISTRAL_API_KEY                         fallback model provider
       #   API_SERVER_KEY                          enables and protects the API server
       #   A2A_BEARER_TOKEN                        protects the A2A endpoint
-      #   HERMES_DASHBOARD_BASIC_AUTH_USERNAME    dashboard login
-      #   HERMES_DASHBOARD_BASIC_AUTH_PASSWORD
-      #   HERMES_DASHBOARD_BASIC_AUTH_SECRET      session signing secret
       environmentFiles = [ workloadServiceEnvironmentFile ];
       environment = {
         # API server: it is only enabled when API_SERVER_KEY is set, so it can
@@ -128,15 +129,6 @@ in
           base_url = workloadServiceCustomBaseUrl;
           context_length = workloadServiceDefaultContextLength;
         };
-        # Used when the Ollama endpoint fails.
-        fallback_providers = [
-          {
-            provider = "custom";
-            base_url = "https://api.mistral.ai/v1";
-            key_env = "MISTRAL_API_KEY";
-            model = "mistral-small-2603";
-          }
-        ];
         toolsets = [
           "hermes-cli"
           "a2a"
@@ -161,11 +153,16 @@ in
         terminal.backend = "local";
         browser.cdp_url = "http://${chromiumCdpBindAddress}:${toString chromiumCdpBindPort}";
         # A non-loopback public_url switches on the login gate of the dashboard
-        # (credentials come from the environment file) and makes Hermes accept
-        # the proxy's hostname. Sessions expire after 15 minutes.
+        # and makes Hermes accept the proxy's hostname. Login goes through
+        # Kanidm (generic OIDC, authorization code + PKCE, public client), so
+        # no password or secret is stored here. Kanidm's scope map decides who
+        # may log in (group hermes-users).
         dashboard = {
           public_url = proxyPublicUrl;
-          basic_auth.session_ttl_seconds = 900;
+          oauth.self_hosted = {
+            issuer = oidcIssuer;
+            client_id = oidcClientId;
+          };
         };
         display = {
           personality = "helpful";
