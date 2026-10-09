@@ -59,6 +59,14 @@ sudo nixos-container restart dalaran-1
   others. The app store is disabled, so apps change only via the Nix config.
 - **`nextcloud-oidc-setup`** oneshot service that (re)registers the Kanidm OIDC
   provider on every boot.
+- **`nextcloud-ollama-setup`** oneshot service that (re)points the
+  `integration_openai` app at the Ollama server in `cho`
+  (`https://ollama.raboes28.nl/v1`, default model `qwen3.5:9b-q8_0`) on
+  every boot, so the **Assistant** app (pinned to 3.5.0, the last release
+  supporting Nextcloud 34) can use it. No API key is needed.
+- **`nextcloud-taskprocessing-worker`** long-running `occ taskprocessing:worker`
+  that runs AI tasks immediately. Without it, tasks wait for the 5 minute cron
+  run and the Assistant appears to hang.
 - **ffmpeg** on the cron `PATH` for video previews.
 
 ## Dependencies
@@ -69,6 +77,7 @@ sudo nixos-container restart dalaran-1
 | Kanidm           | `heartstone` (`idm.raboes28.nl`)           | SSO login          |
 | ACME certificate | `medivh` (read-only mount)                 | TLS                |
 | Reverse proxy    | `baleroc`                                  | Public entry point |
+| Ollama           | `cho` (`ollama.raboes28.nl`)               | Assistant AI       |
 
 ## Persistent data (host bind mounts)
 
