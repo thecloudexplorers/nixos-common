@@ -11,6 +11,7 @@ in
     ./acme/service-acme-ironforge.nix
     ./acme/service-acme-cho.nix
     ./acme/service-acme-khadgar.nix
+    ./acme/service-acme-brann.nix
   ]
   # Generic modules
   ++ [

@@ -29,6 +29,13 @@ in
           mountPoint = "/var/lib/acme/idm.${rootDomain}";
           isReadOnly = true;
         };
+        # And the Open WebUI (brann) certificate. Medivh writes it into its own
+        # ACME directory (see modules/workload/brann/host-data.nix).
+        "/${workloadName}-acme-brann" = {
+          hostPath = "/mnt/ssd/medivh/1/var/lib/acme/brann.${rootDomain}";
+          mountPoint = "/var/lib/acme/brann.${rootDomain}";
+          isReadOnly = true;
+        };
       };
       # Ensure the container has a dedicated virtual interface
       privateNetwork = true;

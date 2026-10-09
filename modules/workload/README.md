@@ -11,6 +11,7 @@ service. Per-workload docs and handy commands are in each workload's own README.
 | `ironforge`  | PostgreSQL                 | [ironforge](ironforge/README.md)   |
 | `cho`        | Ollama                     | [cho](cho/README.md)               |
 | `khadgar`    | Hermes Agent               | [khadgar](khadgar/README.md)       |
+| `brann`      | Open WebUI                 | [brann](brann/README.md)           |
 | `medivh`     | ACME certificates          | [medivh](medivh/README.md)         |
 
 ## Folder structure
@@ -54,6 +55,7 @@ service. Per-workload docs and handy commands are in each workload's own README.
 | `ironforge`  | [service-postgresql.nix](ironforge/service-postgresql.nix)   | none                                                                |
 | `cho`        | [service-ollama.nix](cho/service-ollama.nix)                 | none                                                                |
 | `khadgar`    | [service-hermes-agent.nix](khadgar/service-hermes-agent.nix) | none                                                                |
+| `brann`      | [service-open-webui.nix](brann/service-open-webui.nix)       | none                                                                |
 | `medivh`     | [acme/](medivh/acme/)                                        | none                                                                |
 
 Notes:
@@ -73,6 +75,9 @@ Notes:
   ports (dashboard `9120`, OpenAI compatible API `8643`, A2A `9901`), not
   through Baleroc. Keep them on the LAN/VPN. Secrets are in a host managed
   `hermes.env`, see its README.
+- **brann:** Open WebUI is served by `brann-1` on HTTPS port 443 and is also
+  exposed to the internet through Baleroc. Login is Kanidm only and needs no
+  secret, see its README.
 - **Subfolders:** only group service files into a subfolder when a workload has
   several of them (as `medivh/acme/`). With one service file, keep it directly in the
   workload folder.

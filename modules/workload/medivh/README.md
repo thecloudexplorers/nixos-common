@@ -14,6 +14,7 @@ sudo nixos-container run medivh-1 -- journalctl -u 'acme-*' -f
 sudo nixos-container run medivh-1 -- journalctl -u acme-ironforge.raboes28.nl.service -n 100 --no-pager
 sudo nixos-container run medivh-1 -- journalctl -u acme-ollama.raboes28.nl.service -n 100 --no-pager
 sudo nixos-container run medivh-1 -- journalctl -u acme-khadgar.raboes28.nl.service -n 100 --no-pager
+sudo nixos-container run medivh-1 -- journalctl -u acme-brann.raboes28.nl.service -n 100 --no-pager
 
 # Overview of the certificate services and renewal timers
 sudo nixos-container run medivh-1 -- systemctl list-units 'acme-*'
@@ -25,6 +26,7 @@ sudo nixos-container run medivh-1 -- systemctl start acme-idm.raboes28.nl.servic
 sudo nixos-container run medivh-1 -- systemctl start acme-ironforge.raboes28.nl.service
 sudo nixos-container run medivh-1 -- systemctl start acme-ollama.raboes28.nl.service
 sudo nixos-container run medivh-1 -- systemctl start acme-khadgar.raboes28.nl.service
+sudo nixos-container run medivh-1 -- systemctl start acme-brann.raboes28.nl.service
 
 # Check expiry of the issued certificates
 sudo openssl x509 -noout -subject -enddate -in /mnt/ssd/medivh/1/var/lib/acme/nextcloud.raboes28.nl/cert.pem
@@ -32,6 +34,7 @@ sudo openssl x509 -noout -subject -enddate -in /mnt/ssd/heartstone/var/lib/acme/
 sudo openssl x509 -noout -subject -enddate -in /mnt/ssd/ironforge/1/var/lib/postgresql/secrets/cert.pem
 sudo openssl x509 -noout -subject -enddate -in /mnt/ssd/medivh/1/var/lib/acme/ollama.raboes28.nl/cert.pem
 sudo openssl x509 -noout -subject -enddate -in /mnt/ssd/medivh/1/var/lib/acme/khadgar.raboes28.nl/cert.pem
+sudo openssl x509 -noout -subject -enddate -in /mnt/ssd/medivh/1/var/lib/acme/brann.raboes28.nl/cert.pem
 
 # ACME credentials (read-only mounts from the host)
 ls -la /mnt/ssd/medivh/environments /mnt/ssd/medivh/secrets
@@ -61,13 +64,15 @@ The ACME configuration lives in [acme/](acme/):
   `ollama.raboes28.nl`, used by the Ollama HTTPS proxy in `cho`.
 - [service-acme-khadgar.nix](acme/service-acme-khadgar.nix): certificate for
   `khadgar.raboes28.nl`, used by the Hermes Agent HTTPS proxies in `khadgar`.
+- [service-acme-brann.nix](acme/service-acme-brann.nix): certificate for
+  `brann.raboes28.nl`, used by the Open WebUI HTTPS proxy in `brann`.
 
 ## Dependencies
 
-| Dependency                                                        | Purpose                                                                      |
-| ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| TransIP API credentials                                           | DNS-01 challenge (`/mnt/ssd/medivh/environments`, `/mnt/ssd/medivh/secrets`) |
-| `dalaran`, `heartstone`, `ironforge`, `baleroc`, `cho`, `khadgar` | Consumers of the certificates                                                |
+| Dependency                                                                 | Purpose                                                                      |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| TransIP API credentials                                                    | DNS-01 challenge (`/mnt/ssd/medivh/environments`, `/mnt/ssd/medivh/secrets`) |
+| `dalaran`, `heartstone`, `ironforge`, `baleroc`, `cho`, `khadgar`, `brann` | Consumers of the certificates                                                |
 
 ## Persistent data (host bind mounts)
 

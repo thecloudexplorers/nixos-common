@@ -7,6 +7,8 @@ let
   # Hermes Agent dashboard (khadgar workload). It listens on its own port.
   hermesHostName = "khadgar.${rootDomain}";
   hermesDashboardUrl = "https://${hermesHostName}:9120";
+  # Open WebUI (brann workload), served on the default HTTPS port.
+  openWebuiHostName = "brann.${rootDomain}";
 in
 {
   services = {
@@ -49,22 +51,38 @@ in
           hermes-users = {
             members = [ "jev" ];
           };
+          # Members allowed to log in to Open WebUI, the chat interface for
+          # the local models. See ../brann/service-open-webui.nix for the
+          # client side.
+          openwebui-users = {
+            members = [
+              "jev"
+              "marlous"
+            ];
+          };
         };
         persons = {
           marlous = {
             displayName = "Marlous";
+            mailAddresses = [ "marlous@raboes28.nl" ];
             groups = [ "faml-users" ];
           };
           peon = {
             displayName = "Peon";
+            mailAddresses = [ "peon@raboes28.nl" ];
             groups = [ "test-users" ];
           };
           jev = {
             displayName = "Jev";
+            # Released as the `email` claim to the OIDC clients (Open WebUI,
+            # Nextcloud). Nothing sends mail to it, so it only has to be a
+            # valid, unique address.
+            mailAddresses = [ "jev@raboes28.nl" ];
             groups = [ "faml-users" ];
           };
           lyov = {
             displayName = "Lyov";
+            mailAddresses = [ "lyov@raboes28.nl" ];
             groups = [ "kids-users" ];
           };
         };
@@ -107,6 +125,25 @@ in
           originUrl = "${hermesDashboardUrl}/auth/callback";
           # `openid` is mandatory for OIDC clients to function at all.
           scopeMaps.hermes-users = [
+            "openid"
+            "profile"
+            "email"
+          ];
+          preferShortUsername = true;
+        };
+
+        # Open WebUI login. Like Hermes this is a public client (PKCE, no client
+        # secret), so no secret has to be fetched or stored on the host.
+        systems.oauth2.openwebui = {
+          displayName = "Open WebUI";
+          public = true;
+          # Landing page shown from the Kanidm application portal.
+          originLanding = "https://${openWebuiHostName}/";
+          # Must exactly match OPENID_REDIRECT_URI in
+          # ../brann/service-open-webui.nix.
+          originUrl = "https://${openWebuiHostName}/oauth/oidc/callback";
+          # `openid` is mandatory for OIDC clients to function at all.
+          scopeMaps.openwebui-users = [
             "openid"
             "profile"
             "email"
