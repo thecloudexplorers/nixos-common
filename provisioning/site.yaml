@@ -4,22 +4,26 @@
   connection: local
   become: true
   vars_files:
-    - variables.yml
+    - variables.yaml
 
   tasks:
     - name: Create Secure Boot keys
       command: "sbctl create-keys"
       register: key_creation
 
-    - name: Verify key tree structure (/etc/secureboot)
-      command: "ls -R /etc/secureboot"
+    - name: Verify key tree structure
+      command: "ls -R {{ sbctl_bundle_path }}"
       register: key_tree
       changed_when: false
 
     - name: Verify current Secure Boot state
       command: "sbctl verify"
       register: sbctl_verify
-      failed_when: "'Verified' not in sbctl_verify.stdout"
+      # sbctl verify prints per-file "✘ <file> is not signed" lines and may
+      # still exit 0 on failure in some versions, so check the output too.
+      failed_when: >-
+        sbctl_verify.rc != 0
+        or 'not signed' in sbctl_verify.stdout
 
     - name: Enroll keys (including Microsoft)
       command: "sbctl enroll-keys --microsoft"

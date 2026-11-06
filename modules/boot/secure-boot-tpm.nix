@@ -43,7 +43,10 @@ in
   config = lib.mkIf cfg.enable {
     boot = {
       bootspec.enableValidation = true;
-      lanzaboote.pkiBundle = cfg.pkiBundle;
+      lanzaboote = {
+        enable = true;
+        pkiBundle = cfg.pkiBundle;
+      };
       loader = {
         efi.canTouchEfiVariables = true;
         # Lanzaboote handles the boot process, so we disable the standard

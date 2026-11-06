@@ -36,7 +36,7 @@ NixOS is declarative, but hardware state (like TPM sealing) can be imperative. T
 
 ## 🚀 Quick Start: Secure Boot & TPM Unlock
 
-This example shows how a consumer adopts the `secureboot-tpm` block.
+This example shows how a consumer adopts the `secureboot-tpm` block. For the full guide — first-time key enrollment, TPM auto-unlock of encrypted drives, PCR selection, and re-enrollment after firmware/key changes — see [docs/secure-boot.md](docs/secure-boot.md).
 
 ### Step 1: Nix Configuration
 
@@ -82,7 +82,7 @@ After the first build and boot, run the provisioning playbook to seal your hardw
 # Enter the directory
 cd provisioning
 # Run the local provision playbook
-ansible-playbook site.yml --become
+ansible-playbook site.yaml --become
 ```
 
 ## 🗺 Roadmap
