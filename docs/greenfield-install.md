@@ -11,21 +11,22 @@ To install NixOS from command-line, with disko, execute the following commands:
     - `sudo nixos-generate-config --no-filesystems --show-hardware-config`
     - If this is a truly 'greenfield' install from scratch, copy the output of this command
     into your `/path/to/flake/computer/<NEWHOST>/hardware-config.nix` before install.
-3. To actually install NixOS on the newly created partitions:
+3. Create the Secure Boot signing keys in the target system, before installing. Follow [Creating the signing keys during a greenfield install](./secure-boot.md#creating-the-signing-keys-during-a-greenfield-install). After the first boot, finish the Secure Boot and TPM setup using the rest of [secure-boot.md](./secure-boot.md).
+4. To actually install NixOS on the newly created partitions:
     - `sudo nixos-install --no-root-passwd --flake /run/media/nixos/Ventoy/dev/nixos-config#faml-pc-home_server`
       - Running `--no-root-passwd` to avoid keyboard issues during the installation process by failing to type the same the password twice.
-4. To set the root password manually execute:
+5. To set the root password manually execute:
     - `sudo nixos-enter --root '/mnt'`
     And then run the following in the shell of the new system:
     - `passwd`
     After succesfully setting the new password exit the chroot shell:
     - `logout`
-5. If all has gone well:
+6. If all has gone well:
     - `reboot`
-6. After reboot, type the passphrase for the ssd and zfs pool.
+7. After reboot, type the passphrase for the ssd and zfs pool.
     > NOTE: Keyboard delay for non wired keyboards before you can start typing the passphrase is about 10 seconds, so be patient!
-7. You will run into the following error: [FAILED] Failed to start Import ZFS pool "zhdd"
-8. Simply import the zfs pool manually the first tyme, by running the following command:
+8. You will run into the following error: [FAILED] Failed to start Import ZFS pool "zhdd"
+9. Simply import the zfs pool manually the first tyme, by running the following command:
     - `zpool import -f zhdd`
    If issues persist, look in the ZFS Troubleshooting section below for more information.
 

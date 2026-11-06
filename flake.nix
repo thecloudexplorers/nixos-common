@@ -20,7 +20,6 @@
     # Load the community driven NixOS common definitions
     nixos-common = {
       url = "github:thecloudexplorers/nixos-common/main";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
