@@ -53,8 +53,7 @@
     ../../../services/kanidm-client.nix
 
   ];
-  # We are not using the grub bootloader, instead we rely on uefi boot.
-  boot.loader.grub.enable = false;
+
   ###################################
   # This is all ZFS specific stuff! #
   ###################################

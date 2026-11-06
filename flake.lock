@@ -180,11 +180,11 @@
     },
     "nixos-common": {
       "locked": {
-        "lastModified": 1793963643,
-        "narHash": "sha256-UryWY6iXENzVPWFb4uA8rS0UQ0cLDRFNWMc/yxvMutE=",
+        "lastModified": 1793964490,
+        "narHash": "sha256-6knyAiZZ549Au0ckkZTr5thdRvY+7kxxtj8hgpNFbOs=",
         "owner": "thecloudexplorers",
         "repo": "nixos-common",
-        "rev": "763ead4af567bb3e2925bfc0df4f1c558cdc9d39",
+        "rev": "5b19c32ebe27107aa423984949849ef35c108128",
         "type": "github"
       },
       "original": {
