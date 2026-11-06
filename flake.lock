@@ -180,16 +180,16 @@
     },
     "nixos-common": {
       "locked": {
-        "lastModified": 1793964490,
-        "narHash": "sha256-6knyAiZZ549Au0ckkZTr5thdRvY+7kxxtj8hgpNFbOs=",
+        "lastModified": 1793967172,
+        "narHash": "sha256-k2tCi0wyqfwVRGDsz8SLDfGPTtdlbeyBreMBvW6KsYg=",
         "owner": "thecloudexplorers",
         "repo": "nixos-common",
-        "rev": "5b19c32ebe27107aa423984949849ef35c108128",
+        "rev": "56ed0f6094df06188101e503566020b14970481b",
         "type": "github"
       },
       "original": {
         "owner": "thecloudexplorers",
-        "ref": "feature/bearmannl/add-secure-boot-tpm-module",
+        "ref": "main",
         "repo": "nixos-common",
         "type": "github"
       }

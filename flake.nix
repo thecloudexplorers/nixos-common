@@ -19,7 +19,7 @@
     };
     # Load the community driven NixOS common definitions
     nixos-common = {
-      url = "github:thecloudexplorers/nixos-common/feature/bearmannl/add-secure-boot-tpm-module";
+      url = "github:thecloudexplorers/nixos-common/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
