@@ -58,6 +58,12 @@ in
         # use at a 64k context with little quality loss, so more of each model
         # stays on the 16 GB GPU instead of being offloaded to the CPU.
         OLLAMA_KV_CACHE_TYPE = "q8_0";
+        # Keep 1 GiB of VRAM free per GPU (value in bytes). Ollama packs a model
+        # and its 64k context almost to the brim, and the runner then failed on
+        # its first request: cublasCreate could not allocate its handle
+        # ("CUDA error: the resource allocation failed"). The headroom is
+        # for cuBLAS and the compute buffers that the estimate does not count.
+        OLLAMA_GPU_OVERHEAD = "1073741824";
       };
       # Every model listed here is downloaded and can be selected per request
       # through the "model" field. Ollama loads one on demand and unloads idle ones.
