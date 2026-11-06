@@ -12,9 +12,10 @@ in
     # systemd chowns the state directory to that user when the service starts,
     # which means root-only is enough on the host. It holds the SQLite database
     # (users, chats), uploads and the secret key that signs login sessions, so
-    # nobody else needs access.
+    # nobody else needs access. There is deliberately no `z` rule: it would
+    # reset the owner to root whenever tmpfiles reruns (for example on a
+    # switch), and the running service could then no longer open its database.
     "d /mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/${workloadService} 0700 root root -"
-    "z /mnt/ssd/${workloadName}/${toString workloadNode}/var/lib/${workloadService} 0700 root root -"
     # The ACME workload (medivh) writes the certificate here. Creating the
     # directory up front lets brann-1 start before the first certificate has
     # been issued: the bind mount fails to start the container otherwise. The
