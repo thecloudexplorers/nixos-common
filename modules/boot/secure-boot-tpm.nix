@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   inputs,
   ...
 }:
@@ -12,49 +13,56 @@
 #
 # Contract:
 # The user provides the input; this module handles all bootloader,
-# initrd, and package requirements.
+# initrd, and package requirements. Consumers configure the module
+# through the options declared below, e.g.:
+#
+#   services.common_modules.secureBoot.pkiBundle = "/etc/secureboot";
 
 let
   # Validate that the user provided the necessary input
   lanzaboote = inputs.lanzaboote;
+  cfg = config.services.common_modules.secureBoot;
 in
 {
   imports = [ lanzaboote.nixosModules.lanzaboote ];
 
-  boot = {
-    bootspec.enableValidation = true;
-    lanzaboote = {
-      # Use the user-provided path or default to /var/lib/sbctl
-      pkiBundle = config.services.common_modules.secureBoot.pkiBundle || "/var/lib/sbctl";
+  options.services.common_modules.secureBoot = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable Secure Boot with TPM-based unlocking via Lanzaboote.";
     };
-    loader = {
-      efi.canTouchEfiVariables = true;
-      # Lanzaboote handles the boot process, so we disable standard systemd-boot
-      systemd-boot.enable = false;
-    };
-    initrd = {
-      availableKernelModules = [
-        "encrypted_keys"
-        "tpm"
-        "trusted"
-      ];
+
+    pkiBundle = lib.mkOption {
+      type = lib.types.path;
+      default = "/var/lib/sbctl";
+      description = "Path to the sbctl PKI bundle containing the db, KEK and PK keys.";
     };
   };
 
-  # Standard packages required for provisioning and runtime
-  environment.systemPackages = with lib.ctx.pkgs; [
-    sbctl
-    tpm2-tools
-    tpm2-tss
-  ];
-
-  # Reference configuration point for the consumer
-  # This allows downstream users to override specifics like pkiBundle
-  # without touching this module's code.
-  services.common_modules = {
-    secureBoot = {
-      enable = true;
-      pkiBundle = "/var/lib/sbctl";
+  config = lib.mkIf cfg.enable {
+    boot = {
+      bootspec.enableValidation = true;
+      lanzaboote.pkiBundle = cfg.pkiBundle;
+      loader = {
+        efi.canTouchEfiVariables = true;
+        # Lanzaboote handles the boot process, so we disable standard systemd-boot
+        systemd-boot.enable = false;
+      };
+      initrd = {
+        availableKernelModules = [
+          "encrypted_keys"
+          "tpm"
+          "trusted"
+        ];
+      };
     };
+
+    # Standard packages required for provisioning and runtime
+    environment.systemPackages = with pkgs; [
+      sbctl
+      tpm2-tools
+      tpm2-tss
+    ];
   };
 }

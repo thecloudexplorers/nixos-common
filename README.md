@@ -58,8 +58,8 @@ The downstream config is reduced to just identifying the inputs and passing valu
   # Only provide the 'parameters' - the module handles 
   # kernel modules, initrd settings, and bootloader flags.
   services.common_modules.secureBoot = {
+    enable = true;
     pkiBundle = "/var/lib/sbctl";
-    tpmUnlockPcrs = "0+2+7+12";
   };
 }
 ```
