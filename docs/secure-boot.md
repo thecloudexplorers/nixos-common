@@ -33,11 +33,20 @@ Then continue with the remaining steps below after the first boot.
     - Hand this to the person with sudo rights, for example `sudo nixos-rebuild switch --flake .#faml-pc-home_server`
 3. Verify that the boot files are signed:
     - `sudo sbctl verify`
+    - One line for `/boot/EFI/nixos/kernel-*.efi` showing "is not signed" is expected: lanzaboote only signs
+      the UKIs and the systemd-boot stub, and the unsigned kernel is verified through the hash embedded in the UKI.
 4. Put the firmware in Secure Boot *setup mode*, then enroll the keys (including the Microsoft keys, so
    firmware option ROMs keep working):
+    - In the BIOS (ASUS ProArt X870E-Creator WiFi) go to **Boot** → **Secure Boot** → **Key Management** and
+      choose **Clear Secure Boot Keys**, then save and exit.
+    - Back in NixOS, check `sudo sbctl status` shows `Setup Mode: ✓ Enabled`.
     - `sudo sbctl enroll-keys --microsoft`
-5. Reboot, enable Secure Boot in the firmware and check the result:
-    - `sudo bootctl status`
+5. Reboot and enable Secure Boot in the firmware:
+    - In the BIOS, under **Boot** → **Secure Boot**, set **OS Type** to **Windows UEFI mode**.
+      > NOTE: **Other OS** leaves Secure Boot disabled, even with the keys enrolled. Do not use
+      > "Install default Secure Boot keys", as that overwrites the enrolled keys.
+    - Save and exit, then check `sudo sbctl status` (`Secure Boot: ✓ Enabled`) and `sudo bootctl status`
+      (`Secure Boot: enabled (user)`).
 
 ## TPM auto-unlock of encrypted drives with Secure Boot enabled
 
@@ -57,9 +66,9 @@ Refer to the [Linux TPM PCR Registry documentation](https://uapi-group.org/speci
 for more detailed explanations.
 
 1. Enroll the TPM, replacing any existing TPM slot:
-    - `sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+2+7+12 --wipe-slot=tpm2 /dev/<device>`
+    - `sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+2+7+12 --wipe-slot=tpm2 /dev/nvme0n1p1`
 2. Create a recovery key (store it somewhere safe, outside this machine):
-    - `sudo systemd-cryptenroll --recovery-key /dev/<device>`
+    - `sudo systemd-cryptenroll --recovery-key /dev/nvme0n1p1`
 
 ### When keys or firmware change
 
