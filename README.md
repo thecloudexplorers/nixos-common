@@ -42,21 +42,31 @@ This example shows how a consumer adopts the `secureboot-tpm` block.
 
 The downstream config is reduced to just identifying the inputs and passing values into the module:
 
+With a flake, declare the `lanzaboote` input and pass the flake inputs to the modules via `specialArgs` (see `examples/personal-flake.nix`):
+
+```nix
+nixpkgs.lib.nixosSystem {
+  system = "x86_64-linux";
+  specialArgs = { inherit (self) inputs outputs; };
+  modules = [
+    nixos-common.nixosModules.secure-boot-tpm
+    ./configuration.nix
+  ];
+}
+```
+
+Without a flake, provide the `inputs` module argument via `specialArgs` at the `nixosSystem` entrypoint (see `examples/personal-config.nix` for the full wiring). The downstream config is then reduced to importing the module and passing values into its declared options:
+
 ```nix
 # examples/personal-config.nix
-{ config, imports, inputs, ... }:
-
 {
   imports = [
     ./../modules/boot/secure-boot-tpm.nix
   ];
 
-  inputs = {
-    lanzaboote.url = "github:nix-community/lanzaboote";
-  };
-
-  # Only provide the 'parameters' - the module handles 
+  # Only provide the 'parameters' - the module handles
   # kernel modules, initrd settings, and bootloader flags.
+  # Defaults: enable = true, pkiBundle = "/var/lib/sbctl".
   services.common_modules.secureBoot = {
     enable = true;
     pkiBundle = "/var/lib/sbctl";

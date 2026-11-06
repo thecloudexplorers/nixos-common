@@ -46,8 +46,13 @@ in
       lanzaboote.pkiBundle = cfg.pkiBundle;
       loader = {
         efi.canTouchEfiVariables = true;
-        # Lanzaboote handles the boot process, so we disable standard systemd-boot
+        # Lanzaboote handles the boot process, so we disable the standard
+        # loaders. Note: disabling systemd-boot also removes its
+        # `boot.loader.grub.enable = mkDefault false`, and on nixos-26.05
+        # grub is enabled by default (!boot.isContainer), so grub must be
+        # disabled explicitly or its "set devices" assertion fires.
         systemd-boot.enable = false;
+        grub.enable = false;
       };
       initrd = {
         availableKernelModules = [
