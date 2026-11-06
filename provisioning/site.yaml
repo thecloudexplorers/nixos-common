@@ -1,0 +1,53 @@
+---
+- name: Provision Secure Boot and TPM Unlock
+  hosts: localhost
+  connection: local
+  become: true
+  vars_files:
+    - variables.yml
+
+  tasks:
+    - name: Create Secure Boot keys
+      command: "sbctl create-keys"
+      register: key_creation
+
+    - name: Verify key tree structure (/etc/secureboot)
+      command: "ls -R /etc/secureboot"
+      register: key_tree
+      changed_when: false
+
+    - name: Verify current Secure Boot state
+      command: "sbctl verify"
+      register: sbctl_verify
+      failed_when: "'Verified' not in sbctl_verify.stdout"
+
+    - name: Enroll keys (including Microsoft)
+      command: "sbctl enroll-keys --microsoft"
+      register: enrollment
+
+    - name: Verify boot status with bootctl
+      command: "bootctl status"
+      register: boot_status
+      changed_when: false
+
+    - name: Seal encryption key into TPM
+      # This binds the key to the state of PCR 0,2,7,12.
+      # If Secure Boot or Firmware changes, this will stop unlocking automatically.
+      command: >
+        systemd-cryptenroll --tpm2-device=auto 
+        --tpm2-pcrs={{ tpm_pcrs }} 
+        --wipe-slot=tpm2 
+        {{ encrypted_device }}
+      register: crypt_seal
+
+    - name: Create recovery key for the encrypted device
+      # Safety net to ensure if all else fails the drive is still unlockable.
+      command: "systemd-cryptenroll --recovery-key {{ encrypted_device }}"
+      register: recovery_key
+
+    - name: Final summary of provisioning
+      debug:
+        msg: 
+          - "Secure Boot keys created and enrolled."
+          - "Encryption key sealed to TPM PCRs: {{ tpm_pcrs }}."
+          - "Recovery key generated for {{ encrypted_device }}."

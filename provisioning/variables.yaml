@@ -1,0 +1,12 @@
+---
+# Provisioning variables for Secure Boot & TPM Unlock.
+# Update the 'encrypted_device' to your specific disk partition (e.g., /dev/nvme0n1p3).
+
+# The target drive partition for encryption and TPM unlocking
+encrypted_device: "/dev/nvme0n1p3"
+
+# PCRs used for sealing based on your spec: 0+2+7+12
+tpm_pcrs: "0+2+7+12"
+
+# Path where sbctl stores keys (should match NixOS config)
+sbctl_bundle_path: "/var/lib/sbctl"
