@@ -89,7 +89,8 @@ must be loaded into GPU memory. Afterwards, check on the host that it runs on th
 GPU with `sudo nixos-container run cho-1 -- ollama ps` (`PROCESSOR` should read
 `100% GPU`).
 
-The context window is set to 64k (`OLLAMA_CONTEXT_LENGTH`). Ollama's OpenAI
+The context window is set to 32k (`OLLAMA_CONTEXT_LENGTH`). At 64k the 16 GB GPU
+had no VRAM headroom left and the runner crashed with a CUDA allocation error. Ollama's OpenAI
 compatible endpoint ignores a client's context setting and otherwise uses a much
 smaller default, which silently truncates long prompts such as Hermes' (the
 agent then loses the earlier conversation). `ollama ps` shows the loaded
