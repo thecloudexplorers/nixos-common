@@ -13,7 +13,7 @@ Read `modules/workload/README.md` first; it defines the file conventions.
 2. Rename the files: `container-<N>.nix`, `networking-<N>.nix`.
 3. In both files change `workloadNode = <N>;` and everything built from it.
 4. In `networking-<N>.nix` set a new, unique:
-   - `computerId` (hostId). Generated with `head -c 8 /etc/machine-id` on a fresh machine id; it only needs to be unique.
+   - `computerId` (hostId): 8 hex characters, unique across all nodes and the host. Generate one with `head -c 4 /dev/urandom | xxd -p`, then check it is unused with `grep -r computerId modules/`.
    - MAC address (`ethernetInterfaceMacAddress`), where the sibling node sets one.
    - Static `extraHosts` entries only where the sibling has them.
 5. Add `container-<N>/service-<service>-<N>.nix` only when settings differ from the siblings (see `heartstone/container-1/service-kanidm-1.nix` for an example). Shared settings stay in `service-<service>.nix`.

@@ -14,7 +14,7 @@ generators and docs.
 
 - `flake.nix`: inputs, installer images, devShell (`nixd`, `nixfmt`), `nixosConfigurations`.
 - `modules/computer/server/faml-pc-home_server/`: host config (`configuration.nix`, `disko-config.nix`, `hardware-configuration.nix`, `networking.nix`). `configuration.nix` imports every workload.
-- `modules/workload/<name>/`: one workload per service (baleroc=nginx, dalaran=Nextcloud, heartstone=Kanidm, ironforge=PostgreSQL, medivh=ACME). **Read [modules/workload/README.md](modules/workload/README.md) before touching workloads**; it defines the file conventions.
+- `modules/workload/<name>/`: one workload per service (see the table in [modules/workload/README.md](modules/workload/README.md) for the current list). **Read [modules/workload/README.md](modules/workload/README.md) before touching workloads**; it defines the file conventions.
 - `modules/users/`, `modules/networking/`, `modules/nix/`, `modules/services/`: shared modules.
 - `docs/`: install and operations docs. `scripts/`: helper scripts. `generators/`: installer ISOs.
 

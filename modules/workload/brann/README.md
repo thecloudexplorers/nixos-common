@@ -93,6 +93,20 @@ sudo nixos-container restart brann-1
 - Nginx terminates TLS using the certificate from medivh and proxies to
   `127.0.0.1:8080`, including websockets and without buffering so answers
   stream.
+- Web search uses DuckDuckGo (no API key, so no secret) through the DDGS
+  library, which tries `duckduckgo,brave,bing,google,yahoo,mojeek` in that order
+  (`DDGS_BACKEND`) and skips the encyclopedia engines of the `auto` default. It is switched on by
+  default in every new chat (`DEFAULT_MODEL_METADATA`); users can turn it off
+  with the web search toggle in the message box. DuckDuckGo can rate
+  limit scraping, so the result count is 3 and requests run one at a time; if
+  that becomes a problem, run a SearXNG workload and switch
+  `WEB_SEARCH_ENGINE` to `searxng`. Both the web loader and the embedding and
+  retrieval step are bypassed: the model gets only the search result snippets,
+  which is fast but less detailed than full pages. `brann-1` needs internet
+  access to reach DuckDuckGo.
+- The code interpreter is on by default in every new chat
+  (`DEFAULT_MODEL_METADATA`) and uses Pyodide, so code runs in the user's
+  browser, not on the server. Users can turn it off per chat.
 - Open WebUI downloads a small embedding model from Hugging Face the first
   time a document is uploaded, so the container needs internet access.
 
