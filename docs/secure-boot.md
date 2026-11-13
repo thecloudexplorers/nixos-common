@@ -78,3 +78,39 @@ updating keys or the firmware). This is intended, but it means you need to:
 1. Disable Secure Boot and enroll the keys again;
 2. then enable Secure Boot;
 3. then enroll the TPM again (step 1 above).
+
+## Auto-unlock of the encrypted ZFS pool (zhdd)
+
+The `zhdd/zdata` dataset uses native ZFS encryption, not LUKS, so the TPM cannot unlock it directly.
+Instead its passphrase is stored in a file on the root drive, which is LUKS encrypted and unlocked by the TPM.
+The file is only readable after Secure Boot and the TPM have unlocked the root. `disko-config.nix` points
+`keylocation` at `file:///var/lib/zfs/secret.key`; the file itself is created manually and never ends up in
+the Nix store.
+
+1. Create the key file with the current dataset passphrase, without a trailing newline (ZFS reads the whole
+   file as the passphrase):
+    - `sudo install -d -m 0700 /var/lib/zfs`
+    - `sudo sh -c "printf '%s' '<passphrase>' > /var/lib/zfs/secret.key"`
+    - `sudo chmod 0400 /var/lib/zfs/secret.key`
+2. Tell the existing dataset where to find the key (`keylocation` in disko only applies to new datasets):
+    - `sudo zfs set keylocation=file:///var/lib/zfs/secret.key zhdd/zdata`
+3. Check that the key loads from the file:
+    - `sudo zfs unmount zhdd/zdata && sudo zfs unload-key zhdd/zdata`
+    - `sudo zfs load-key zhdd/zdata && sudo zfs mount zhdd/zdata`
+4. Rebuild and reboot; the passphrase prompt for `zhdd` should no longer appear.
+
+The passphrase still works as a manual fallback, for example if the key file is lost.
+
+### Recovery and safety for the ZFS key
+
+ZFS has no recovery key slot like LUKS: an encrypted dataset has exactly one key. The setup above is safe
+because it never changes that key; the key file contains the existing passphrase.
+
+- Store the passphrase in a password manager before you start. It is the recovery key, and it is also what
+  unlocks the pool on a new system if the root drive (and with it the key file) is lost.
+- `zfs set keylocation=...` only changes a property, not the encrypted data or the key. Revert it with
+  `sudo zfs set keylocation=prompt zhdd/zdata`, after which the boot prompt and the passphrase work again.
+- If loading from the file fails, load the key manually with `sudo zfs load-key -L prompt zhdd/zdata`.
+- Do not use `zfs change-key` for this setup. It is the command that can lock you out of the dataset.
+- Before starting, save the output of `sudo zfs get keystatus,keylocation,encryptionroot zhdd/zdata` so you
+  know the starting state, and run the load-key test (step 3) before rebooting.

@@ -237,7 +237,10 @@
               options = {
                 encryption = "aes-256-gcm";
                 keyformat = "passphrase";
-                #keylocation = "file:///var/lib/zfs/secret.key";
+                # The passphrase is read from a file on the LUKS root, which is TPM
+                # unlocked, so this pool unlocks automatically at boot. The file
+                # is created manually (see docs/secure-boot.md), never in the store.
+                keylocation = "file:///var/lib/zfs/secret.key";
               };
               mountpoint = "/mnt/zdata";
             };
