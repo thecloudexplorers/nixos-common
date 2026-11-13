@@ -17,7 +17,8 @@ let
   oidcIssuer = "https://idm.${rootDomain}/oauth2/openid/${oidcClientId}";
   # Ollama on cho-1 is the primary model backend; it is OpenAI compatible.
   workloadServiceCustomBaseUrl = "https://ollama.${rootDomain}/v1";
-  workloadServiceDefaultContextLength = 65536;
+  # Keep this equal to OLLAMA_CONTEXT_LENGTH in ../cho/service-ollama.nix.
+  workloadServiceDefaultContextLength = 32768;
   # Secrets file, bind mounted read-only from the host (see container-1.nix).
   workloadServiceEnvironmentFile = "/tmp/${workloadName}-hermes/hermes.env";
   chromiumCdpBindAddress = "127.0.0.1";

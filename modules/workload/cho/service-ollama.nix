@@ -50,14 +50,28 @@ in
         # conversation history was cut off and follow-up questions lost their
         # context. Keep this equal to context_length in khadgar's
         # service-hermes-agent.nix.
-        OLLAMA_CONTEXT_LENGTH = "65536";
+        # 64k left no VRAM headroom for gemma4:26b on the 16 GB GPU, and larger
+        # prompts (web search results) then crashed the runner with a CUDA
+        # allocation error, so it is 32k.
+        OLLAMA_CONTEXT_LENGTH = "32768";
         # Flash attention is required for a quantized KV cache and lowers memory
         # use at long context sizes.
         OLLAMA_FLASH_ATTENTION = "1";
         # Store the KV cache as q8_0 instead of f16. This roughly halves its VRAM
-        # use at a 64k context with little quality loss, so more of each model
+        # use at a long context with little quality loss, so more of each model
         # stays on the 16 GB GPU instead of being offloaded to the CPU.
         OLLAMA_KV_CACHE_TYPE = "q8_0";
+        # Keep 1 GiB of VRAM free per GPU (value in bytes). Ollama packs a model
+        # and its context almost to the brim, and the runner then failed on
+        # its first request: cublasCreate could not allocate its handle
+        # ("CUDA error: the resource allocation failed"). The headroom is
+        # for cuBLAS and the compute buffers that the estimate does not count.
+        OLLAMA_GPU_OVERHEAD = "1073741824";
+        # The llama.cpp runner fits the model into VRAM with its own margin,
+        # which did not leave the headroom above free (about 600 MiB remained
+        # while a model was loaded). This sets the free VRAM it aims for per
+        # GPU, in MiB.
+        LLAMA_ARG_FIT_TARGET = "1536";
       };
       # Every model listed here is downloaded and can be selected per request
       # through the "model" field. Ollama loads one on demand and unloads idle ones.

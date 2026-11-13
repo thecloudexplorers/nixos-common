@@ -12,6 +12,15 @@
       url = "github:nix-community/disko/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Enable lanzaboote for UEFI Secure Boot
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # Load the community driven NixOS common definitions
+    nixos-common = {
+      url = "github:thecloudexplorers/nixos-common/main";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,6 +42,7 @@
       nixos-generators,
       nixos-hardware,
       disko,
+      nixos-common,
       home-manager,
       plasma-manager,
       ...
@@ -106,6 +116,8 @@
             nixos-hardware.nixosModules.common-gpu-amd
             nixos-hardware.nixosModules.common-pc
             nixos-hardware.nixosModules.common-pc-ssd
+            # Load nixos-common modules
+            nixos-common.nixosModules.secure-boot-tpm
             # Load the various modules through the configuration.nix imports
             ./modules/computer/server/faml-pc-home_server/configuration.nix
           ];

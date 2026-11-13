@@ -124,7 +124,7 @@
   ##############################
 
   # This is the basic bootloader
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Central European Time (CET/CEST)
