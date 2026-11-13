@@ -105,6 +105,12 @@ nixos-common.nixosModules.nix-base
 # };
 ```
 
+## Developing with a local clone
+
+To test uncommitted changes to this repo from a consumer flake (or fork),
+see [docs/dev-flow.md](docs/dev-flow.md) — the `--override-input` workflow
+for evaluating/building against a local checkout without pushing.
+
 ## 🗺 Roadmap
 
 - [x] Nix base settings (`nix-base` block: substituters, GC, auto-upgrade, stateVersion)
