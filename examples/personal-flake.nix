@@ -45,13 +45,14 @@
               };
             }
             # Load nixos-common modules
+            nixos-common.nixosModules.nix-base
             nixos-common.nixosModules.localization-en_nl
             nixos-common.nixosModules.secure-boot-tpm
             # Optional: override the secure boot parameters.
             # The module declares these as options; defaults are enable = true
             # and pkiBundle = "/var/lib/sbctl".
             # {
-            #   services.common_modules.secureBoot = {
+            #   tce.services.common-modules.secureBoot = {
             #     pkiBundle = "/etc/secureboot";
             #   };
             # }

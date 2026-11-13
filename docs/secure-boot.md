@@ -116,12 +116,12 @@ and in `personal-config.nix`:
 ### Module options
 
 The module declares its contract as standard NixOS options under
-`services.common_modules.secureBoot`:
+`tce.services.common-modules.secureBoot`:
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `services.common_modules.secureBoot.enable` | bool | `true` | Master switch for the whole block. |
-| `services.common_modules.secureBoot.pkiBundle` | path | `"/var/lib/sbctl"` | Directory holding the sbctl PKI (`keys/`, `GUID`). Must match where `sbctl create-keys` put the keys. Override example: `services.common_modules.secureBoot.pkiBundle = "/etc/secureboot";` (older sbctl default). |
+| `tce.services.common-modules.secureBoot.enable` | bool | `true` | Master switch for the whole block. |
+| `tce.services.common-modules.secureBoot.pkiBundle` | path | `"/var/lib/sbctl"` | Directory holding the sbctl PKI (`keys/`, `GUID`). Must match where `sbctl create-keys` put the keys. Override example: `tce.services.common-modules.secureBoot.pkiBundle = "/etc/secureboot";` (older sbctl default). |
 
 ### What the module configures for you
 

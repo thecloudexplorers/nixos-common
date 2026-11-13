@@ -11,6 +11,8 @@ Every module in this library follows a **Contract-Based** design pattern:
 1. **The Library (This Repo):** Contains the NixOS modules and logic required for complex behavior (e.g., Secure Boot, TPM sealing, IDM integrations).
 2. **The Consumer (Downstream NixOS Config):** Only provides the raw data (Usernames, GIDs, Paths, Toggles).
 
+All options this library declares live under `tce.services.common-modules.*` — `tce` abbreviates TheCloudExplorers, so the namespace can never collide with upstream NixOS options, and uses dashes (not underscores) per NixOS attribute conventions.
+
 By isolating configuration from implementation, we ensure that common infrastructure remains consistent across multiple personal and professional deployments.
 
 ## 🛠 Component Overview
@@ -20,6 +22,7 @@ By isolating configuration from implementation, we ensure that common infrastruc
 Standardized, declarative Nix code for specific features:
 
 - **Boot:** Secure Boot + TPM auto-unlock (via Lanzaboote).
+- **Nix base:** Substituters, GC/optimise, automatic upgrades, nixpkgs platform/unfree defaults (`nix-base` block).
 - **User:** Defaultizing system accounts with automatic UID/GID mapping.
 - **IDM:** Kanidm integrations.
 - **Networking:** Dedicated profiles for standardized connectivity.
@@ -67,7 +70,7 @@ Without a flake, provide the `inputs` module argument via `specialArgs` at the `
   # Only provide the 'parameters' - the module handles
   # kernel modules, initrd settings, and bootloader flags.
   # Defaults: enable = true, pkiBundle = "/var/lib/sbctl".
-  services.common_modules.secureBoot = {
+  tce.services.common-modules.secureBoot = {
     enable = true;
     pkiBundle = "/var/lib/sbctl";
   };
@@ -85,8 +88,26 @@ cd provisioning
 ansible-playbook site.yaml --become
 ```
 
+## 🧱 Nix Base Settings
+
+The `nix-base` block applies base Nix/NixOS settings: substituters and trusted keys, garbage collection, store optimisation, automatic upgrades, and the nixpkgs platform/unfree defaults. Every value is a declared option with a default, so consumers only override what they need:
+
+```nix
+# In the modules list:
+nixos-common.nixosModules.nix-base
+
+# Optional overrides (defaults shown):
+# tce.services.common-modules.nixBase = {
+#   trustedUsers = [ "@wheel" ];
+#   gc.options = "--delete-older-than 14d";
+#   autoUpgrade.allowReboot = false;
+#   stateVersion = "26.05";
+# };
+```
+
 ## 🗺 Roadmap
 
+- [x] Nix base settings (`nix-base` block: substituters, GC, auto-upgrade, stateVersion)
 - [x] Localization modules (C, EU, NL)
 - [x] Secure Boot + TPM Unlock (Lanzaboote block)
 - [ ] Default User Block (Name/GID wiring)
