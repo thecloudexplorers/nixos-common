@@ -24,7 +24,7 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Enable the base Nix/NixOS settings block.";
+      description = "Enable the base Nix/NixOS settings module.";
     };
 
     hostPlatform = lib.mkOption {

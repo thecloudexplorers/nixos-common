@@ -1,19 +1,30 @@
 # Generic NixOS Modules Library by TheCloudExplorers
 
-An engineering-first standard library of NixOS modules designed to separate **Infrastructure Policy** (the *how*) from **User Configuration** (the *what*).
+## Context & Philosophy
 
-Instead of sprawling, monolithic configuration files, this project provides "Blocks"—isolated, versioned modules that handle complex system wiring. Downstream users simply provide a minimal set of parameters to activate production-ready services.
+This repository serves as the primary infrastructure accelerator for
+`TheCloudExplorers`. Beyond its role as an internal standard, it is designed as
+a *modern reference architecture* for the NixOS community.
 
-## 🏗 Architecture Philosophy: The Contract
+Inspired by the principles of
+[Azure Verified Modules (AVM)](https://azure.github.io/Azure-Verified-Modules/overview/introduction/),
+we aim to provide a "single definition" of what a high-quality NixOS module is:
+
+- *Consistency*: Standardized construction and testing (see roadmap) across all modules.
+- *Contract-Based*: Strict separation of infrastructure policy (the how) from user configuration (the what).
+- *Reliability*: Production-ready "plumbing" that lets users focus on their workloads rather than system wiring.
+
+Instead of sprawling, monolithic configuration files, this project provides
+versioned modules that handle the complex system wiring.
+
+## 🏗 Architecture: The Contract
 
 Every module in this library follows a **Contract-Based** design pattern:
 
 1. **The Library (This Repo):** Contains the NixOS modules and logic required for complex behavior (e.g., Secure Boot, TPM sealing, IDM integrations).
 2. **The Consumer (Downstream NixOS Config):** Only provides the raw data (Usernames, GIDs, Paths, Toggles).
 
-All options this library declares live under `tce.services.common-modules.*` — `tce` abbreviates TheCloudExplorers, so the namespace can never collide with upstream NixOS options, and uses dashes (not underscores) per NixOS attribute conventions.
-
-By isolating configuration from implementation, we ensure that common infrastructure remains consistent across multiple personal and professional deployments.
+All options this library declares live under `tce.services.common-modules.*` — `tce` abbreviates TheCloudExplorers, so the namespace can never collide with upstream NixOS options — and use dashes (not underscores) per NixOS attribute conventions. Isolating configuration from implementation keeps common infrastructure consistent across all downstream deployments.
 
 ## 🛠 Component Overview
 
@@ -22,7 +33,7 @@ By isolating configuration from implementation, we ensure that common infrastruc
 Standardized, declarative Nix code for specific features:
 
 - **Boot:** Secure Boot + TPM auto-unlock (via Lanzaboote).
-- **Nix base:** Substituters, GC/optimise, automatic upgrades, nixpkgs platform/unfree defaults (`nix-base` block).
+- **Nix base:** Substituters, GC/optimise, automatic upgrades, nixpkgs platform/unfree defaults (`nix-base` module).
 - **User:** Defaultizing system accounts with automatic UID/GID mapping.
 - **IDM:** Kanidm integrations.
 - **Networking:** Dedicated profiles for standardized connectivity.
@@ -39,7 +50,7 @@ NixOS is declarative, but hardware state (like TPM sealing) can be imperative. T
 
 ## 🚀 Quick Start: Secure Boot & TPM Unlock
 
-This example shows how a consumer adopts the `secureboot-tpm` block. For the full guide — first-time key enrollment, TPM auto-unlock of encrypted drives, PCR selection, and re-enrollment after firmware/key changes — see [docs/secure-boot.md](docs/secure-boot.md).
+This example shows how a consumer adopts the `secureboot-tpm` module. For the full guide — first-time key enrollment, TPM auto-unlock of encrypted drives, PCR selection, and re-enrollment after firmware/key changes — see [docs/secure-boot.md](docs/secure-boot.md).
 
 ### Step 1: Nix Configuration
 
@@ -90,7 +101,7 @@ ansible-playbook site.yaml --become
 
 ## 🧱 Nix Base Settings
 
-The `nix-base` block applies base Nix/NixOS settings: substituters and trusted keys, garbage collection, store optimisation, automatic upgrades, and the nixpkgs platform/unfree defaults. Every value is a declared option with a default, so consumers only override what they need:
+The `nix-base` module applies base Nix/NixOS settings: substituters and trusted keys, garbage collection, store optimisation, automatic upgrades, and the nixpkgs platform/unfree defaults. Every value is a declared option with a default, so consumers only override what they need:
 
 ```nix
 # In the modules list:
@@ -113,13 +124,15 @@ for evaluating/building against a local checkout without pushing.
 
 ## 🗺 Roadmap
 
-- [x] Nix base settings (`nix-base` block: substituters, GC, auto-upgrade, stateVersion)
+- [x] Nix base settings (`nix-base` module: substituters, GC, auto-upgrade, stateVersion)
 - [x] Localization modules (C, EU, NL)
-- [x] Secure Boot + TPM Unlock (Lanzaboote block)
-- [ ] Default User Block (Name/GID wiring)
+- [x] Secure Boot + TPM Unlock (Lanzaboote module)
+- [ ] Default User module (Name/GID wiring)
 - [ ] IDM / Kanidm Services
 - [ ] AI Workloads & Hermes Agent integration
 - [ ] Collaboration modules (Nextcloud, etc.)
+  - [ ] Designed as turn-key accelerators for solutions/patterns like a "federated Nextcloud Talk stack" (HPB + NATS + TURN): [docs/nextcloud-talk-federation.md](docs/nextcloud-talk-federation.md)
+- [ ] Implement testing for each module
 
 ## License
 

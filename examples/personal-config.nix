@@ -27,7 +27,7 @@
     [
       # This is the 'Contract'. One line to import all your work.
       "${repo}/modules/boot/secure-boot-tpm.nix"
-      # Nix base settings block (substituters, GC, auto-upgrade, stateVersion).
+      # Nix base settings module (substituters, GC, auto-upgrade, stateVersion).
       # Unlike secure-boot-tpm, this module needs no extra flake inputs.
       "${repo}/modules/nix/base.nix"
     ];

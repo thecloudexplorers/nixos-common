@@ -107,7 +107,7 @@ and in `personal-config.nix`:
 ```nix
 {
   imports = [
-    # One line imports the whole 'block'.
+    # One line imports the whole module.
     "${builtins.fetchGit { url = "https://github.com/thecloudexplorers/nixos-common.git"; rev = "<commit-hash>"; }}/modules/boot/secure-boot-tpm.nix"
   ];
 }
@@ -120,7 +120,7 @@ The module declares its contract as standard NixOS options under
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `tce.services.common-modules.secureBoot.enable` | bool | `true` | Master switch for the whole block. |
+| `tce.services.common-modules.secureBoot.enable` | bool | `true` | Master switch for the whole module. |
 | `tce.services.common-modules.secureBoot.pkiBundle` | path | `"/var/lib/sbctl"` | Directory holding the sbctl PKI (`keys/`, `GUID`). Must match where `sbctl create-keys` put the keys. Override example: `tce.services.common-modules.secureBoot.pkiBundle = "/etc/secureboot";` (older sbctl default). |
 
 ### What the module configures for you
