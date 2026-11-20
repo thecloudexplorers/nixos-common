@@ -21,10 +21,12 @@
     nixos-common = {
       url = "github:thecloudexplorers/nixos-common/main";
     };
+    # Manage per-user configuration (dotfiles, programs) declaratively
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Manage KDE Plasma desktop settings through home-manager
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
