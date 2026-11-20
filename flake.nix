@@ -3,10 +3,6 @@
     nixpkgs.url = "nixpkgs/nixos-26.05";
     # Load the community driven NixOS hardware definitions
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     # NOTE: Ensure disko is here to get filesystem information into the flake
     disko = {
       url = "github:nix-community/disko/master";
@@ -41,7 +37,6 @@
     {
       self,
       nixpkgs,
-      nixos-generators,
       nixos-hardware,
       disko,
       nixos-common,
@@ -50,31 +45,33 @@
       ...
     }:
     {
+      # The ISOs are built with plain nixosSystem; the generator modules import
+      # the nixpkgs installer profiles that provide `isoImage`.
       packages.x86_64-linux = {
-        usbInstallerMinimal = nixos-generators.nixosGenerate {
-          system = "x86_64-linux";
-          modules = [
-            {
-              # Pin nixpkgs to the flake input, so that the packages installed
-              # come from the flake inputs.nixpkgs.url.
-              nix.registry.nixpkgs.flake = nixpkgs;
-            }
-            ./generators/installation/minimal.nix
-          ];
-          format = "iso";
-        };
-        usbInstallerFull = nixos-generators.nixosGenerate {
-          system = "x86_64-linux";
-          modules = [
-            {
-              # Pin nixpkgs to the flake input, so that the packages installed
-              # come from the flake inputs.nixpkgs.url.
-              nix.registry.nixpkgs.flake = nixpkgs;
-            }
-            ./generators/installation/full.nix
-          ];
-          format = "iso";
-        };
+        usbInstallerMinimal =
+          (nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+              {
+                # Pin nixpkgs to the flake input, so that the packages installed
+                # come from the flake inputs.nixpkgs.url.
+                nix.registry.nixpkgs.flake = nixpkgs;
+              }
+              ./generators/installation/minimal.nix
+            ];
+          }).config.system.build.isoImage;
+        usbInstallerFull =
+          (nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+              {
+                # Pin nixpkgs to the flake input, so that the packages installed
+                # come from the flake inputs.nixpkgs.url.
+                nix.registry.nixpkgs.flake = nixpkgs;
+              }
+              ./generators/installation/full.nix
+            ];
+          }).config.system.build.isoImage;
       };
       # Provide a project-local Nix development environment for editor tooling.
       # This ensures VS Code/Nix IDE has a stable `nixd` LSP server and
