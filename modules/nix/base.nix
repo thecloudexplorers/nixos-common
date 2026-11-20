@@ -60,6 +60,15 @@ in
       description = "Size of the buffer Nix uses when downloading files.";
     };
 
+    autoOptimiseStore = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Optimise the Nix store on every build, in addition to the scheduled
+        run configured by `optimise`.
+      '';
+    };
+
     # max-call-depth default is 10k. Beware of stack overflow.
     # https://blog.kleisli.io/post/trampolining-nix-with-generic-closure
     maxCallDepth = lib.mkOption {
@@ -137,8 +146,8 @@ in
     autoUpgrade = {
       enable = lib.mkOption {
         type = lib.types.bool;
-        default = true;
-        description = "Enable automatic NixOS upgrades.";
+        default = false;
+        description = "Enable automatic NixOS upgrades. Off by default: flake-based hosts should update their lock file and switch deliberately.";
       };
 
       allowReboot = lib.mkOption {
@@ -184,6 +193,7 @@ in
     nix = {
       settings = {
         experimental-features = cfg.experimentalFeatures;
+        auto-optimise-store = cfg.autoOptimiseStore;
         download-buffer-size = cfg.downloadBufferSize;
         max-call-depth = cfg.maxCallDepth;
         substituters = cfg.substituters;

@@ -41,7 +41,7 @@
   # tce.services.common-modules.nixBase = {
   #   trustedUsers = [ "@wheel" ];
   #   gc.options = "--delete-older-than 14d";
-  #   autoUpgrade.allowReboot = false;
+  #   autoUpgrade.enable = false;
   #   stateVersion = "26.05";
   # };
 }
