@@ -56,6 +56,9 @@ in
       # the ZFS kernel module is built with support for encryption. Hibernation
       # is not supported on encrypted ZFS filesystems, so we disable it.
       unsafeAllowHibernation = false;
+      # The ISO does not boot from ZFS, so there is no root pool to force
+      # import. Matches the host config and the default from 26.11 on.
+      forceImportRoot = false;
     };
     # Needed for https://github.com/NixOS/nixpkgs/issues/58959
     supportedFilesystems = lib.mkForce [
