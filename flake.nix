@@ -6,6 +6,7 @@
 			# Needed to allow the module system to import these modules
 			import = path: path;
 		in {
+			nix-base = import ./modules/nix/base.nix;
 			localization-en_c = import ./modules/localization/en_c;
 			localization-en_eu = import ./modules/localization/en_eu;
 			localization-en_nl = import ./modules/localization/en_nl;

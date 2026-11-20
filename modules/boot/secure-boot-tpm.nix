@@ -16,17 +16,17 @@
 # initrd, and package requirements. Consumers configure the module
 # through the options declared below, e.g.:
 #
-#   services.common_modules.secureBoot.pkiBundle = "/etc/secureboot";
+#   tce.services.common-modules.secureBoot.pkiBundle = "/etc/secureboot";
 
 let
   # Validate that the user provided the necessary input
   lanzaboote = inputs.lanzaboote;
-  cfg = config.services.common_modules.secureBoot;
+  cfg = config.tce.services.common-modules.secureBoot;
 in
 {
   imports = [ lanzaboote.nixosModules.lanzaboote ];
 
-  options.services.common_modules.secureBoot = {
+  options.tce.services.common-modules.secureBoot = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
