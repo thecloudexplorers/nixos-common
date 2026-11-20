@@ -61,10 +61,10 @@ See `examples/personal-flake.nix`. The essential parts:
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-common.url = "github:thecloudexplorers/nixos-common/main";
+    nix-modules-catalog.url = "github:thecloudexplorers/nix-modules-catalog/main";
   };
 
-  outputs = { self, nixpkgs, nixos-common, ... }:
+  outputs = { self, nixpkgs, nix-modules-catalog, ... }:
     {
       nixosConfigurations.myhost = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -72,7 +72,7 @@ See `examples/personal-flake.nix`. The essential parts:
         # so the flake inputs must be passed through as specialArgs.
         specialArgs = { inherit (self) inputs; };
         modules = [
-          nixos-common.nixosModules.secure-boot-tpm
+          nix-modules-catalog.nixosModules.secure-boot-tpm
           ./configuration.nix
         ];
       };
@@ -108,7 +108,7 @@ and in `personal-config.nix`:
 {
   imports = [
     # One line imports the whole module.
-    "${builtins.fetchGit { url = "https://github.com/thecloudexplorers/nixos-common.git"; rev = "<commit-hash>"; }}/modules/boot/secure-boot-tpm.nix"
+    "${builtins.fetchGit { url = "https://github.com/thecloudexplorers/nix-modules-catalog.git"; rev = "<commit-hash>"; }}/modules/boot/secure-boot-tpm.nix"
   ];
 }
 ```
@@ -116,12 +116,12 @@ and in `personal-config.nix`:
 ### Module options
 
 The module declares its contract as standard NixOS options under
-`tce.services.common-modules.secureBoot`:
+`tce.modules.secureBoot`:
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `tce.services.common-modules.secureBoot.enable` | bool | `true` | Master switch for the whole module. |
-| `tce.services.common-modules.secureBoot.pkiBundle` | path | `"/var/lib/sbctl"` | Directory holding the sbctl PKI (`keys/`, `GUID`). Must match where `sbctl create-keys` put the keys. Override example: `tce.services.common-modules.secureBoot.pkiBundle = "/etc/secureboot";` (older sbctl default). |
+| `tce.modules.secureBoot.enable` | bool | `true` | Master switch for the whole module. |
+| `tce.modules.secureBoot.pkiBundle` | path | `"/var/lib/sbctl"` | Directory holding the sbctl PKI (`keys/`, `GUID`). Must match where `sbctl create-keys` put the keys. Override example: `tce.modules.secureBoot.pkiBundle = "/etc/secureboot";` (older sbctl default). |
 
 ### What the module configures for you
 

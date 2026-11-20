@@ -1,9 +1,9 @@
 # Dev flow: testing local changes with `--override-input`
 
-You consume nixos-common as a flake input:
+You consume nix-modules-catalog as a flake input:
 
 ```nix
-inputs.nixos-common.url = "github:thecloudexplorers/nixos-common/main";
+inputs.nix-modules-catalog.url = "github:thecloudexplorers/nix-modules-catalog/main";
 ```
 
 `flake.lock` pins that input to a remote revision, so edits in a local clone
@@ -12,26 +12,26 @@ local working tree instead — without committing and without touching the lock 
 override the input for a single command:
 
 ```bash
-# Evaluate an option of your host while using the LOCAL nixos-common
+# Evaluate an option of your host while using the LOCAL nix-modules-catalog
 nix eval \
   --no-write-lock-file \
-  --override-input nixos-common path:/home/you/src/nixos-common \
+  --override-input nix-modules-catalog path:/home/you/src/nix-modules-catalog \
   .#nixosConfigurations.myhost.config.system.stateVersion --json
 
-# Read-only full build of a host against the local nixos-common
+# Read-only full build of a host against the local nix-modules-catalog
 nix build \
   --no-write-lock-file \
-  --override-input nixos-common path:/home/you/src/nixos-common \
+  --override-input nix-modules-catalog path:/home/you/src/nix-modules-catalog \
   .#nixosConfigurations.myhost.config.system.build.toplevel
 
 # List the hosts your flake defines
 nix eval \
   --no-write-lock-file \
-  --override-input nixos-common path:/home/you/src/nixos-common \
+  --override-input nix-modules-catalog path:/home/you/src/nix-modules-catalog \
   .#nixosConfigurations --apply 'builtins.attrNames' --json
 
 # Check the library itself (it has no inputs, plain nix works there)
-cd /home/you/src/nixos-common && nix flake check
+cd /home/you/src/nix-modules-catalog && nix flake check
 ```
 
 ## How it works, and caveats
@@ -45,7 +45,7 @@ cd /home/you/src/nixos-common && nix flake check
   as-is (warning: "Git tree ... is dirty"): uncommitted edits, new untracked
   files, and deletions are all reflected.
 - `path:` URLs must not traverse a symlink (`error: path '...' is a symlink`).
-  Resolve the real path first, e.g. `path:$(readlink -f ~/src/nixos-common)`.
+  Resolve the real path first, e.g. `path:$(readlink -f ~/src/nix-modules-catalog)`.
 - The override URL can be any flake URL: `path:...`, `git+file://...`,
   `github:owner/repo/<sha>`, etc. — handy to test against a specific remote
   commit or a fork.
@@ -60,7 +60,7 @@ cd /home/you/src/nixos-common && nix flake check
     local subcmd="$1"
     shift
     nix "$subcmd" --no-write-lock-file \
-      --override-input nixos-common "path:$(readlink -f "$HOME/src/nixos-common")" \
+      --override-input nix-modules-catalog "path:$(readlink -f "$HOME/src/nix-modules-catalog")" \
       "$@"
   }
   # usage: nixdev eval .#nixosConfigurations --apply 'builtins.attrNames' --json
@@ -68,7 +68,7 @@ cd /home/you/src/nixos-common && nix flake check
   ```
 
 - Once your change is pushed, make consumers use it permanently with
-  `nix flake lock --update-input nixos-common` in the consumer flake. Until
+  `nix flake lock --update-input nix-modules-catalog` in the consumer flake. Until
   then, plain `nix eval`/`nix build` without overrides still uses the old
   locked revision.
 
@@ -80,8 +80,8 @@ local clone, or importing the module files by plain path:
 
 ```nix
 # Option A: fetch the local clone (git+file keeps it a flake-style source)
-repo = builtins.fetchGit { url = "git+file:///home/you/src/nixos-common"; };
+repo = builtins.fetchGit { url = "git+file:///home/you/src/nix-modules-catalog"; };
 
 # Option B: import the module file directly from the local path
-imports = [ /home/you/src/nixos-common/modules/nix/base.nix ];
+imports = [ /home/you/src/nix-modules-catalog/modules/nix/base.nix ];
 ```

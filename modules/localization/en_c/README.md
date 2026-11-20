@@ -16,12 +16,12 @@ This module provides a globally neutral computer English localization configurat
 The module defines two main configuration areas:
 
 ### Time Configuration
-- `time.offsetHardwareClock`: Boolean option to offset hardware clock to local timezone (default: false)
+- `tce.modules.localization.offsetHardwareClock`: Boolean option to offset hardware clock to local timezone (default: false)
 - Sets timezone to UTC for global neutrality
 
 ### Internationalization Configuration
-- `i18n.defaultLocaleShortlist`: Enum option for default locale (only C.UTF-8 available)
-- `i18n.defaultCharsetShortlist`: Enum option for default charset (only UTF-8 available)
+- `tce.modules.localization.defaultLocaleShortlist`: Enum option for default locale (only C.UTF-8 available)
+- `tce.modules.localization.defaultCharsetShortlist`: Enum option for default charset (only UTF-8 available)
 - Configures all LC_* categories to use C.UTF-8
 - Sets all charset configurations to UTF-8
 
@@ -33,14 +33,14 @@ To use this module in your NixOS flake configuration:
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixos-common.url = "github:thecloudexplorers/nixos-common";
+    nix-modules-catalog.url = "github:thecloudexplorers/nix-modules-catalog";
   };
 
-  outputs = { self, nixpkgs, nixos-common }: {
+  outputs = { self, nixpkgs, nix-modules-catalog }: {
     nixosConfigurations.your-hostname = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        nixos-common.nixosModules.localization-en_c
+        nix-modules-catalog.nixosModules.localization-en_c
         # Your other configuration modules
       ];
     };

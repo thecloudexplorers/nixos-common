@@ -15,8 +15,8 @@
       url = "github:nix-community/lanzaboote/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Load the community driven NixOS common definitions
-    nixos-common.url = "github:thecloudexplorers/nixos-common/main";
+    # Load the Nix Modules Catalog modules
+    nix-modules-catalog.url = "github:thecloudexplorers/nix-modules-catalog/main";
   };
 
   outputs =
@@ -24,7 +24,7 @@
       self,
       nixpkgs,
       lanzaboote,
-      nixos-common,
+      nix-modules-catalog,
       ...
     }:
     {
@@ -44,15 +44,15 @@
                 };
               };
             }
-            # Load nixos-common modules
-            nixos-common.nixosModules.nix-base
-            nixos-common.nixosModules.localization-en_nl
-            nixos-common.nixosModules.secure-boot-tpm
+            # Load nix-modules-catalog modules
+            nix-modules-catalog.nixosModules.nix-base
+            nix-modules-catalog.nixosModules.localization-en_nl
+            nix-modules-catalog.nixosModules.secure-boot-tpm
             # Optional: override the secure boot parameters.
             # The module declares these as options; defaults are enable = true
             # and pkiBundle = "/var/lib/sbctl".
             # {
-            #   tce.services.common-modules.secureBoot = {
+            #   tce.modules.secureBoot = {
             #     pkiBundle = "/etc/secureboot";
             #   };
             # }

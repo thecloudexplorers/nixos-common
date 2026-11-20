@@ -16,12 +16,12 @@ This module provides an English localization configuration for the Netherlands l
 The module defines two main configuration areas:
 
 ### Time Configuration
-- `time.offsetHardwareClock`: Boolean option to offset hardware clock to local timezone (default: false)
+- `tce.modules.localization.offsetHardwareClock`: Boolean option to offset hardware clock to local timezone (default: false)
 - Sets timezone to Amsterdam by default
 
 ### Internationalization Configuration
-- `i18n.defaultLocaleShortlist`: Enum option for default locale
-- `i18n.defaultCharsetShortlist`: Enum option for default charset
+- `tce.modules.localization.defaultLocaleShortlist`: Enum option for default locale
+- `tce.modules.localization.defaultCharsetShortlist`: Enum option for default charset
 - Configures all LC_* categories to use en_IE.UTF-8 or nl_NL.UTF8
 - Sets all charset configurations to UTF-8
 
@@ -33,14 +33,14 @@ To use this module in your NixOS flake configuration:
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixos-common.url = "github:thecloudexplorers/nixos-common";
+    nix-modules-catalog.url = "github:thecloudexplorers/nix-modules-catalog";
   };
 
-  outputs = { self, nixpkgs, nixos-common }: {
+  outputs = { self, nixpkgs, nix-modules-catalog }: {
     nixosConfigurations.your-hostname = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        nixos-common.nixosModules.localization-en_nl_utf8
+        nix-modules-catalog.nixosModules.localization-en_nl_utf8
         # Your other configuration modules
       ];
     };

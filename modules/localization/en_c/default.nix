@@ -6,42 +6,37 @@
 {
   imports = [ ];
 
-  options = {
-    time = {
-      offsetHardwareClock = lib.mkOption {
-        description = "Offset the hardware (system) clock to the local timezone?";
-        type = lib.types.bool;
-        default = false;
-      };
+  options.tce.modules.localization = {
+    offsetHardwareClock = lib.mkOption {
+      description = "Offset the hardware (system) clock to the local timezone?";
+      type = lib.types.bool;
+      default = false;
     };
 
-    i18n = {
-      defaultLocaleShortlist = lib.mkOption {
-        description = "The default locale for this config.";  
-        type = lib.types.enum [
-          "C.UTF-8"
-        ];
-        default = "C.UTF-8";
-      };
-      defaultCharsetShortlist = lib.mkOption {
-        description = "The default charset for this config.";  
-        type = lib.types.enum [
-          "UTF-8"
-        ];
-        default = "UTF-8";
-      };
+    defaultLocaleShortlist = lib.mkOption {
+      description = "The default locale for this config.";  
+      type = lib.types.enum [
+        "C.UTF-8"
+      ];
+      default = "C.UTF-8";
+    };
+    defaultCharsetShortlist = lib.mkOption {
+      description = "The default charset for this config.";  
+      type = lib.types.enum [
+        "UTF-8"
+      ];
+      default = "UTF-8";
     };
   };
 
   config =
   let
-    cfg-time = config.time;
-    cfg-lang = config.i18n;
+    cfg = config.tce.modules.localization;
   in
   {
     # Set your time zone
     time = {
-      hardwareClockInLocalTime = cfg-time.offsetHardwareClock;
+      hardwareClockInLocalTime = cfg.offsetHardwareClock;
       # Use UTC as default timezone for globally neutral configuration
       timeZone = "UTC";
     };
@@ -50,8 +45,8 @@
     # locale based on C.UTF-8 for maximum universal compatibility
     i18n = {
       # Use C.UTF-8 as the default locale for globally neutral computer English
-      defaultLocale = cfg-lang.defaultLocaleShortlist;
-      defaultCharset = cfg-lang.defaultCharsetShortlist;
+      defaultLocale = cfg.defaultLocaleShortlist;
+      defaultCharset = cfg.defaultCharsetShortlist;
       extraLocales = [
         "en_US.UTF-8/UTF-8"
       ];

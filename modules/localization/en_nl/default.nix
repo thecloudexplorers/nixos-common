@@ -1,46 +1,41 @@
 { config, lib, ... }: {
 	imports = [ ];
 
-	options = {
-		time = {
-			offsetHardwareClock = lib.mkOption {
-				description =
-					"Offset the hardware (system) clock to the local timezone?";
-				type = lib.types.bool;
-				default = false;
-			};
+	options.tce.modules.localization = {
+		offsetHardwareClock = lib.mkOption {
+			description =
+				"Offset the hardware (system) clock to the local timezone?";
+			type = lib.types.bool;
+			default = false;
 		};
 
-		i18n = {
-			defaultLocaleShortlist = lib.mkOption {
-				description = "The default locale for this config.";
-				type = lib.types.enum [
-					"C"
-					"C.UTF-8"
-					"en_IE.UTF-8"
-					"en_IE"
-					"en_IE@euro"
-					"nl_NL.UTF-8"
-					"nl_NL"
-					"nl_NL@euro"
-				];
-				default = "C.UTF-8";
-			};
-			defaultCharsetShortlist = lib.mkOption {
-				description = "The default charset for this config.";
-				type = lib.types.enum [ "UTF-8" "ISO-8859-1" "ISO-8859-15" ];
-				default = "UTF-8";
-			};
+		defaultLocaleShortlist = lib.mkOption {
+			description = "The default locale for this config.";
+			type = lib.types.enum [
+				"C"
+				"C.UTF-8"
+				"en_IE.UTF-8"
+				"en_IE"
+				"en_IE@euro"
+				"nl_NL.UTF-8"
+				"nl_NL"
+				"nl_NL@euro"
+			];
+			default = "C.UTF-8";
+		};
+		defaultCharsetShortlist = lib.mkOption {
+			description = "The default charset for this config.";
+			type = lib.types.enum [ "UTF-8" "ISO-8859-1" "ISO-8859-15" ];
+			default = "UTF-8";
 		};
 	};
 
 	config = let
-		cfg-time = config.time;
-		cfg-lang = config.i18n;
+		cfg = config.tce.modules.localization;
 	in {
 		# Set your time zone
 		time = {
-			hardwareClockInLocalTime = cfg-time.offsetHardwareClock;
+			hardwareClockInLocalTime = cfg.offsetHardwareClock;
 			# Set Amsterdam as default timezone as a 'default Europe timezone'
 			timeZone = "Europe/Amsterdam";
 		};
@@ -50,8 +45,8 @@
 		i18n = {
 			# Use 'Computer English' as the default English language as
 			# an international standard
-			defaultLocale = cfg-lang.defaultLocaleShortlist;
-			defaultCharset = cfg-lang.defaultCharsetShortlist;
+			defaultLocale = cfg.defaultLocaleShortlist;
+			defaultCharset = cfg.defaultCharsetShortlist;
 			extraLocales = [
 				"en_IE.UTF-8/UTF-8"
 				"en_IE/ISO-8859-1"

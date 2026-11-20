@@ -1,5 +1,5 @@
 {
-	description = "nixos-common";
+	description = "nix-modules-catalog";
 
 	outputs = _: {
 		nixosModules = let

@@ -40,7 +40,7 @@ Everything is parameterized by *instance parameters* (Appendix A). Substitute
 your own values for the `<...>` placeholders. The Nix snippets are plain NixOS
 configuration and can be dropped into any flake or `nixosSystem` as-is; this
 repository additionally ships ready-made modules for this stack under the
-`tce.services.common-modules.*` namespace (see the repo README for the
+`tce.modules.*` namespace (see the repo README for the
 contract pattern), so consumers only provide the parameters.
 
 **Modules.** Section 4 defines modules M0–M6. Each module is one Nix module

@@ -6,46 +6,41 @@
 {
   imports = [ ];
 
-  options = {
-    time = {
-      offsetHardwareClock = lib.mkOption {
-        description = "Offset the hardware (system) clock to the local timezone?";
-        type = lib.types.bool;
-        default = false;
-      };
+  options.tce.modules.localization = {
+    offsetHardwareClock = lib.mkOption {
+      description = "Offset the hardware (system) clock to the local timezone?";
+      type = lib.types.bool;
+      default = false;
     };
 
-    i18n = {
-      defaultLocaleShortlist = lib.mkOption {
-        description = "The default locale for this config.";  
-        type = lib.types.enum [
-          "nl_NL.UTF-8"
-          "nl_NL"
-          "nl_NL@euro"
-        ];
-        default = "nl_NL@euro";
-      };
-      defaultCharsetShortlist = lib.mkOption {
-        description = "The default charset for this config.";  
-        type = lib.types.enum [
-          "UTF-8"
-          "ISO-8859-1"
-          "ISO-8859-15"
-        ];
-        default = "ISO-8859-15";
-      };
+    defaultLocaleShortlist = lib.mkOption {
+      description = "The default locale for this config.";  
+      type = lib.types.enum [
+        "nl_NL.UTF-8"
+        "nl_NL"
+        "nl_NL@euro"
+      ];
+      default = "nl_NL@euro";
+    };
+    defaultCharsetShortlist = lib.mkOption {
+      description = "The default charset for this config.";  
+      type = lib.types.enum [
+        "UTF-8"
+        "ISO-8859-1"
+        "ISO-8859-15"
+      ];
+      default = "ISO-8859-15";
     };
   };
 
   config =
   let
-    cfg-time = config.time;
-    cfg-lang = config.i18n;
+    cfg = config.tce.modules.localization;
   in
   {
     # Set your time zone
     time = {
-      hardwareClockInLocalTime = cfg-time.offsetHardwareClock;
+      hardwareClockInLocalTime = cfg.offsetHardwareClock;
       # Set Amsterdam as default timezone as a 'default Europe timezone'
       timeZone = "Europe/Amsterdam";
     };
@@ -53,8 +48,8 @@
     # This specific configuration is intended to provide an all Dutch flavor
     # for people living in the Netherlands, want Dutch as a base as well
     i18n = {
-      defaultLocale = cfg-lang.defaultLocaleShortlist;
-      defaultCharset = cfg-lang.defaultCharsetShortlist;
+      defaultLocale = cfg.defaultLocaleShortlist;
+      defaultCharset = cfg.defaultCharsetShortlist;
       extraLocales = [
         # The ISO-8859-1 standard is a good Dutch language choice,
         # but lacks specific NL characters and the Euro sign

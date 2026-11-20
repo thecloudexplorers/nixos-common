@@ -1,4 +1,4 @@
-# Classic (non-flake) consumer configuration for nixos-common.
+# Classic (non-flake) consumer configuration for nix-modules-catalog.
 #
 # The secure-boot-tpm module imports lanzaboote via the `inputs` module
 # argument, and NixOS `imports` may not depend on config, so `inputs`
@@ -20,7 +20,7 @@
   imports =
     let
       repo = builtins.fetchGit {
-        url = "https://github.com/thecloudexplorers/nixos-common.git";
+        url = "https://github.com/thecloudexplorers/nix-modules-catalog.git";
         rev = "commit-hash"; # Replace with the specific commit hash you want to use
       };
     in
@@ -35,10 +35,10 @@
   # Optional: override the secure boot parameters.
   # The module declares these as options; defaults are enable = true
   # and pkiBundle = "/var/lib/sbctl".
-  # tce.services.common-modules.secureBoot.pkiBundle = "/etc/secureboot";
+  # tce.modules.secureBoot.pkiBundle = "/etc/secureboot";
 
   # Optional: override the nix base settings (defaults shown).
-  # tce.services.common-modules.nixBase = {
+  # tce.modules.nixBase = {
   #   trustedUsers = [ "@wheel" ];
   #   gc.options = "--delete-older-than 14d";
   #   autoUpgrade.enable = false;

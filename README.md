@@ -1,4 +1,4 @@
-# Generic NixOS Modules Library by TheCloudExplorers
+# Nix Modules Catalog by TheCloudExplorers
 
 ## 📜 Context & Philosophy
 
@@ -29,11 +29,16 @@ for complex behavior (e.g., Secure Boot, TPM sealing, IDM integrations).
 2. **The Consumer (Downstream NixOS Config):** Only provides the raw data
 (Usernames, GIDs, Paths, Toggles).
 
-All options this library declares live under `tce.services.common-modules.*`,
-`tce` abbreviates TheCloudExplorers, so the namespace can never collide with
-upstream NixOS options — and use dashes (not underscores) per NixOS attribute
-conventions. Isolating configuration from implementation keeps common
-infrastructure consistent across all downstream deployments.
+All options this library declares live under `tce.modules.<module>.*` — one
+subtree per catalog entry, e.g. `tce.modules.secureBoot.*`. `tce` abbreviates
+TheCloudExplorers, so the namespace can never collide with upstream NixOS
+options. Option attribute names follow the official NixOS naming convention:
+camelCase in general, with dashes only when the name matches a nixpkgs package
+attribute — see the NixOS manual's
+[Option Declarations](https://github.com/NixOS/nixpkgs/blob/master/nixos/doc/manual/development/option-declarations.section.md)
+and [package naming](https://nixos.org/nixpkgs/manual/#sec-package-naming).
+Isolating configuration from implementation keeps common infrastructure
+consistent across all downstream deployments.
 
 ## 🧩 Component Overview
 
@@ -80,7 +85,7 @@ nixpkgs.lib.nixosSystem {
   system = "x86_64-linux";
   specialArgs = { inherit (self) inputs outputs; };
   modules = [
-    nixos-common.nixosModules.secure-boot-tpm
+    nix-modules-catalog.nixosModules.secure-boot-tpm
     ./configuration.nix
   ];
 }
@@ -101,7 +106,7 @@ passing values into its declared options:
   # Only provide the 'parameters' - the module handles
   # kernel modules, initrd settings, and bootloader flags.
   # Defaults: enable = true, pkiBundle = "/var/lib/sbctl".
-  tce.services.common-modules.secureBoot = {
+  tce.modules.secureBoot = {
     enable = true;
     pkiBundle = "/var/lib/sbctl";
   };
@@ -129,10 +134,10 @@ default, so consumers only override what they need:
 
 ```nix
 # In the modules list:
-nixos-common.nixosModules.nix-base
+nix-modules-catalog.nixosModules.nix-base
 
 # Optional overrides (defaults shown):
-# tce.services.common-modules.nixBase = {
+# tce.modules.nixBase = {
 #   trustedUsers = [ "@wheel" ];
 #   gc.options = "--delete-older-than 14d";
 #   autoUpgrade.enable = false;

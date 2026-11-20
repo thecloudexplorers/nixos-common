@@ -11,16 +11,16 @@
 # Consumers import this module and only tune the options declared below,
 # e.g.:
 #
-#   tce.services.common-modules.nixBase = {
+#   tce.modules.nixBase = {
 #     trustedUsers = [ "@wheel" "deploy" ];
 #     gc.options = "--delete-older-than 30d";
 #   };
 
 let
-  cfg = config.tce.services.common-modules.nixBase;
+  cfg = config.tce.modules.nixBase;
 in
 {
-  options.tce.services.common-modules.nixBase = {
+  options.tce.modules.nixBase = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
