@@ -124,7 +124,7 @@ in
         # live questions like the weather. With one request at a time (below),
         # later engines are only used when an earlier one fails or is rate
         # limited.
-        DDGS_BACKEND = "duckduckgo,brave,bing,google,yahoo,mojeek";
+        DDGS_BACKEND = "duckduckgo,brave,yahoo,mojeek,yandex";
         WEB_SEARCH_RESULT_COUNT = "5";
         WEB_SEARCH_CONCURRENT_REQUESTS = "1";
         # Use only the snippets DuckDuckGo returns instead of fetching every

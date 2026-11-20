@@ -94,7 +94,7 @@ sudo nixos-container restart brann-1
   `127.0.0.1:8080`, including websockets and without buffering so answers
   stream.
 - Web search uses DuckDuckGo (no API key, so no secret) through the DDGS
-  library, which tries `duckduckgo,brave,bing,google,yahoo,mojeek` in that order
+  library, which tries `duckduckgo,brave,yahoo,mojeek,yandex` in that order
   (`DDGS_BACKEND`) and skips the encyclopedia engines of the `auto` default. It is switched on by
   default in every new chat (`DEFAULT_MODEL_METADATA`); users can turn it off
   with the web search toggle in the message box. DuckDuckGo can rate
