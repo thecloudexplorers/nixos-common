@@ -1,0 +1,120 @@
+banner_hero: '[#5A5A5A]╔══════════════════════════════════════════╗[/]
+
+  ║     [#C8102E]◎[/] [#AAAAAA]DEATH STAR · FIRING CONTROL[/] [#C8102E]◎[/]      ║
+
+  [#3A3A3A]╠══════════════════════════════════════════╣[/]
+
+  ║          [#00A2FF]⌖  T  A  R  G  E  T  ⌖[/]          ║
+
+  ║             [#00A2FF]╭──────┬──────╮[/]              ║
+
+  ║             [#00A2FF]│      │      │[/]              ║
+
+  ║             [#00A2FF]├──────┼──────┤[/]              ║
+
+  ║             [#00A2FF]│      │      │[/]              ║
+
+  ║             [#00A2FF]╰──────┴──────╯[/]              ║
+
+  [#3A3A3A]╠══════════════════════════════════════════╣[/]
+
+  ║        [#5A5A5A]▓▓▓▓[/] [#C8102E]IMPERIAL COMMAND[/] [#5A5A5A]▓▓▓▓[/]        ║
+
+  ║        [#D2D0CE]ENGAGE · DEPLOY · DESTROY[/]         ║
+
+  [#5A5A5A]╚══════════════════════════════════════════╝[/]'
+banner_logo: "[bold #2A2A2A]███████╗███╗   ███╗██████╗ ██╗██████╗ ███████╗[/]\n[bold #2A2A2A]██╔════╝████╗ ████║██╔══██╗██║██╔══██╗██╔════╝[/]\n\
+  [bold #3D2020]█████╗  ██╔████╔██║██████╔╝██║██████╔╝█████╗  [/]\n[bold #5A1818]██╔══╝  ██║╚██╔╝██║██╔═══╝ ██║██╔══██╗██╔══╝\
+  \  [/]\n[bold #7A1414]███████╗██║ ╚═╝ ██║██║     ██║██║  ██║███████╗[/]\n[bold #9E1010]╚══════╝╚═╝     ╚═╝╚═╝     ╚═╝╚═╝\
+  \  ╚═╝╚══════╝[/]\n[bold #C8102E]                                              [/]\n           [bold #00A2FF]I M P E R I\
+  \ A L  N A V Y[/]\n"
+branding:
+  agent_name: Imperial Agent
+  goodbye: "TRANSMISSION TERMINATED :: LONG LIVE THE EMPIRE"
+  help_header: ⌖ IMPERIAL DIRECTIVE - Available Commands
+  prompt_symbol: '◎ '
+  response_label: ' ◉ IMPERIAL COMMAND '
+  welcome: '[bold #AAAAAA]I[/][bold #AAA9A9]M[/][bold #AAA8A8]P[/][bold #AAA8A8]E[/][bold #ABA6A6]R[/][bold #ABA5A5]I[/][bold
+    #ACA4A4]A[/][bold #ACA2A2]L[/] [bold #ADA1A1]P[/][bold #AD9F9F]R[/][bold #AE9D9D]O[/][bold #AF9B9B]T[/][bold #B09A9A]O[/][bold
+    #B09797]C[/][bold #B19595]O[/][bold #B29393]L[/] [bold #B39191]A[/][bold #B48F8F]C[/][bold #B58C8C]T[/][bold #B68A8A]I[/][#B78787]V[/][#B88484]E[/]
+    [#B98282]:[/][#BA7F7F]:[/] [#BB7C7C]A[/][#BC7979]W[/][#BD7676]A[/][#BE7474]I[/][#BF7070]T[/][#C06D6D]I[/][#C16A6A]N[/][#C36767]G[/]
+    [#C46464]O[/][#C56161]R[/][#C65D5D]D[/][#C85A5A]E[/][#C95656]R[/][#CA5353]S[/][#CC4F4F],[/] [#CD4C4C]L[/][#CE4848]O[/][#D04444]R[/][#D14141]D[/]
+    [#D33D3D]V[/][#D43939]A[/][#D63535]D[/][#D73131]E[/][#D92E2E]R[/]'
+colors:
+  banner_accent: '#00A2FF'
+  banner_border: '#3A3A3A'
+  banner_dim: '#5A5A5A'
+  banner_text: '#D2D0CE'
+  banner_title: '#C8102E'
+  input_rule: '#3A3A3A'
+  prompt: '#D2D0CE'
+  response_border: '#C8102E'
+  status_bar_bg: "#202020"
+  status_bar_text: "#D2D0CE"
+  status_bar_strong: "#C8102E"
+  status_bar_dim: "#5A5A5A"
+  status_bar_good: "#5A9A5A"
+  status_bar_warn: "#E35205"
+  status_bar_bad: "#00A2FF"
+  status_bar_critical: "#FF3030"
+  voice_status_bg: "#202020"
+  completion_menu_bg: "#1B1B1B"
+  completion_menu_current_bg: "#265E7F"
+  completion_menu_meta_bg: "#262626"
+  completion_menu_meta_current_bg: "#4E4A6B"
+  session_border: '#2A2A2A'
+  session_label: '#6B6966'
+  ui_accent: '#C8102E'
+  ui_error: '#FF3030'
+  ui_label: '#00A2FF'
+  ui_ok: '#5A9A5A'
+  ui_warn: '#E35205'
+description: Galactic Empire v2. Canon red, Death Star firing control terminal, hologram blue accents.
+name: empire
+spinner:
+  thinking_faces:
+  - '[◎]'
+  - '[●]'
+  - '[◉]'
+  - '[○]'
+  - '[◎]'
+  thinking_verbs:
+  - SCANNING SECTOR
+  - TARGET LOCK
+  - HYPERSPACE CALC
+  - TRACTOR BEAM ENGAGED
+  - AWAITING ORDERS
+  - STANDING BY
+  - ACKNOWLEDGE
+  - IMPERIAL PROTOCOL
+  - DEPLOYING FORCES
+  waiting_faces:
+  - (■)
+  - (▪)
+  - (●)
+  - (◎)
+  - (●)
+  - (▪)
+  wings:
+  - - ⌖
+    - ⌖
+  - - ◎
+    - ◎
+  - - ⬡
+    - ⬡
+tool_emojis:
+  cronjob: ◐
+  memory: ◈
+  patch: ▪
+  read_file: ▓
+  search_files: ◎
+  skill_view: ▫
+  skills_list: ⬡
+  terminal: █
+  text_to_speech: ●
+  todo: □
+  vision_analyze: ◎
+  web_fetch: ◉
+  web_search: ⌖
+  write_file: ▒
+tool_prefix: │

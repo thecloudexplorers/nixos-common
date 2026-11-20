@@ -10,10 +10,10 @@ let
   kanidmDomain = "idm.${rootDomain}";
   kanidmClientId = "openwebui";
   ollamaUrl = "https://ollama.${rootDomain}";
-  # The default model of Hermes (khadgar) and the Nextcloud Assistant
-  # (dalaran). Using the same one means it is usually already loaded in VRAM,
-  # so the first question of the day does not wait for a model swap.
-  defaultModel = "gemma4:26b";
+  # The default model of Hermes (khadgar). Using the same one means it is
+  # usually already loaded in VRAM, so the first question of the day does not
+  # wait for a model swap.
+  defaultModel = "gemma4:12b";
   proxyPort = 443;
   proxyListeners = [
     {

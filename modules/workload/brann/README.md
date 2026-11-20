@@ -75,8 +75,8 @@ sudo nixos-container restart brann-1
 - Open WebUI is the nixpkgs `services.open-webui` module, configured through
   [service-open-webui.nix](service-open-webui.nix).
 - Models: Ollama on [cho](../cho/README.md) (`https://ollama.raboes28.nl`) is the
-  only backend; the OpenAI connection is off. `gemma4:26b` is the default, like
-  for Hermes and the Nextcloud Assistant, so it is usually already loaded.
+  only backend; the OpenAI connection is off. `gemma4:12b` is the default, like
+  for Hermes, so it is usually already loaded.
   `brann-1` resolves `ollama.raboes28.nl` through a static host entry in
   [container-1/networking-1.nix](container-1/networking-1.nix).
 - The GPU is shared with Hermes and the Nextcloud Assistant. Ollama keeps one

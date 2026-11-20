@@ -49,11 +49,14 @@ in
         # alone sends a larger system prompt and tool list than that, so the
         # conversation history was cut off and follow-up questions lost their
         # context. Keep this equal to context_length in khadgar's
-        # service-hermes-agent.nix.
+        # service-hermes-agent.nix. Hermes refuses to start a model with less
+        # than 64k, so this is 64k.
         # 64k left no VRAM headroom for gemma4:26b on the 16 GB GPU, and larger
         # prompts (web search results) then crashed the runner with a CUDA
-        # allocation error, so it is 32k.
-        OLLAMA_CONTEXT_LENGTH = "32768";
+        # allocation error. gemma4:12b is the default model and leaves enough
+        # room, so only select the larger models when no long prompts are
+        # expected.
+        OLLAMA_CONTEXT_LENGTH = "65536";
         # Flash attention is required for a quantized KV cache and lowers memory
         # use at long context sizes.
         OLLAMA_FLASH_ATTENTION = "1";
@@ -79,9 +82,13 @@ in
         # Coding (PowerShell, Bicep) and agentic work.
         "qwen3.6:35b"
         "laguna-xs-2.1"
-        # Architecture documents and writing; default model of Hermes (khadgar)
-        # and the Nextcloud Assistant (dalaran).
+        # Architecture documents and writing; larger model, selectable per
+        # request or in a Hermes session.
         "gemma4:26b"
+        # Medium model that fits the GPU with headroom; default model of
+        # Hermes (khadgar), Open WebUI (brann) and the Nextcloud Assistant
+        # (dalaran).
+        "gemma4:12b"
         # Small and fast; simple chat.
         "gemma4:e4b"
         # Small and fast model that Hermes (khadgar) can switch to.

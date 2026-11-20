@@ -84,9 +84,9 @@ sudo nixos-container restart khadgar-1
   [service-hermes-agent.nix](service-hermes-agent.nix). The Hermes container
   mode is off; this NixOS container is the sandbox.
 - Models: Ollama on [cho](../cho/README.md) (`https://ollama.raboes28.nl/v1`,
-  `gemma4:26b` by default, 32k context) is the only model backend. The
+  `gemma4:12b` by default, 64k context) is the only model backend. The
   named provider `ollama` also lists `qwen3.6:35b`, `laguna-xs-2.1`,
-  `gemma4:e4b` and `qwen3.5:9b-q8_0`; switch in a session with
+  `gemma4:26b`, `gemma4:e4b` and `qwen3.5:9b-q8_0`; switch in a session with
   `/model custom:ollama:<model>`. Keep that list in sync with cho's
   `loadModels`. There is no cloud
   fallback. `khadgar-1` resolves `ollama.raboes28.nl` through a static host
@@ -105,6 +105,10 @@ sudo nixos-container restart khadgar-1
   downloaded on first use, so the container needs internet access.
 - There is no web search backend configured: the example this was based on used a
   SearXNG instance, which does not exist in this repository.
+
+## Theme
+
+Hermes uses the Empire skin from [joeynyc/hermes-skins](https://github.com/joeynyc/hermes-skins) (MIT), stored in `skins/empire.yaml` and copied to `~/.hermes/skins/` on activation. Selected with `display.skin`; switch per session with `/skin <name>`.
 
 ## Persistent data
 

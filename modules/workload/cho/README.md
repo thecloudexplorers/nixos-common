@@ -42,7 +42,7 @@ sudo nixos-container restart cho-1
 - Nginx terminates TLS using the certificate issued by [medivh](../medivh/README.md)
   and proxies requests to Ollama on port `11434`.
 - The models in `loadModels` (currently `qwen3.6:35b`, `laguna-xs-2.1`,
-  `gemma4:26b`, `gemma4:e4b` and `qwen3.5:9b-q8_0`) are downloaded automatically.
+  `gemma4:26b`, `gemma4:12b`, `gemma4:e4b` and `qwen3.5:9b-q8_0`) are downloaded automatically.
   Choose one per request with
   the `model` field; Ollama loads it on demand and unloads idle models.
   `syncModels = true` keeps the installation synchronized with that list and
@@ -89,8 +89,10 @@ must be loaded into GPU memory. Afterwards, check on the host that it runs on th
 GPU with `sudo nixos-container run cho-1 -- ollama ps` (`PROCESSOR` should read
 `100% GPU`).
 
-The context window is set to 32k (`OLLAMA_CONTEXT_LENGTH`). At 64k the 16 GB GPU
-had no VRAM headroom left and the runner crashed with a CUDA allocation error. Ollama's OpenAI
+The context window is set to 64k (`OLLAMA_CONTEXT_LENGTH`), the minimum Hermes
+accepts. With `gemma4:26b` at 64k the 16 GB GPU had no VRAM headroom left and the
+runner crashed with a CUDA allocation error, so use the default `gemma4:12b` for
+Hermes. Ollama's OpenAI
 compatible endpoint ignores a client's context setting and otherwise uses a much
 smaller default, which silently truncates long prompts such as Hermes' (the
 agent then loses the earlier conversation). `ollama ps` shows the loaded

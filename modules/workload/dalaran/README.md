@@ -61,7 +61,7 @@ sudo nixos-container restart dalaran-1
   provider on every boot.
 - **`nextcloud-ollama-setup`** oneshot service that (re)points the
   `integration_openai` app at the Ollama server in `cho`
-  (`https://ollama.raboes28.nl/v1`, default model `gemma4:26b`) on
+  (`https://ollama.raboes28.nl/v1`, default model `gemma4:12b`) on
   every boot, so the **Assistant** app (pinned to 3.5.0, the last release
   supporting Nextcloud 34) can use it. No API key is needed. `max_tokens` is
   raised to 8192 because thinking models count reasoning against it: with the default of 1000

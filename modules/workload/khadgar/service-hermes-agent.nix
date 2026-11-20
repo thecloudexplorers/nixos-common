@@ -18,7 +18,7 @@ let
   # Ollama on cho-1 is the primary model backend; it is OpenAI compatible.
   workloadServiceCustomBaseUrl = "https://ollama.${rootDomain}/v1";
   # Keep this equal to OLLAMA_CONTEXT_LENGTH in ../cho/service-ollama.nix.
-  workloadServiceDefaultContextLength = 32768;
+  workloadServiceDefaultContextLength = 65536;
   # Secrets file, bind mounted read-only from the host (see container-1.nix).
   workloadServiceEnvironmentFile = "/tmp/${workloadName}-hermes/hermes.env";
   chromiumCdpBindAddress = "127.0.0.1";
@@ -125,7 +125,7 @@ in
       settings = {
         timezone = "Europe/Amsterdam";
         model = {
-          default = "gemma4:26b";
+          default = "gemma4:12b";
           provider = "custom";
           base_url = workloadServiceCustomBaseUrl;
           context_length = workloadServiceDefaultContextLength;
@@ -148,6 +148,7 @@ in
                 "qwen3.6:35b"
                 "laguna-xs-2.1"
                 "gemma4:26b"
+                "gemma4:12b"
                 "gemma4:e4b"
                 "qwen3.5:9b-q8_0"
               ]
@@ -195,6 +196,7 @@ in
           };
         };
         display = {
+          skin = "empire";
           personality = "helpful";
           show_reasoning = true;
           streaming = true;
@@ -271,6 +273,10 @@ in
   # The browser profile lives in the persistent state directory.
   systemd.tmpfiles.rules = [
     "d ${workloadServicePath}/chrome-debug 0700 ${workloadServiceUser} ${workloadServiceUser} -"
+    # Empire skin (MIT, joeynyc/hermes-skins). Hermes only loads skins from
+    # ~/.hermes/skins, and C+ refreshes the copy from the Nix store on each activation.
+    "d ${workloadServicePath}/.hermes/skins 0750 ${workloadServiceUser} ${workloadServiceUser} -"
+    "C+ ${workloadServicePath}/.hermes/skins/empire.yaml 0640 ${workloadServiceUser} ${workloadServiceUser} - ${./skins/empire.yaml}"
   ];
 
   # The read-only certificate is shared with medivh's ACME container.
