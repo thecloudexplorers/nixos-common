@@ -117,6 +117,7 @@
             nixos-hardware.nixosModules.common-pc
             nixos-hardware.nixosModules.common-pc-ssd
             # Load nixos-common modules
+            nixos-common.nixosModules.nix-base
             nixos-common.nixosModules.secure-boot-tpm
             # Load the various modules through the configuration.nix imports
             ./modules/computer/server/faml-pc-home_server/configuration.nix

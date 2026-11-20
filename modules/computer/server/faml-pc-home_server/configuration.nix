@@ -26,10 +26,6 @@
     ./disko-config.nix
     ./networking.nix
 
-    ## Import Nix modules with generic settings for all computers.
-    # These are all 'nix' settings, such as nix store optimisation.
-    ../../../nix/settings.nix
-
     ## Workloads to be hosted on this server
     # Import all containers here
     ../../../workload/medivh/host-data.nix
@@ -140,10 +136,11 @@
     "nl_NL.UTF-8/UTF-8"
   ];
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  # Tune the nix-base module from nixos-common (loaded in flake.nix).
+  tce.services.common-modules.nixBase = {
+    # Keep the previous 500 MiB buffer instead of the module's 256 MiB default.
+    downloadBufferSize = 524288000;
+  };
 
   hardware.bluetooth = {
     enable = true;
@@ -611,5 +608,4 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = stateVersion; # Did you read the comment?
-  system.autoUpgrade.channel = "https://nixos.org/channels/nixos-26.05/";
 }
