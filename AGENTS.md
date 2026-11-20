@@ -73,9 +73,12 @@ partitions/formats disks or alters the running system; hand those to the user.
 Nix files must be tracked by git (`git add`) for flakes to see them.
 
 For changes to sensitive boot-level components (ZFS, disk encryption, initrd,
-bootloader, kernel modules, filesystems), tell the user to apply them with
-`sudo nixos-rebuild boot --flake .#faml-pc-home_server` (applies on next boot)
-instead of `switch`, so a failure cannot break the running system.
+bootloader, kernel modules, filesystems) and for updates of the boot-related
+flake inputs `lanzaboote` and `nixos-hardware`, tell the user to apply them
+with `sudo nixos-rebuild boot --flake .#faml-pc-home_server` and then reboot,
+instead of `switch`, so a failure cannot break the running system. Update
+these inputs on their own (`nix flake update lanzaboote nixos-hardware`), not
+together with nixpkgs, so a boot problem can be traced to a single change.
 
 ## Agent behavior
 

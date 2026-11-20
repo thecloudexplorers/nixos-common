@@ -136,8 +136,8 @@
     "nl_NL.UTF-8/UTF-8"
   ];
 
-  # Tune the nix-base module from nixos-common (loaded in flake.nix).
-  tce.services.common-modules.nixBase = {
+  # Tune the nix-base module from nix-modules-catalog (loaded in flake.nix).
+  tce.modules.nixBase = {
     # Keep the previous 500 MiB buffer instead of the module's 256 MiB default.
     downloadBufferSize = 524288000;
   };

@@ -162,19 +162,19 @@
         "type": "github"
       }
     },
-    "nixos-common": {
+    "nix-modules-catalog": {
       "locked": {
-        "lastModified": 1795170109,
-        "narHash": "sha256-D2yvUOUF9piQeMWlHcWj3L/hqOah+e5uq05Tz+fw11k=",
+        "lastModified": 1795186657,
+        "narHash": "sha256-dCJR3Ge2vF4Ctc9bUuAc4WpK8j+guN9UV9GUAuGrsT8=",
         "owner": "thecloudexplorers",
-        "repo": "nixos-common",
-        "rev": "09260da1b588558d25d480a43ebf01c3179e9101",
+        "repo": "nix-modules-catalog",
+        "rev": "500d0e19ecc56646d09e1ae9818a072ae4a94764",
         "type": "github"
       },
       "original": {
         "owner": "thecloudexplorers",
         "ref": "main",
-        "repo": "nixos-common",
+        "repo": "nix-modules-catalog",
         "type": "github"
       }
     },
@@ -341,7 +341,7 @@
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager_2",
         "lanzaboote": "lanzaboote",
-        "nixos-common": "nixos-common",
+        "nix-modules-catalog": "nix-modules-catalog",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",
         "plasma-manager": "plasma-manager"

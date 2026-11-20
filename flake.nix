@@ -13,9 +13,9 @@
       url = "github:nix-community/lanzaboote/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Load the community driven NixOS common definitions
-    nixos-common = {
-      url = "github:thecloudexplorers/nixos-common/main";
+    # Load the community driven NixOS common module catalog
+    nix-modules-catalog = {
+      url = "github:thecloudexplorers/nix-modules-catalog/main";
     };
     # Manage per-user configuration (dotfiles, programs) declaratively
     home-manager = {
@@ -39,7 +39,7 @@
       nixpkgs,
       nixos-hardware,
       disko,
-      nixos-common,
+      nix-modules-catalog,
       home-manager,
       plasma-manager,
       ...
@@ -115,9 +115,9 @@
             nixos-hardware.nixosModules.common-gpu-amd
             nixos-hardware.nixosModules.common-pc
             nixos-hardware.nixosModules.common-pc-ssd
-            # Load nixos-common modules
-            nixos-common.nixosModules.nix-base
-            nixos-common.nixosModules.secure-boot-tpm
+            # Load nix-modules-catalog modules
+            nix-modules-catalog.nixosModules.nix-base
+            nix-modules-catalog.nixosModules.secure-boot-tpm
             # Load the various modules through the configuration.nix imports
             ./modules/computer/server/faml-pc-home_server/configuration.nix
           ];

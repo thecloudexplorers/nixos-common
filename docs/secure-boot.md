@@ -1,8 +1,8 @@
 # Secure Boot and TPM Auto-Unlock
 
 Secure Boot is provided by the `secure-boot-tpm` module from
-[nixos-common](https://github.com/thecloudexplorers/nixos-common), imported in `flake.nix`
-(`nixos-common.nixosModules.secure-boot-tpm`). The module takes care of the Nix side:
+[nix-modules-catalog](https://github.com/thecloudexplorers/nix-modules-catalog), imported in `flake.nix`
+(`nix-modules-catalog.nixosModules.secure-boot-tpm`). The module takes care of the Nix side:
 
 - importing the `lanzaboote` NixOS module (the `lanzaboote` flake input in this repo is required),
 - enabling bootspec,
