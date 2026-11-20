@@ -72,6 +72,11 @@ Never run `nixos-rebuild switch`, `nixos-install`, `disko` or anything that
 partitions/formats disks or alters the running system; hand those to the user.
 Nix files must be tracked by git (`git add`) for flakes to see them.
 
+For changes to sensitive boot-level components (ZFS, disk encryption, initrd,
+bootloader, kernel modules, filesystems), tell the user to apply them with
+`sudo nixos-rebuild boot --flake .#faml-pc-home_server` (applies on next boot)
+instead of `switch`, so a failure cannot break the running system.
+
 ## Agent behavior
 
 - Replies: no preamble, no recap, do not restate the diff. Fragments are fine. Code, comments, docs and commit messages stay in normal full prose.

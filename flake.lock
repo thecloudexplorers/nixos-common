@@ -180,11 +180,11 @@
     },
     "nixos-common": {
       "locked": {
-        "lastModified": 1793967172,
-        "narHash": "sha256-k2tCi0wyqfwVRGDsz8SLDfGPTtdlbeyBreMBvW6KsYg=",
+        "lastModified": 1795170109,
+        "narHash": "sha256-D2yvUOUF9piQeMWlHcWj3L/hqOah+e5uq05Tz+fw11k=",
         "owner": "thecloudexplorers",
         "repo": "nixos-common",
-        "rev": "56ed0f6094df06188101e503566020b14970481b",
+        "rev": "09260da1b588558d25d480a43ebf01c3179e9101",
         "type": "github"
       },
       "original": {
@@ -265,11 +265,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1790750587,
-        "narHash": "sha256-neiwVQVB0ONcopw7wbiinq1vYtMOTjTLuEueGF9Ex1Y=",
-        "rev": "78e9c786dc08cd4f3420c2395cd977206a9b1da2",
+        "lastModified": 1795031880,
+        "narHash": "sha256-TpCexO5p9oBa2et7EEIP6y3vsgieBM3M1U1YyO7oG/U=",
+        "rev": "3457b69ac4aba6d9ea9a743370af160fb502db29",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.10927.78e9c786dc08/nixexprs.tar.zst"
+        "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.14753.3457b69ac4ab/nixexprs.tar.zst"
       },
       "original": {
         "id": "nixpkgs",

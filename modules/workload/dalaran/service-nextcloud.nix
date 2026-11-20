@@ -286,6 +286,38 @@ in
     };
   };
 
+  # The database runs in the separate ironforge container, which the host starts
+  # in parallel with this one. If it is not reachable yet, occ upgrade in
+  # nextcloud-setup aborts ("No route to host") and, as a oneshot, it is never
+  # retried, leaving Nextcloud half upgraded until someone runs occ by hand.
+  # Wait for the database port first and retry on failure as a safety net.
+  systemd.services.nextcloud-setup = {
+    wants = [ "network-online.target" ];
+    after = [ "network-online.target" ];
+    serviceConfig = {
+      ExecStartPre = pkgs.writeShellScript "nextcloud-wait-for-database" ''
+        for attempt in $(seq 1 24); do
+          if (exec 3<>/dev/tcp/${databaseHost}/${toString databasePort}) 2>/dev/null; then
+            exit 0
+          fi
+          echo "Waiting for database ${databaseHost}:${toString databasePort} (attempt $attempt)..."
+          sleep 5
+        done
+        echo "Database ${databaseHost}:${toString databasePort} not reachable after 120 seconds."
+        exit 1
+      '';
+      Restart = "on-failure";
+      RestartSec = 30;
+    };
+  };
+
+  # The module's ExecCondition for this unit runs php on occ directly, which
+  # (unlike the occ wrapper) does not set NEXTCLOUD_CONFIG_DIR. occ then looks
+  # in the read-only config dir inside the Nix store and logs "Cannot write
+  # into config directory!". nextcloud-cron has the same workaround upstream.
+  systemd.services.nextcloud-update-db.environment.NEXTCLOUD_CONFIG_DIR =
+    "${workloadServiceFolder}/config";
+
   systemd.services.nextcloud-cron.path = [
     pkgs.ffmpeg
   ];
