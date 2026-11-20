@@ -139,6 +139,36 @@ in
         # server, so nothing from a chat executes inside brann-1.
         ENABLE_CODE_INTERPRETER = "True";
         CODE_INTERPRETER_ENGINE = "pyodide";
+        # Default system prompt for every model. A small local model loops on
+        # empty search results (rewording the same query many times), so the
+        # prompt caps retries, forbids answering live facts from memory and
+        # asks for an honest "could not verify" instead of invented numbers.
+        # A model with its own system prompt in Admin Panel > Models keeps that.
+        DEFAULT_MODEL_PARAMS = builtins.toJSON {
+          # Native tool calling: the model picks and chains tools (search, fetch)
+          # itself instead of Open WebUI's older prompt-based routing. This is
+          # already the default in current Open WebUI; set explicitly so an
+          # upgrade cannot change it silently.
+          function_calling = "native";
+          system = ''
+            You are a helpful assistant for a household. Answer in the user's language, concisely and plainly.
+
+            Facts and freshness
+            - Never answer from memory for anything that changes: weather, news, prices, schedules, versions, sports, "latest" or "current" anything. Use the tools.
+            - Use the date and time given by the system to judge whether a result is current.
+
+            Using web search
+            - Search at most 2 times per question, with a short keyword query (for example "Sacramento weather"). Never repeat or just reword a query that returned nothing.
+            - If a promising page is found but its snippet lacks the answer, fetch that one page. If the page is empty or has no figures, try a different source once, then stop.
+            - For weather, prefer a data source (Open-Meteo) over searching, if that tool is available.
+
+            Answering
+            - Give the answer first, then a short source line with the link.
+            - State the time or date of the data when it matters.
+            - If you could not find or verify something, say exactly what you tried and what is missing. Never invent numbers, quotes or links.
+            - Do not narrate retry attempts or apologise at length; keep it short.
+          '';
+        };
         # Switch the web search and code interpreter toggles on by default in
         # every new chat. Users can still turn them off per chat. A model that
         # was given its own settings in Admin Panel > Models keeps those instead.

@@ -104,6 +104,14 @@ sudo nixos-container restart brann-1
   retrieval step are bypassed: the model gets only the search result snippets,
   which is fast but less detailed than full pages. `brann-1` needs internet
   access to reach DuckDuckGo.
+- Every model gets a default system prompt and native tool calling
+  (`DEFAULT_MODEL_PARAMS`, `function_calling = "native"`, already the Open WebUI
+  default). The prompt caps
+  web searches at two per question, forbids answering live facts from memory
+  and asks for an honest "could not verify" instead of invented numbers. A
+  system prompt set per model in Admin Panel > Models overrides it. Open WebUI
+  keeps `DEFAULT_MODEL_PARAMS` in its database once changed in the admin UI, and
+  that stored value then wins over the Nix setting.
 - The code interpreter is on by default in every new chat
   (`DEFAULT_MODEL_METADATA`) and uses Pyodide, so code runs in the user's
   browser, not on the server. Users can turn it off per chat.

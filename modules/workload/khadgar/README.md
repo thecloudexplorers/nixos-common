@@ -108,7 +108,7 @@ sudo nixos-container restart khadgar-1
 
 ## Theme
 
-Hermes uses the Empire skin from [joeynyc/hermes-skins](https://github.com/joeynyc/hermes-skins) (MIT), stored in `skins/empire.yaml` and copied to `~/.hermes/skins/` on activation. Selected with `display.skin`; switch per session with `/skin <name>`.
+Hermes uses the Empire skin from [joeynyc/hermes-skins](https://github.com/joeynyc/hermes-skins) (MIT), stored in `skins/empire.yaml` and copied to `~/.hermes/skins/` on activation. Selected with `display.skin`; switch per session with `/skin <name>`. The web dashboard has its own theme system: `skins/empire-dashboard.yaml` is copied to `~/.hermes/dashboard-themes/` and selected via `dashboard.theme`; other themes can be picked from the palette icon in the dashboard header.
 
 ## Persistent data
 

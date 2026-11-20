@@ -189,6 +189,7 @@ in
         # no password or secret is stored here. Kanidm's scope map decides who
         # may log in (group hermes-users).
         dashboard = {
+          theme = "empire";
           public_url = proxyPublicUrl;
           oauth.self_hosted = {
             issuer = oidcIssuer;
@@ -277,6 +278,8 @@ in
     # ~/.hermes/skins, and C+ refreshes the copy from the Nix store on each activation.
     "d ${workloadServicePath}/.hermes/skins 0750 ${workloadServiceUser} ${workloadServiceUser} -"
     "C+ ${workloadServicePath}/.hermes/skins/empire.yaml 0640 ${workloadServiceUser} ${workloadServiceUser} - ${./skins/empire.yaml}"
+    "d ${workloadServicePath}/.hermes/dashboard-themes 0750 ${workloadServiceUser} ${workloadServiceUser} -"
+    "C+ ${workloadServicePath}/.hermes/dashboard-themes/empire.yaml 0640 ${workloadServiceUser} ${workloadServiceUser} - ${./skins/empire-dashboard.yaml}"
   ];
 
   # The read-only certificate is shared with medivh's ACME container.

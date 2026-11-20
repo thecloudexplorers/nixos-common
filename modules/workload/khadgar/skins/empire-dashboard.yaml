@@ -1,0 +1,20 @@
+# Dashboard counterpart of empire.yaml (the CLI skin): Imperial red on near-black,
+# hologram-blue accents, reusing the skin's canon red (#C8102E).
+name: empire
+label: Empire
+description: Galactic Empire, canon red on Death Star black
+
+palette:
+  background: "#0A0A0C"
+  midground: "#D8D8DC"
+  foreground:
+    hex: "#C8102E"
+    alpha: 0.35
+  warmGlow: "rgba(200, 16, 46, 0.18)"
+  noiseOpacity: 0.6
+
+typography:
+  fontSans: '"Share Tech Mono", ui-monospace, monospace'
+  fontMono: '"Share Tech Mono", ui-monospace, monospace'
+  fontUrl: "https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap"
+  letterSpacing: "0.03em"
