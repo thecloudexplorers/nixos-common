@@ -13,7 +13,7 @@ in
 {
   services = {
     "${workloadService}" = {
-      package = pkgs.kanidm_1_11;
+      package = pkgs.kanidm_1_12;
       server = {
         enable = true;
         settings = {

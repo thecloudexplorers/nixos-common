@@ -7,6 +7,6 @@ in
     # Workload Specific
     ./service-kanidm.nix
   ];
-  environment.systemPackages = with pkgs; [ kanidm_1_11 ];
+  environment.systemPackages = with pkgs; [ kanidm_1_12 ];
   system.stateVersion = workloadStateVersion;
 }
